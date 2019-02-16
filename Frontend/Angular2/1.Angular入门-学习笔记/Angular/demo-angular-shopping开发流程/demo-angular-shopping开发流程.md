@@ -15,7 +15,7 @@
 - 导航栏组件
 - 搜索表单组件
 - 轮播图组件
-- 商品展示组件
+- 商品列表组件
 - 星级评价组件
 - 页脚组件
 
@@ -161,9 +161,238 @@ Navbar和Nav的区别：当屏幕缩小时，navbar可以折叠（nav不可以�
 
 [Bootstrap v4.3 - Carousel](https://getbootstrap.com/docs/4.3/components/carousel/)
 
-```html
+[图片占位符工具](https://placeholder.com/)
 
+```html
+<div id="productCarousel" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#productCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#productCarousel" data-slide-to="1"></li>
+    <li data-target="#productCarousel" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="https://via.placeholder.com/855x340/" class="d-block w-100" alt="">
+    </div>
+    <div class="carousel-item">
+      <img src="https://via.placeholder.com/855x340/" class="d-block w-100" alt="">
+    </div>
+    <div class="carousel-item">
+      <img src="https://via.placeholder.com/855x340/" class="d-block w-100" alt="">
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#productCarousel" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#productCarousel" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
 ```
+
+## 开发商品列表组件
+
+### 开发商品列表组件模板
+
+`*ngFor`命令用来遍历数组/集合中的元素。用法如下：
+
+```html
+<div *ngFor="let product of products" class="col-md-4 product-container float-left">
+  <div class="img-thumbnail">
+    <img src="https://via.placeholder.com/245x120" class="img-container"/>
+    <div class="figure-caption">
+      <span class="float-right">￥{{ product.price }}</span>
+      <h4><a href="#">{{ product.name }}</a></h4>
+      <p>{{ product.description }}</p>
+    </div>
+    <div>
+      <app-stars></app-stars>
+    </div>
+  </div>
+</div>
+```
+
+### 开发商品列表组件控制器
+
+#### 传入数据
+
+`ngOnInit()`函数是Component生命周期函数（钩子），在Component被初始化时调用一次，一般用来初始化组件中需要使用到的数据。
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.css']
+})
+export class ProductsComponent implements OnInit {
+
+  private products: Array<Product>
+  constructor() { }
+
+  // Component生命周期函数（钩子），在Component被初始化时调用一次，一般用来初始化组件中需要使用到的数据
+  ngOnInit() {
+    this.products = [
+      new Product(1, '商品1', 1.00, 4.5, '这是商品1', ['电子', '屏显']),
+      new Product(2, '商品2', 2.00, 1.5, '这是商品2', ['运动']),
+      new Product(3, '商品3', 3.00, 5.0, '这是商品3', ['电子']),
+      new Product(4, '商品4', 4.00, 4.5, '这是商品4', ['电子', '性能']),
+      new Product(5, '商品5', 5.00, 3.0, '这是商品5', ['洗护']),
+      new Product(6, '商品6', 6.00, 2.5, '这是商品6', ['电子'])
+    ];
+  }
+
+}
+
+export class Product {
+
+  constructor(
+    public id: number,
+    public name: string,
+    public price: number,
+    public rating: number,
+    public description: string,
+    public categories: Array<string>
+  ) { }
+}
+```
+
+## 开发星级评价组件
+
+要开发星级评价组件，要解决如下几个问题：
+
+1. 如何显示一颗星星？
+
+   使用Icon库，推荐[Font Awesome](http://fontawesome.dashgame.com/)
+
+   - 使用npm安装Font Awesome依赖
+
+     ```powershell
+     $ npm install font-awesome --save
+     ```
+
+   - 将安装的第三方库引入到项目中：
+
+     > demo-angular-shopping/angular.json
+
+     ![1550304570369](assets/1550304570369.png)
+
+   - 在style.css中导入font-awesome.css
+
+     >demo-angular-shopping/src/style.css
+
+     ```css
+     /* You can add global styles to this file, and also import other style files */
+     @import '~font-awesome/css/font-awesome.css';
+     ```
+
+   - 使用font-awesome显示一颗实心星星
+
+     ```html
+     <p>
+       <i class="fa fa-star"></i>
+     </p>
+     ```
+
+   - 使用font-awesome显示一颗空心星星
+
+     ```html
+     <p>
+       <!-- 其实这里是用fa-star-o覆盖了fa-star中的重新属性 -->
+       <i class="fa fa-star fa-star-o"></i>
+     </p>
+     ```
+
+2. 如何显示五颗星星？
+
+   - 可以使用`*ngFor`属性来使用一套逻辑显示处理若干星星。
+
+     ```html
+     <p>
+       <i *ngFor="let star of stars" class="fa fa-star fa-star-o"></i>
+     </p>
+     ```
+
+     Angular中使用`{{ }}`将属性括起来，以此来表示插值绑定：直接把该后台属性的值显示在页面上。
+
+     ```html
+     <tag>{{ backend-attr }}</tag>
+     ```
+
+     属性绑定使用`[]`将html的标签属性括起来，并将该属性的值与后台某属性的值对应起来。
+
+     ```html
+     <tag [tag-attr]="backend-attr"></tag>
+     ```
+
+     属性绑定有一个特例，样式绑定，可以让我们使用后台属性决定是否选用某css样式。
+
+     ```html
+     <tag [class.class-attr]="backend-attr"></tag>
+     ```
+
+     因此，我们的模板代码如下，当star为true时，我们给`<i>`标签加上`fa-star-o`样式，即星星样式为空心，否则，还是为实心样式：
+
+     ```html
+     <p>
+       <i *ngFor="let star of stars" class="fa fa-star" [class.fa-star-o]="star"></i>
+     </p>
+     ```
+
+     相应地，在后台我们应该提供一个一维5元数组来对应这五颗星星。
+
+     ```typescript
+     import { Component, OnInit } from '@angular/core';
+     
+     @Component({
+       selector: 'app-stars',
+       templateUrl: './stars.component.html',
+       styleUrls: ['./stars.component.css']
+     })
+     export class StarsComponent implements OnInit {
+     
+       private stars: boolean[]
+     
+       constructor() { }
+     
+       ngOnInit() {
+         // 2颗实心，3颗空心
+         this.stars = [false, false, true, true, true];
+       }
+     
+     }
+     ```
+
+3. 如何将商品的星级评价数值rating传递给星级评价组件？
+
+   该问题涉及到父组件向子组件传值的知识点：
+
+   - 首先，我们在子组件控制器中声明一个变量（用来保存父组件向子组件传递的值），并使用装饰器`@Input()`装饰
+
+     ![1550309242503](assets/1550309242503.png)
+
+   - 然后，在父组件调用子组件的文件（模板文件）中，找到子组件对应的标签，**使用属性绑定将父组件中的值传递给子组件**。
+
+     ![1550308707012](assets/1550308707012.png)
+
+4. 如何根据商品星级评价数值rating决定星星是空心的还是实心的？
+
+   根据rating来决定boolean数组stars中元素的取值。
+
+   ```typescript
+   ngOnInit() {
+     this.stars = [];
+     for (let i = 1; i <= 5; i++) {
+       this.stars.push(i > this.rating);
+     }
+   }
+   ```
+
+
+### 开发星级评价组件模板
 
 ## 开发页脚组件
 
