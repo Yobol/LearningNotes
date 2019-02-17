@@ -36,7 +36,7 @@
 
    > new-app/src/app/app.component.html
 
-   替换掉启动页面（angular.json的index属性所指)中的主组件（AppComponent）对应选择器标签（`<app-root>`)。
+   插入到启动页面（angular.json的index属性所指)中的主组件（AppComponent）对应选择器标签（`<app-root>`)中。
 
    > new-app/src/index.html
 
