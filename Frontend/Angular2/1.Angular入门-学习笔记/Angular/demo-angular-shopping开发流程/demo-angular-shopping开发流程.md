@@ -7,7 +7,7 @@
 
 ## 项目分析
 
-![1550129490340](assets/1550129490340.png)
+![1550129490340](assets/1550390873914.png)
 
 实例应用主界面包含7个基本组件：
 
@@ -224,6 +224,7 @@ Navbar和Nav的区别：当屏幕缩小时，navbar可以折叠（nav不可以�
 
 ```typescript
 import { Component, OnInit } from '@angular/core';
+import { Product } from '../entity/product'
 
 @Component({
   selector: 'app-products',
@@ -248,7 +249,11 @@ export class ProductsComponent implements OnInit {
   }
 
 }
+```
 
+> app/entity/product.ts
+
+```typescript
 export class Product {
 
   constructor(
@@ -425,3 +430,43 @@ SPA（Single Page Application，单页应用）是一个主页面只加载一次
 ![1550390873914](assets/1550390873914.png)
 
 我们希望，不管应用处于什么样的视图状态，navbar/footer/search组件都将一直显示，而将根据用户操作在中间右侧区域显示不同的内容。因此，我们需要将该区域定义为一个插座，然后通过配置路由器，让该应用在不同的视图状态下，显示不同的组件。按照Angular的规定，在一个插座上只能显示一个组件，因此我们需要将carousel和products组件封装到一个HomeComponent中。
+
+### 为项目添加路由
+
+![1550544387945](assets/1550544387945.png)
+
+1. 创建商品详情组件，显示商品的图片和标题：
+
+   - 使用`ng g component product`创建商品详情组件；
+
+   - 修改product组件的控制器，试图从导航URL中获取所需的参数：
+
+     ![1550559367031](assets/1550559367031.png)
+
+   - 修改product组件的模板，显示商品信息：
+
+     ![1550559456610](assets/1550559456610.png)
+
+2. 重构代码，将carousel组件和products组件封装进新的Home组件中：
+
+   - 使用`ng g component home`创建Home组件
+
+   - 将AppComponent模板中的将carousel组件和products组件的占位符放到新创建的HomeComponent模板中
+
+     ![1550557958705](assets/1550557958705.png)
+
+     ![1550557974811](assets/1550557974811.png)
+
+3. 手动配置路由（也可使用`ng new --routing new-app`在新建项目的时候自动配置路由），在导航到商品详情组件时传递商品的信息：
+
+   - 手动配置AppModule的路由信息：
+
+     ![1550559639575](assets/1550559639575.png)
+
+4. 修改AppComponent模板，根据路由显示HomeComponent或者ProductComponent
+
+   ![1550558686050](assets/1550558686050.png)
+
+5. 修改商品列表组件，给商品名称添加带routerLink指令的链接，导航到ProductComponent
+
+   ![1550559505819](assets/1550559505819.png)
