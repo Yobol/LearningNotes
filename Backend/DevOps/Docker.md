@@ -1,5 +1,10 @@
 # Docker
 
+## Registry & Reposity
+
+A registry is a collection of repositories, and a repository is a collection of
+images
+
 ## Docker的优点
 
 - 平台无关，可移植；
@@ -60,9 +65,27 @@ $ docker pull nginx
 
 使用docker build命令创建镜像：
 
-1. 首先创建一个Dockerfile文件，告诉Docker如何构建我们的应用；
-2. 创建Dockerfile：
-   - [Docker官方文档]()
+1. 首先创建一个Dockerfile文件，告诉Docker如何构建我们的应用,语法参考[Dockerfile]()；
+2. 执行`docker build [OPTIONS] <PATH | URL | ->`命令从指定目录 | URL下寻找Dockerfile文件构建一个镜像（-t/--tag参数以name:tag格式指定镜像名，如果不指定:tag，则tag默认是lastest，推荐使用--tag=name:v0.0.1格式）；
+3. 使用`docker images`命令查看本地Docker registry中的镜像。
+
+#### 上传自定义镜像
+
+```shell
+# login Docker Hub
+$ docker login
+# 接着输入你在Docker Hub上的用户名和密码
+
+# 给你的repository添加新的tag
+$ docker tag <repository> <username/repository:newtag>
+
+# 你的registry上镜像的格式： username/repository:tag
+
+# 上传本地镜像到你的registry中
+$ docker push username/repository:tag
+
+# 现在你可以将本地的相关镜像删除之后，再运行docker run命令试试Docker是否会帮你从你的registry中拉取相应的镜像
+```
 
 ## 查看镜像
 
@@ -90,8 +113,8 @@ $ docker images
 
 # -d 表示在后台运行容器并回显容器ID
 
-# -P 将容器的默认暴露的端口映射到主机的随机端口上
-# -p 主机端口:容器端口，将容器的端口映射到主机的指定端口上，目的是可以直接对外提供访问
+# -P 将容器的暴露的端口按照（）的规则映射到主机的随机端口上
+# -p 主机端口:容器端口，将容器暴露的端口映射到主机的指定端口上，目的是可以直接对外提供访问
 # 你可以为同一个镜像启动多个容器（就像类和对象的关系那样），通过-p来指定不同的端口
 
 # --name 指定容器名 cnl为自己指定的容器名，若不指定，则随机生成
@@ -123,7 +146,7 @@ $ docker container ls --all
 ### 查看容器内的标准输出
 
 ```shell
-# docker logs <container-id	|container-name>
+# docker logs <container-id|container-name>
 # using container id
 $ docker logs fba6dfab29f0
 
@@ -203,7 +226,49 @@ $ docker commit -m="webapp-v2" -a="yobol" 21cd4e52d620 yobol/webapp:v2
 ## 删除镜像
 
 ```shell
-# docker rmi nginx
+# docker rmi <image-id|image-name>
 $ docker rmi nginx
+```
+
+## docker-compose
+
+### 安装
+
+官方文档：[Install Docker Compose](https://docs.docker.com/compose/install/)。
+
+[Docker及相关资源的国内高速镜像](http://get.daocloud.io/)
+
+```shell
+# 下载Docker Compose 1.24.0版本，1.24.0 为版本号，可以替换成其他版本。
+$ sudo curl -L "https://get.daocloud.io/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+# 为下载的文件添加可执行权限
+$ sudo chmod +x /usr/local/bin/docker-compose
+
+# 查看docker-compose版本，以验证安装结果
+$ docker-compose --version
+
+# 如果执行docker-compose失败，也可以创建链接
+$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+```
+
+当下载失败时，换个版本试试！！！
+
+### Get Started
+
+官方文档：[Docker Compose Get started](https://docs.docker.com/compose/gettingstarted/)
+
+### CLI
+
+官方文档：[Compose command-line reference](https://docs.docker.com/compose/reference/)
+
+### docker-compose.yml
+
+官方文档：[Compose file version 3 reference](https://docs.docker.com/compose/compose-file/)
+
+### 卸载
+
+```shell
+$ sudo rm /usr/local/bin/docker-compose
 ```
 
