@@ -40,8 +40,6 @@ $ docker version
 $ docker info
 ```
 
-
-
 ## 查找镜像
 
 在[Docker Hub](https://hub.docker.com/)上查找NAME中带有指定关键字的镜像。
@@ -60,6 +58,52 @@ $ docker search nginx
 # 拉取nginx官方镜像
 $ docker pull nginx
 ```
+
+## 修改仓库源地址
+
+如果加载速度过慢的话，可以修改Docker仓库源的地址。
+
+```shell
+$ sudo vim /etc/docker/daemon.json
+# 解决加载速度过慢的一种方法
+{
+    "registry-mirrors": "https://registry.docker-cn.com"
+}
+
+# 重新启动Docker
+$ docker service restart
+```
+
+参考：[修改docker仓库资源的地址](https://blog.csdn.net/wanderlustLee/article/details/80216588)
+
+## Insecure Registry
+
+在Pull镜像的过程中可能会反馈如下信息：
+
+```
+yobol@yobol:~/xxx/xxxxxx$ docker-compose up -d
+Pulling xxx (IP地址/xxx/xxx:tag)...
+ERROR: Get https://IP地址/v2/: x509: certificate signed by unknown authority
+```
+
+```shell
+$ sudo vim /etc/docker/daemon.json
+# 解决加载速度过慢的一种方法
+{
+    "insecure-registries": "https://IP地址"
+}
+
+# 重新启动Docker
+$ docker service restart
+```
+
+With insecure registries enabled, Docker goes through the following steps:
+
+- First, try using HTTPS.         
+  - If HTTPS is available but the certificate is invalid, **ignore the error about the certificate**.
+  - If HTTPS is not available, fall back to HTTP.
+
+参考：[Deploy a plain HTTP registry](https://docs.docker.com/registry/insecure/)
 
 ## 自定义镜像
 
@@ -261,6 +305,8 @@ $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ### CLI
 
 官方文档：[Compose command-line reference](https://docs.docker.com/compose/reference/)
+
+启动
 
 ### docker-compose.yml
 
