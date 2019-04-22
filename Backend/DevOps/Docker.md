@@ -88,7 +88,6 @@ ERROR: Get https://IP地址/v2/: x509: certificate signed by unknown authority
 
 ```shell
 $ sudo vim /etc/docker/daemon.json
-# 解决加载速度过慢的一种方法
 {
     "insecure-registries": "https://IP地址"
 }

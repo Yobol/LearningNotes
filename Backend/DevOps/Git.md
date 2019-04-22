@@ -41,7 +41,7 @@ git config --global user.email "xxx@.xxx"
 
 #### 当前用户的Git配置文件
 
-当前用户当Git配置文件放在用户主目录下的一个隐藏文件`.gitconfig`中，使用`cat ～/.gitconfig`查看。
+当前用户Git配置文件放在用户主目录下的一个隐藏文件`.gitconfig`中，使用`cat ～/.gitconfig`查看。
 
 ## 查看仓库中所有人的提交记录
 
@@ -200,7 +200,7 @@ $ git merge --no-ff [-m <"tag info">] dev
 
 #### 解决冲突
 
-当merge时，有可能会产生冲突，而当有冲突产生时，自动merge会失效，Git会使用`<<<<<<< ======= >>>>>>>`来标记出不同分支的内容：
+当尝试merge（在push之前也会将本地版本库中的分支与云端的分支进行merge）时，有可能会产生冲突，而当有冲突产生时，自动merge会失效，Git会使用`<<<<<<< ======= >>>>>>>`来标记出不同分支的内容：
 
 - 使用git status命令查看冲突信息；
 - 手动修改文件内容；
