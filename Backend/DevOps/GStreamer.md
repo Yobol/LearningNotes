@@ -1,18 +1,163 @@
 # GStreamer
 
-GStreamer是设计用来处理多媒体流的框架。
+GStreamer是基于插件（有些插件中提供了各种多媒体数字信号编解码器，也有些提供了其他的功能，所有的插件都能够被连接到任意的已经定义了数据的流管道中）可复用易扩展，功能强大，跨平台的处理多媒体流的框架。
+
+GStreamer-1.0 框架架构：
+
+![img](assets/20160518161626378.png)
+
+框架大致包含了**应用层接口**、**主核心框架**以及**扩展插件**三个部分。
+
+应用层接口主要是给各类应用程序提供接口如：多媒体播放器、流媒体服务器、视频编辑器等；接口的形式多样化，可以是信号、回调函数、函数调用等。
+
+主核心框架就是流媒体的实际运行框架，其包含了媒体处理、内部消息处理、数据的网络传输、以及插件系统实现的功能等；主核心框架又包含了一系列的子模块称之为element，每个element完成一项单一的功能，通过Pipeline把其串联起来实现一条媒体流的实现。
+
+扩展插件还是以主核心框架为基础，提供一些额外的服务，如：协议的组件、部分格式编解码的实现、以及第三方的一些Utility。核心框架会提供一些虚化的接口给各类插件，各类插件只需按照规则实现那些虚化的接口，核心框架就会具有相应的能力（类似父类和子类的关系）。
+
+以Gstreamer为核心，构造了一套关于流媒体实时视频的获取、存储、转发综合方案，并实现了数据获取与转发相分离、支持多协议并发输出、低延迟、高可靠等特性。
+
+![img](assets/20160518161806396.png)
+
+## 元件（Element）
+
+元件是一个有特殊函数接口的类，有些元件的函数接口用于读取文件的数据，有些用于解码数据，有些元件的函数接口只是输出相应的数据到具体的设备。
+
+可以将若干元件连接到一起，创建一个管道（Pipeline）来完成一个特定的任务，如视频播放/转发/存储或视频录音（剔除视频流，而只保存音频流）等。
+
+### 元件类型
+
+#### source
+
+##### filesrc
+
+从文件的任意位置读取数据流。
+
+- location属性指定文件所在位置；
+- blocksize属性指定每个缓冲区每次读取的字节数；
+
+##### rtspsrc
+
+基于RTSP（RFC 2326）协议接收网络上的数据。
+
+只能接收`application/x-rtp`和`application/x-rdt`类型的数据。
+
+##### v4l2src
+
+从Video4Linux2 设备中读取帧（试验了一下可以从电脑自带的摄像头中读取数据）。
+
+#### filter
+
+从输入的数据流中剥离出符合需求的几路数据并输出。
+
+![1556086317881](assets/1556086317881.png)
+
+##### decodebin
+
+自动填充和解码原始媒体文件。
+
+可以输入任意类型的数据，也可以输出任意类型的数据。
+
+##### mp4mux
+
+将音频和视频并入一个MP4文件中（Multiplex audio and video into a MP4 file）。
+
+- name属性指定对象名称，默认为“mp4mux0"；
+
+##### textoverlay
+
+向视频缓冲区的顶部添加文本信息（就是在视频上面加文字）。
+
+#### sink
+
+##### filesink
+
+将数据流保存为一个文件。
+
+- location属性设置保存位置和文件名；
+
+##### autovideosink
+
+封装`video sink`以自动探测`video`。
+
+##### xvimagesink
+
+基于videosink的Xv？
+
+##### appsink
+
+允许应用程序访问原始缓冲器（raw buffer）。
+
+![1556106916176](assets/1556106916176.png)
+
+#### plugin
+
+##### rtph264depay
+
+从RTP包中抽取`H264`视频。
+
+sink：x-rtp
+
+source：x-h264
+
+##### mpegtsmux
+
+将多路媒体流合并为MPEG传输流。
+
+![1556106656276](assets/1556106656276.png)
+
+### 元件状态
+
+- GST_STATE_NULL：空状态；在元件刚初始化时，元件不会被分配任何资源；而在元件由其他状态转为该状态时，即元件已持有资源时，则所占用的资源都将被回收；
+- GST_STATE_READY：就绪状态；在该状态下，元件会得到所需的所有资源，这些全局资源将被通过该元件的数据流所使用；
+- GST_STATE_PLAYING：播放态；在该状态下，元件将开始工作；
+- GST_STATE_PAUSED：暂停态；在该状态下，元件已经开始对流开始了处理，但此刻将暂停处理。
+
+可通过`get_element_set_state(state)`来改变一个元件的状态，但不能跨状态迁移，即只能在相邻的状态之间迁移。
+
+## 衬垫（Pad）
+
+衬垫是元件对外的接口，可以看作是一个元件的插座或者端口。
+
+衬垫用于连接元件，让数据从源元件（的源衬垫，source pad）流向接收元件（的接收衬垫， sink pad）。
+
+衬垫的功能（Pad Capabilities，即Pad Caps）决定了一个元件所能处理的媒体类型。
+
+![1556087767207](assets/1556087767207.png)
+
+## 队列（Queue）
+
+队列可以看作是一种使线程间数据容量线程安全的方法，同时也可以当作一种缓冲区, 可以设置元件的阀值上下限,如果数据低于阀值的下限(:断开线程 ,输出将会被禁止;如果数据高于上限,输入将会被禁止或者数据将被丢弃。
+
+## 箱柜（Bin）
+
+箱柜是一种特殊的元件，用来作为装载元件的容器，可以通过改变一个箱柜的状态来改变箱柜里所有元件的状态（组合模式）。
+
+箱柜可以发送总线消息给它的子元件（这些消息包括ERROR，TAG，EOS）。
+
+## 管道（Pipeline）
+
+管道是一种有自己的总线和时钟的高级箱柜。管道是一个容器，你可以将任意其他的对象放入其中，并且可以操作包含在它内部的所有元件。
+
+当你设定管道为运行状态时，数据流将开始流动，并且开始处理媒体数据流，一旦开始，**管道将在一个单独的线程中运行**，直到被暂停或被迫停止，或者数据流播放完毕。
+
+## 总线（Bus）
+
+总线是一个简单的系统，它采用自己的线程机制将一个管道线程的消息分发到一个应用程序中。
+
+一个管道包含一个总线，应用程序在总线上设置一个消息处理器。主循环运行的时候，总线会轮询这个消息处理器是否有新的消息，当消息被采集到之后，总线将调用相应的回调函数来完成任务。
+
+### 消息类型
+
+- ERROR：有致命错误发生的时候发送该消息；
+- EOF：数据流结束的时候发送该消息；
+- 状态转换：当状态成功转换的时候发送该消息；
+- 缓冲：当缓冲网络数据流的时候发送该消息；
 
 ## 安装GStreamer-1.0（Ubuntu 16.04LTS）
 
 ```shell
 # 安装GStreamer 1.0
 $ sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools
-```
-
-安装目录：
-
-```
-
 ```
 
 使用官方Demo：
@@ -172,51 +317,49 @@ Caps Filter就像一个不做任何动作，仅仅接受给出的Caps的元件�
 
 ### [gst-inspect-1.0](https://gstreamer.freedesktop.org/documentation/tools/gst-inspect.html)
 
-该工具有三种操作模式：
+#### 不指定参数
 
-- 当没有参数的时候，它会列出所有的元件类型，你可以使用这些元件类型来创建新的元件；
+列出所有的元件类型，你可以使用这些元件类型来创建新的元件：
 
-  ```shell
-  $ gst-inspect-1.0
-  ```
+```shell
+$ gst-inspect-1.0
 
-- 当使用文件名作为参数时，它会将这个文件看作是一个GStreamer插件，尝试打开它，并且列出里面所有的元素；
+# 如查询所有源元件类型
+$ gst-inspect-1.0 | grep src
+```
 
-  ```shell
-  $ gst-discoverer-1.0 http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4
-  ```
+#### 指定元件名作为参数
 
-- 当使用元件名作为参数时，它会列出有关该元件的所有信息：
+列出有关该元件的所有信息：
 
-  ```shell
-  $ gst-inspect-1.0 ~/gst-plugins-base/ext/pango
-  ```
+```shell
+$ gst-inspect-1.0 souphttpsrc
+```
 
-  最关键的部分：pad template（元件可以持有的所有pad类型以及它们的功能caps） 和 element properties（元件的所有属性，包括它们的类型和可以选择的值）。
+#### 指定文件名作为参数
+
+将这个文件看作是一个GStreamer插件，尝试打开它，并且列出里面所有的元素；
+
+```shell
+$ gst-inspect-1.0 ~/gst-plugins-base/ext/pango
+```
+
+最关键的部分：
+
+- Pad Templates：展示元件可以持有的所有衬垫类型以及它们的功能，你可以据此确认是否和另一个元件连接；
+- Element Properties：元件的所有属性，包括它们的类型和可以选择的值。
 
 ### [gst-discover-1.0]()
 
-接受一个URI，然后打印出所有GStreamer可以从中提取的媒体信息。查看media文件是如何编码如何复用的,以此来确定把什么element放到pipeline里面。
+接受一个URI，然后打印出所有GStreamer可以从中提取的媒体信息。查看media文件是如何编码如何复用（如何合并各种数据流）的,以此来确定把什么element放到pipeline里面。
 
 ```shell
 $ gst-discoverer-1.0 https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm -v
 ```
 
-使用`gst-discover-1.0 --help`获得可选项。
+使用`gst-discoverer-1.0 --help`获得可选项。
 
 [Basic tutorial 9: Media information gathering](https://gstreamer.freedesktop.org/documentation/tutorials/basic/media-information-gathering.html)中的GstDiscover对象封装了该工具。
-
-#### 在命令行下创建一个管道
-
-
-
-#### 找出一个元件的Caps
-
-
-
-#### 发现一个媒体文件的内部结构
-
-
 
 ## 手动构建一个管道
 
@@ -993,6 +1136,8 @@ GStreamer支持多线程！
 ## 参考
 
 1. [官方安装教程：Installing on Linux](https://gstreamer.freedesktop.org/documentation/installing/on-linux.html) 如果失败请移步 [在Ubuntu上运行GStreamer](https://blog.csdn.net/sinat_41559158/article/details/80524915)
-2. [官方基础教程]() 如果看不懂请移步 [中文版教程集合](https://uzzz.org/2018/03/24/04faa85307086290e8a59b3b21927b70.html)
-3. [GStreamer学习](http://blog.iotwrt.com/media/2017/11/17/gstreamer-study/)
+2. [官方基础教程](https://gstreamer.freedesktop.org/documentation/tutorials/basic/hello-world.html) 如果看不懂请移步 [中文版教程集合](https://uzzz.org/2018/03/24/04faa85307086290e8a59b3b21927b70.html)
+3. [GStreamer Core Reference Manual](https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/)
+4. [GStreamer学习](http://blog.iotwrt.com/media/2017/11/17/gstreamer-study/)
+5. [基于Gstreamer的实时视频流的分发](https://blog.csdn.net/sdjhs/article/details/51444934)
 
