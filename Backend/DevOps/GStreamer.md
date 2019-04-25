@@ -37,13 +37,125 @@ GStreamer-1.0 框架架构：
 
 ##### rtspsrc
 
-基于RTSP（RFC 2326）协议接收网络上的数据。
+通过SDP（Session Description Protocal，会话描述协议）建立与IPC（Information Processing Center，信息处理中心，一般指RTSP Server）的RTSP Session连接，接收RTP  stream，然后不做任何处理直接将RTP packet通过PUSH模式传送给下游模块。
 
 只能接收`application/x-rtp`和`application/x-rdt`类型的数据。
+
+###### Element Properties
+
+- protocols：选择低层的传输协议：
+
+  ```shell
+  Default: 0x00000007, "tcp+udp-mcast+udp"
+  (0x00000000): unknown          - GST_RTSP_LOWER_TRANS_UNKNOWN
+  (0x00000001): udp              - GST_RTSP_LOWER_TRANS_UDP
+  (0x00000002): udp-mcast        - GST_RTSP_LOWER_TRANS_UDP_MCAST
+  (0x00000004): tcp              - GST_RTSP_LOWER_TRANS_TCP
+  (0x00000010): http             - GST_RTSP_LOWER_TRANS_HTTP
+  (0x00000020): tls              - GST_RTSP_LOWER_TRANS_TLS
+  ```
+
+- retry：是否支持丢包重传机制：
+
+  ```shell
+  Max number of retries when allocating RTP ports.
+  flags: readable, writable
+  Unsigned Integer. Range: 0 - 65535 Default: 20
+  ```
+
+- 
+
+###### Element Signals
+
+- ‘on-sdp’：一旦接收到SDP消息，就发送该信号，调用绑定的自定义函数；
+
+  ```c
+  void user_function (GstElement* object,
+                      GstSDPMessage* arg0,
+                      gpointer user_data);
+  ```
+
+- ‘handle-request’：让应用层处理IPC的request和response；
+
+  ```c
+  void user_function (GstElement* object,
+                      gpointer arg0,
+                      gpointer arg1,
+                      gpointer user_data);
+  ```
+
+- ‘select-stream’：每次GStreamer对接收到的stream设定Caps时，就发送该信号，调用绑定的自定义函数；
+
+  ```c
+  gboolean user_function (GstElement* object,
+                          guint arg0,
+                          GstCaps* arg1,
+                          gpointer user_data);
+  ```
+
+  
 
 ##### v4l2src
 
 从Video4Linux2 设备中读取帧（试验了一下可以从电脑自带的摄像头中读取数据）。
+
+##### appsrc
+
+作为管道的入口，允许将应用程序缓冲区的内容传送到管道中。
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      ANY
+```
+
+###### Element Properties
+
+```shell
+3.2.1  Appsrc
+
+模块功能：做为Pipeline的开始节点，允许应用程序往Pipeline“喂送”数据。
+
+ 
+
+模块控制参数：
+
+block: 每块推送buffer块的最大字节；
+
+current-level-bytes：当前队列的大小；
+
+is-live：当前推送的是否直播数据；
+
+max-bytes：缓存队列的最大容量；
+
+max-latency：流数据在该模块的最大延迟时间；
+
+min-latency：流数据在该模块的最小延迟时间；该值设为-1表示无延时发送。
+
+min-percent：设定队列缓存数据的比例，当缓存数据小于该值时appsrc向pipeline发出“need data”信号；
+
+size：流媒体数据的字节数，一般用-1表示未知；
+
+stream-type：流媒体类型，GST_APP_STREAM_TYPE_STREAM表示实时数据不支持seeking操作；
+
+ 
+
+注册的信号：
+
+“need data”：每当appsrc的Buffer需要数据时，该信号会被抛出，回调函数被触发；
+
+“enough data”：每当appsrc的buffer即将溢出时，该信号会被抛出，回调函数被触发；
+
+ 
+
+注册的接口：
+
+“push buffer”: 应用程序需要往往appsrc喂数据，该接口可以被调用；
+```
 
 #### filter
 
@@ -87,23 +199,323 @@ GStreamer-1.0 框架架构：
 
 允许应用程序访问原始缓冲器（raw buffer）。
 
-![1556106916176](assets/1556106916176.png)
+```shell
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      ANY
+```
+
+##### glimagesink
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      video/x-raw(memory:GLMemory, meta:GstVideoOverlayComposition)
+                 format: { RGBA, BGRA, RGBx, BGRx, ARGB, ABGR, xRGB, xBGR, RGB, BGR, RGB16, BGR16, AYUV, I420, YV12, NV12, NV21, YUY2, UYVY, Y41B, Y42B, Y444, GRAY8, GRAY16_LE, GRAY16_BE }
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+      video/x-raw(memory:EGLImage, meta:GstVideoOverlayComposition)
+                 format: RGBA
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+      video/x-raw(memory:SystemMemory, meta:GstVideoOverlayComposition)
+                 format: { RGBA, BGRA, RGBx, BGRx, ARGB, ABGR, xRGB, xBGR, RGB, BGR, RGB16, BGR16, AYUV, I420, YV12, NV12, NV21, YUY2, UYVY, Y41B, Y42B, Y444, GRAY8, GRAY16_LE, GRAY16_BE }
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+      video/x-raw(meta:GstVideoGLTextureUploadMeta, meta:GstVideoOverlayComposition)
+                 format: RGBA
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+      video/x-raw(memory:GLMemory)
+                 format: { RGBA, BGRA, RGBx, BGRx, ARGB, ABGR, xRGB, xBGR, RGB, BGR, RGB16, BGR16, AYUV, I420, YV12, NV12, NV21, YUY2, UYVY, Y41B, Y42B, Y444, GRAY8, GRAY16_LE, GRAY16_BE }
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+      video/x-raw(memory:EGLImage)
+                 format: RGBA
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+      video/x-raw
+                 format: { RGBA, BGRA, RGBx, BGRx, ARGB, ABGR, xRGB, xBGR, RGB, BGR, RGB16, BGR16, AYUV, I420, YV12, NV12, NV21, YUY2, UYVY, Y41B, Y42B, Y444, GRAY8, GRAY16_LE, GRAY16_BE }
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+      video/x-raw(meta:GstVideoGLTextureUploadMeta)
+                 format: RGBA
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+              framerate: [ 0/1, 2147483647/1 ]
+```
 
 #### plugin
 
 ##### rtph264depay
 
-从RTP包中抽取`H264`视频。
+接收RTP包，并遵循RFC 3984规范从RTP包中抽取`H264`视频。
 
-sink：x-rtp
+###### Pad Templates
 
-source：x-h264
+```shell
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      application/x-rtp
+                  media: video
+             clock-rate: 90000
+          encoding-name: H264
+
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      video/x-h264
+          stream-format: avc
+              alignment: au
+      video/x-h264
+          stream-format: byte-stream
+              alignment: { nal, au }
+```
 
 ##### mpegtsmux
 
 将多路媒体流合并为MPEG传输流。
 
-![1556106656276](assets/1556106656276.png)
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'sink_%d'
+    Availability: On request
+      Has request_new_pad() function: 0x7fa3a290d980
+    Capabilities:
+      video/mpeg
+                 parsed: true
+            mpegversion: { 1, 2, 4 }
+           systemstream: false
+      video/x-dirac
+      video/x-h264
+          stream-format: byte-stream
+              alignment: { au, nal }
+      video/x-h265
+          stream-format: byte-stream
+              alignment: { au, nal }
+      audio/mpeg
+                 parsed: true
+            mpegversion: { 1, 2 }
+      audio/mpeg
+                 framed: true
+            mpegversion: 4
+          stream-format: adts
+      audio/mpeg
+            mpegversion: 4
+          stream-format: raw
+      audio/x-lpcm
+                  width: { 16, 20, 24 }
+                   rate: { 48000, 96000 }
+               channels: [ 1, 8 ]
+          dynamic_range: [ 0, 255 ]
+               emphasis: { false, true }
+                   mute: { false, true }
+      audio/x-ac3
+                 framed: true
+      audio/x-dts
+                 framed: true
+      audio/x-opus
+               channels: [ 1, 8 ]
+        channel-mapping-family: { 0, 1 }
+      subpicture/x-dvb
+      application/x-teletext
+      meta/x-klv
+                 parsed: true
+
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      video/mpegts
+           systemstream: true
+             packetsize: { 188, 192 }
+```
+
+###### Element Properties
+
+| name      | des                                                          |
+| --------- | ------------------------------------------------------------ |
+| m2ts-mode | Set to TRUE to output Blu-Ray disc format with 192 byte packets. FALSE for standard TS format with 188 byte packets.<br/>flags: readable, writable<br/>
+Boolean. Default: false |
+
+##### tsdemux
+
+mpegtsmux的逆操作，把ts包恢复成mpeg2格式。
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      video/mpegts
+           systemstream: true
+
+  SRC template: 'video_%04x'
+    Availability: Sometimes
+    Capabilities:
+      video/mpeg
+            mpegversion: { 1, 2, 4 }
+           systemstream: false
+      video/x-h264
+          stream-format: byte-stream
+              alignment: nal
+      video/x-h265
+          stream-format: byte-stream
+              alignment: nal
+      video/x-dirac
+      video/x-cavs
+      video/x-wmv
+             wmvversion: 3
+                 format: WVC1
+
+  SRC template: 'audio_%04x'
+    Availability: Sometimes
+    Capabilities:
+      audio/mpeg
+            mpegversion: 1
+      audio/mpeg
+            mpegversion: 2
+          stream-format: adts
+      audio/mpeg
+            mpegversion: 4
+          stream-format: loas
+      audio/x-lpcm
+                  width: { 16, 20, 24 }
+                   rate: { 48000, 96000 }
+               channels: [ 1, 8 ]
+          dynamic_range: [ 0, 255 ]
+               emphasis: { false, true }
+                   mute: { false, true }
+      audio/x-ac3
+      audio/x-eac3
+      audio/x-dts
+      audio/x-opus
+      audio/x-private-ts-lpcm
+
+  SRC template: 'subpicture_%04x'
+    Availability: Sometimes
+    Capabilities:
+      subpicture/x-pgs
+      subpicture/x-dvd
+      subpicture/x-dvb
+
+  SRC template: 'private_%04x'
+    Availability: Sometimes
+    Capabilities:
+      ANY
+```
+
+##### h264parse
+
+解析H.264流。
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      video/x-h264
+
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      video/x-h264
+                 parsed: true
+          stream-format: { avc, avc3, byte-stream }
+              alignment: { au, nal }
+```
+
+###### Element Properties
+
+- disable_passthrough: 
+  - 为True表示强制按照H.264规范解析输入数据，主要是针对一些不被信任的输入数据；
+  - 为False表示根据标准行为去解析或不解析输入数据，一般选择False；
+- config-interval:发送PPS,SPS的时间间隔（SPS会被复用在数据流中）；
+
+##### rtph264pay
+
+把H.264视频编码进RTP包中（遵循RFC3984）。
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      video/x-h264
+          stream-format: avc
+              alignment: au
+      video/x-h264
+          stream-format: byte-stream
+              alignment: { nal, au }
+
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      application/x-rtp
+                  media: video
+                payload: [ 96, 127 ]
+             clock-rate: 90000
+          encoding-name: H264
+```
+
+##### rtpbin
+
+RTP bin。模块功能：rtpsession + rtpjitterbuffer + rtprtxsend + rtprtxreceive。
+
+rtpsession:建立rtp session 并分配SSRC，接收发送RTP包，调度发送接收RTCP包，实现了RFC3550；以上行为需要基于RTSP Session的协商结果。
+
+rtpjitterbuffer：缓存数据流，根据配置等待需要重传的RTP包，并及时察觉未收到的RTP包触发rtpsession发送FBNACK(RFC4585),发送重传事件给 rptreceive；
+
+rtprtxsend：按照配置保存一定量的RTP包，收到rtpsession的重传指示，查找目标RTP包按照RFC4588的规范重新发送；
+
+rtprtxreceive：根据从rtpjitterbuffer接受到的重传指示，按照RFC4588的要求，把重传流的SSRC2映射到主数据流SSRC1(RFC 4588)，把数据包交给下游的rtpjitterbuffer。
+
+##### avdec_h264
+
+H.264解码器，将H264格式的流解码成各种格式的原始流。
+
+###### PadTemplates
+
+```shell
+Pad Templates:
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      video/x-raw
+                 format: { I420, YUY2, RGB, BGR, Y42B, Y444, YUV9, Y41B, GRAY8, RGB8P, I420, Y42B, Y444, UYVY, NV12, NV21, ARGB, RGBA, ABGR, BGRA, GRAY16_BE, GRAY16_LE, A420, RGB16, RGB15, I420_10BE, I420_10LE, I422_10BE, I422_10LE, Y444_10BE, Y444_10LE, GBR, GBR_10BE, GBR_10LE, A420_10BE, A420_10LE, A422_10BE, A422_10LE, A444_10BE, A444_10LE }
+
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      video/x-h264
+              alignment: au
+          stream-format: { avc, byte-stream }
+
+```
+
+
 
 ### 元件状态
 
@@ -1133,11 +1545,97 @@ $ gcc basic-tutorial-6.c -o basic-tutorial-6 `pkg-config --cflags --libs gstream
 
 GStreamer支持多线程！
 
+## GStreamer对RTP和RTSP的支持
+
+参考：
+
+1. [RTP and RTSP support](https://gstreamer.freedesktop.org/documentation/rtp.html)
+2. [GStreamer/gst-rtsp-server releases](https://github.com/GStreamer/gst-rtsp-server/releases)
+3. [GStreamer RTSP Server Reference Manual](https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gst-rtsp-server/html/)
+
+### GStreamer RTSP Server
+
+#### 创建RTSP Server
+
+gst-rtsp-server-1.8.1下载地址：[密码：6jnj](https://pan.baidu.com/s/1TMQyaBieSbAY2XM1cCEpkw)
+
+##### 编译gst-rtsp-server
+
+参考：[Jetson-tx1 编译gst-rtsp-server-1.8.1](https://blog.csdn.net/Chen_yingpeng/article/details/77884587?locationNum=11&fps=1)
+
+如果在编译gtk-doc的时候报`ImportError: No module named 'libxml2'`的错误，可以尝试使用`sudo update-alternatives --config python`命令将Python版本调至`2.7`再尝试`make -j4`。
+
+如果在安装gst-rtsp-server执行`./autogen.sh`的时候报`configure: No package 'gstreamer-plugins-base-1.0' found`的错误，可以尝试`sudo apt-get install libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev`
+
+```
+Ah, since Ubuntu separates binary and header packages, you need libgstreamer-plugins-base1.0-dev and libgstreamer-plugins-bad1.0-dev
+```
+
+##### 启动gst-rtsp-server
+
+参照`gst-rtsp-server根目录/examples/`下的例子（可以另起一个终端，输入`vlc rtsp://localhost:8554/test`）。
+
+```c
+#include <gst/gst.h>
+
+#include <gst/rtsp-server/rtsp-server.h>
+
+int
+main (int argc, char *argv[])
+{
+  GMainLoop *loop;
+  GstRTSPServer *server;
+  GstRTSPMountPoints *mounts;
+  GstRTSPMediaFactory *factory;
+
+  gst_init (&argc, &argv);
+
+  loop = g_main_loop_new (NULL, FALSE);
+
+  /* create a server instance */
+  server = gst_rtsp_server_new ();
+
+  /* get the mount points for this server, every server has a default object
+   * that be used to map uri mount points to media factories */
+  mounts = gst_rtsp_server_get_mount_points (server);
+
+  /* make a media factory for a test stream. The default media factory can use
+   * gst-launch syntax to create pipelines. 
+   * any launch line works as long as it contains elements named pay%d. Each
+   * element with pay%d names will be a stream */
+  factory = gst_rtsp_media_factory_new ();
+  gst_rtsp_media_factory_set_launch (factory,
+      "( videotestsrc is-live=1 ! x264enc ! rtph264pay name=pay0 pt=96 )");
+
+  gst_rtsp_media_factory_set_shared (factory, TRUE);
+
+  /* attach the test factory to the /test url */
+  gst_rtsp_mount_points_add_factory (mounts, "/test", factory);
+
+  /* don't need the ref to the mapper anymore */
+  g_object_unref (mounts);
+
+  /* attach the server to the default maincontext */
+  gst_rtsp_server_attach (server, NULL);
+
+  /* start serving */
+  g_print ("stream ready at rtsp://127.0.0.1:8554/test\n");
+  g_main_loop_run (loop);
+
+  return 0;
+}
+```
+
+### GStreamer RTSP Client
+
+核心组件为rtspsrc，是对RTSP Client的抽象。
+
+rtspsrc可以直接作为单例使用，也可以通过将playbin的uri属性设置为`rtsp://`来间接使用rtspsrc。
+
 ## 参考
 
 1. [官方安装教程：Installing on Linux](https://gstreamer.freedesktop.org/documentation/installing/on-linux.html) 如果失败请移步 [在Ubuntu上运行GStreamer](https://blog.csdn.net/sinat_41559158/article/details/80524915)
 2. [官方基础教程](https://gstreamer.freedesktop.org/documentation/tutorials/basic/hello-world.html) 如果看不懂请移步 [中文版教程集合](https://uzzz.org/2018/03/24/04faa85307086290e8a59b3b21927b70.html)
 3. [GStreamer Core Reference Manual](https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/)
-4. [GStreamer学习](http://blog.iotwrt.com/media/2017/11/17/gstreamer-study/)
+4. [GStreamer学习资源](http://blog.iotwrt.com/media/2017/11/17/gstreamer-study/)
 5. [基于Gstreamer的实时视频流的分发](https://blog.csdn.net/sdjhs/article/details/51444934)
-
