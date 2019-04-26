@@ -146,6 +146,18 @@ $ docker images
 
 如果你不指定一个镜像的版本标签，则默认使用latest版本。
 
+## 查看指定镜像信息
+
+```shell
+# 查看指定镜像简略信息
+$ docker images <image-id|image-name>
+
+# 查看指定镜像详细信息
+$ docker [image] inspect <image-id|image-name>
+```
+
+
+
 ## 为指定镜像创建容器并启动
 
 ```shell
@@ -211,6 +223,14 @@ $ docker top cnl
 ```shell
 # docker inspect [OPTIONS] <container-id|container-name> [<container-id|container-name>]
 $ docker inspect cnl
+```
+
+### 查看容器内部资源（包括封装的源码/配置）
+
+```shell
+# 启动容器 container-a
+
+docker exec -it <container-a-name> bash
 ```
 
 ## 结束容器

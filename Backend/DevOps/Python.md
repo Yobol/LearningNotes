@@ -1,5 +1,38 @@
 # Python
 
+## 内置函数
+
+### enumerate()
+
+enumerate()函数用于将一个可遍历的数据对象（如列表/元组/字符串）组合为一个索引序列，同时列出数据和数据下标，一般用在for循环中。
+
+Python 2.3 以上可用，2.6以上添加start参数。
+
+#### 语法
+
+```python
+# sequence - 一个序列，迭代器或其他支持迭代的对象
+# start - 下标起始地址
+enumerate(sequence[, start=0])
+```
+
+#### 示例
+
+```python
+seq = ['one', 'two', 'three']
+for i, element in enumerate(seq):
+	print(str(i) + " " + element)
+
+    
+#########
+0 one
+1 two
+2 three
+########
+```
+
+
+
 ## 附录
 
 ### Python语言规范

@@ -41,7 +41,7 @@ from gi.repository import Gst
 
 ![1556001352290](assets/1556001352290.png)
 
-## 元件
+## 元件（Gst.Element）
 
 ### 创建元件
 
@@ -91,7 +91,35 @@ source = Gst.ElementFactory.make('videotestsrc', 'source')
 source.set_property('pattern', 10)
 ```
 
-## 管道
+### 获取衬垫
+
+```python
+# 衬垫是和元件绑定的
+# 根据name（如'sink'或'src'）获取已经存在的衬垫，存在则返回Gst.Pad，不存在则返回None
+element.get_static_pad(name)
+```
+
+### [绑定`pad-added`信号](https://lazka.github.io/pgi-docs/#Gst-1.0/classes/Element.html#Gst.Element.signals.pad_added)
+
+```python
+# 为'pad-added'信号绑定自定义函数
+# 当new_pad被添加到element时， 'pad-added'信号将会从流线程的上下文中发出
+element.connect('pad-added', on_pad_added)
+
+# 自定义处理函数
+def on_pad_add(element, new_pad):
+    # your handling process
+    element.link(sink_element.get_static_pad('sink'))
+```
+
+### 连接衬垫
+
+```python
+# 为源元件的源衬垫和接收元件的接收衬垫添加连接
+source_element_src_pad.link(src_element_sink_pad)
+```
+
+## 管道（Gst.Pipeline）
 
 ### 创建管道
 
@@ -104,7 +132,16 @@ player = Gst.Pipeline.new('pipeline-name')
 
 ```python
 # 往管道中添加指定元件
+# 继承自Gst.Bin
 pipeline.add(element)
+```
+
+### 获取元件
+
+```python
+# 从管道中根据name获取元件
+# 继承自Gst.Bin
+pipeline.get(name)
 ```
 
 ### 连接元件
@@ -121,10 +158,9 @@ source_element.link(sink_element)
 ### 设置管道状态
 
 ```python
+# 可以将管道的状态设置为Gst.State.<NULL|READY|PLAYING|PAUSED>
 pipeline.set_state(Gst.State)
 ```
-
-
 
 ## 总线
 

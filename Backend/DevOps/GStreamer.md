@@ -258,6 +258,24 @@ Pad Templates:
               framerate: [ 0/1, 2147483647/1 ]
 ```
 
+##### rtmpsink
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      video/x-flv
+```
+
+###### Element Properties
+
+| name     | desc                                                         |
+| -------- | ------------------------------------------------------------ |
+| location | RTMP url(`rtmp://ip_addr:port/path`)<br/>flags: readable, writable<br/>String. Default: null |
+
 #### plugin
 
 ##### rtph264depay
@@ -349,11 +367,11 @@ Pad Templates:
 
 ###### Element Properties
 
-| name      | des                                                          |
-| --------- | ------------------------------------------------------------ |
-| m2ts-mode | Set to TRUE to output Blu-Ray disc format with 192 byte packets. FALSE for standard TS format with 188 byte packets.<br/>flags: readable, writable<br/>
-Boolean. Default: false |
 
+
+| name      | desc                                                         |
+| --------- | ------------------------------------------------------------ |
+| m2ts-mode | Set to TRUE to output Blu-Ray disc format with 192 byte packets. FALSE for standard TS format with 188 byte packets.<br/>flags: readable, writable<br/>Boolean. Default: false |
 ##### tsdemux
 
 mpegtsmux的逆操作，把ts包恢复成mpeg2格式。
@@ -513,6 +531,64 @@ Pad Templates:
               alignment: au
           stream-format: { avc, byte-stream }
 
+```
+
+##### flvmux
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'video'
+    Availability: On request
+      Has request_new_pad() function: gst_flv_mux_request_new_pad
+    Capabilities:
+      video/x-flash-video
+      video/x-flash-screen
+      video/x-vp6-flash
+      video/x-vp6-alpha
+      video/x-h264
+          stream-format: avc
+
+  SINK template: 'audio'
+    Availability: On request
+      Has request_new_pad() function: gst_flv_mux_request_new_pad
+    Capabilities:
+      audio/x-adpcm
+                 layout: swf
+               channels: { 1, 2 }
+                   rate: { 5512, 11025, 22050, 44100 }
+      audio/mpeg
+            mpegversion: 1
+                  layer: 3
+               channels: { 1, 2 }
+                   rate: { 5512, 8000, 11025, 22050, 44100 }
+                 parsed: true
+      audio/mpeg
+            mpegversion: { 4, 2 }
+          stream-format: raw
+      audio/x-nellymoser
+               channels: { 1, 2 }
+                   rate: { 5512, 8000, 11025, 16000, 22050, 44100 }
+      audio/x-raw
+                 format: { U8, S16LE }
+                 layout: interleaved
+               channels: { 1, 2 }
+                   rate: { 5512, 11025, 22050, 44100 }
+      audio/x-alaw
+               channels: { 1, 2 }
+                   rate: { 5512, 11025, 22050, 44100 }
+      audio/x-mulaw
+               channels: { 1, 2 }
+                   rate: { 5512, 11025, 22050, 44100 }
+      audio/x-speex
+               channels: 1
+                   rate: 16000
+
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      video/x-flv
 ```
 
 
