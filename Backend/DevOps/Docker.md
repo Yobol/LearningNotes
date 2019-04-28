@@ -229,8 +229,10 @@ $ docker inspect cnl
 
 ```shell
 # 启动容器 container-a
+$ docker exec -it <container-a-name> bash
 
-docker exec -it <container-a-name> bash
+# 退出
+exit
 ```
 
 ## 结束容器
@@ -295,9 +297,7 @@ $ docker rmi nginx
 
 ## docker-compose
 
-### 安装
-
-官方文档：[Install Docker Compose](https://docs.docker.com/compose/install/)。
+### [安装](https://docs.docker.com/compose/install/)
 
 [Docker及相关资源的国内高速镜像](http://get.daocloud.io/)
 
@@ -317,19 +317,86 @@ $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 当下载失败时，换个版本试试！！！
 
-### Get Started
-
-官方文档：[Docker Compose Get started](https://docs.docker.com/compose/gettingstarted/)
+### [Get started](https://docs.docker.com/compose/gettingstarted/)
 
 ### CLI
 
 官方文档：[Compose command-line reference](https://docs.docker.com/compose/reference/)
 
-启动
+#### 启动
+
+```shell
+# -d表示后台运行
+$ docker-compose up -d
+```
+
+#### 查看容器运行情况
+
+```shell
+$ docker-compose ps
+```
+
+#### 关闭
+
+```shell
+$ docker-compose down
+```
 
 ### docker-compose.yml
 
-官方文档：[Compose file version 3 reference](https://docs.docker.com/compose/compose-file/)
+`YAML（[/ˈjæməl/]，尾音类似camel）。`
+
+在`docker-compose.yml`文件`services`下的每一个service都对应一个`docker run`命令，因此其下的每一个配置选项都对应了所创建的docker容器实例的配置项，即`docker run <OPTIONS> IMAGE [COMMAND] [ARG...]`。
+
+在Dockerfile文件中指定的选项不用再在`docker-compose.yml`中指定。
+
+在`docker-compose.yml`同目录下创建`.env`文件，`使用VARIABLE_NAME=variable_value`来声明环境变量，然后使用`${VARIABLE_NAME}`来使用环境变量。
+
+[version 2](https://docs.docker.com/compose/compose-file/compose-file-v2/)
+
+```yaml
+# docker-compose version
+version: "2"
+services:
+  # define service
+  service-name:
+    # IMAGE
+    image: image-name
+    # --name <container-name>
+    container_name: container-name
+    # 描述服务之间的依赖关系，有如下两个作用：
+    #   1. docker-compose up 将以依赖顺序来启动服务，如启动web服务需要先启动db和redis服务
+    #   2. docker-compose up service-name 将自动包含service-name所有的依赖
+    #      如docker-compose up web 将会自动创建和启动db和redis
+    depends_on:
+      - service-name
+    # 指定主机端口和容器暴露端口的映射关系
+    # -p <host-port:container-port>
+    # -P <container-port>
+    ports:
+      - "host-port:container-port"
+    # --net <bridge|host|none|service: service-name|container: container-name>
+    network_node: bridge|host|none|service: service-name|container: container-name
+    # 添加环境变量
+    # 当环境变量值为true/false时，需要使用'true|false'来防止Ymal将其解析为True|False
+    environment: 
+      key1: value1
+      key2: value2
+    # 挂载主机（host）文件夹或命名卷（named volumes），需要以顶级卷键指定命名卷
+    # 可以使用相对路径来指定主机上的目录，但是需要记住：相对路径必须以.或者..开头
+    # 短语法使用 [source:]target[:mode] 格式
+    #   - source可以是主机路径，也可以是一个卷名；
+    #   - target是source对应的容器地址；
+    #   - mode 可以是ro（read-only），也可以是rw（read-write, default）
+    # 长语法，balabala
+    volumes: 
+      ./data/xxx/xxx
+      ./log/xxx
+    # no策略是无论发生什么都不会重启容器，是默认的重启策略；
+    # always策略是无论发生什么都会重启容器；
+    # on-failure策略只有在容器的退出码为on-failure时才会重启容器。
+    restart: <no|always|on-failure>
+```
 
 ### 卸载
 
@@ -337,3 +404,105 @@ $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 $ sudo rm /usr/local/bin/docker-compose
 ```
 
+## Docker网络模式
+
+参考：[Docker网络模式](http://dockone.io/article/1261)
+
+Docker容器运行在一台宿主机（host）上，可以是一台物理机，也可以是一台虚拟机。
+
+宿主机上运行了Docker的daemon进程和客户端，一方面可以和Docker registry（Docker Repositories）交互，另一方面可以启动、关闭和审查容器。（下图为简单的Docker单主机架构）
+
+![01.png](assets/bbd6d8b6ca1556f737b452b72d105c78.png)
+
+### 两种数据交换方式的比较
+
+#### 共享卷（Shared Volumes）
+
+- 优点：使用方式方便简单；数据传输速度快；
+- 缺点：数据的发送/获取端紧耦合，很难将单主机部署转化为多部署。
+
+因此，在大多数单主机部署中，通常使用共享卷来作为数据共享的方式。
+
+#### 网络（Network）
+
+在多主机部署中，需要使用网络来共享数据。使用多主机部署，可能是因为：
+
+1. 单主机能力有限（宿主机上容器的平均数量10～40和最大数量250）；
+2. 需部署分布式系统。
+
+### bridge（桥接模式）
+
+在该模式下，Docker守护进程创建了一个虚拟以太网桥`docker0`，附加在其上的任何网卡之间都能自动转发数据包。
+
+默认情况下，守护进程会创建一对对等接口，将其中一个接口设置为容器的`eth0`接口，另一个接口放置在宿主机的命名空间中，从而使得宿主机上的容器能够连接到宿主机的内部网络上。
+
+同时，守护进程还会从网桥的私有地址空间中分配（系统随机或者自己指定）一个IP地址和子网给该容器。
+
+```shell
+# 指定容器的网络模式为桥接模式
+$ docker run -d -P --net=bridge <image-id|image-name>
+
+# bridge模式是Docker默认的网络模式，因此也可以省略--net=bridge
+$ docker run -d -P <image-id|image-name>
+
+# 示例
+$ docker run -d -P --net=bridge nginx:1.9.1
+$ docker ps
+CONTAINER ID   IMAGE                  COMMAND    CREATED
+STATUS         PORTS                  NAMES
+17d447b7425d   nginx:1.9.1            nginx -g   19 seconds ago
+Up 18 seconds  0.0.0.0:49153->443/tcp,
+                          0.0.0.0:49154->80/tcp  trusting_feynman
+```
+
+![02.png](assets/b04b20bc12982a536ca9a35f6d5cca23.png)
+
+`注：如果你没有使用-P发布该容器暴露的所有端口或者使用-p发布特定的端口，IP数据包就不能从宿主机之外传送到容器中。`
+
+### host（主机模式）
+
+在该模式下，Docker的网络隔离机制将被禁用，也就意味着容器将共享宿主机的网络命名空间，而直接暴露在公共网络中。因此，我们可以通过端口映射（port mapping）进行协调。
+
+```shell
+# 以host网络模式以ubuntu:16.04镜像启动容器
+$ docker run -d --net=host ubuntu:16.04 tail -f /dev/null
+
+# 结果应该是容器和宿主机具有相同的IP地址
+```
+
+![03.png](assets/5d7564e6eb8554412bd74e6772a336b4.png)
+
+`注：当使用了host网络模式时，容器实际上会继承宿主机的IP地址。该模式比bridge模式更快，因为没有路由开销，但是该模式将容器直接暴露在公共网络中，是有安全隐患的。`
+
+### container（容器模式）
+
+在该模式下，容器会重用另一个容器的网络命名空间，适用于需要自定义网络栈的情况。
+
+`注：k8s使用该网络模式。`
+
+```shell
+# 使用指定的容器的IP地址
+$ docker run -d -P --net=container:<another-docker> IMAGE
+```
+
+`注：container网络模式使得创建的容器和指定的容器拥有相同的IP地址。`
+
+### none（无网络模式）
+
+在该模式下，容器的网络模式被禁用。该模式将容器放置在它自己的网络栈中，但是不进行任何配置。实际上，该模式关闭了容器的网络功能，适用于以下两种情况：
+
+1. 容器并不需要使用网络；
+2. 希望自定义网络栈。
+
+```shell
+$ docker run -d -P --net=none IMAGE
+
+$ docker inspect CONTAINER | grep IPAddress
+###########################################
+"SecondaryIPAddresses": null,
+            "IPAddress": "",
+                    "IPAddress": "",
+###########################################
+```
+
+`注：使用这种模式，将没有任何网络配置。`

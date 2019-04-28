@@ -276,6 +276,50 @@ Pad Templates:
 | -------- | ------------------------------------------------------------ |
 | location | RTMP url(`rtmp://ip_addr:port/path`)<br/>flags: readable, writable<br/>String. Default: null |
 
+##### splitmuxsink
+
+是一个包含（）的bin，用于将输入流复用（mux）到多个按时间/大小分块的文件中。
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'subtitle_%u'
+    Availability: On request
+      Has request_new_pad() function: gst_splitmux_sink_request_new_pad
+    Capabilities:
+      ANY
+
+  SINK template: 'audio_%u'
+    Availability: On request
+      Has request_new_pad() function: gst_splitmux_sink_request_new_pad
+    Capabilities:
+      ANY
+
+  SINK template: 'video'
+    Availability: On request
+      Has request_new_pad() function: gst_splitmux_sink_request_new_pad
+    Capabilities:
+      ANY
+```
+
+###### Element Properties
+
+| name          | desc                                                         |
+| ------------- | ------------------------------------------------------------ |
+| max-size-time | 非0时表示按时间分段存储到文件中，每段跨越的时间长度，单位为ns。<br/>flags: readable, writable<br/>
+Unsigned Integer64. Range: 0 - 18446744073709551615 Default: 0 |
+| muxer         | 指定使用的muxer，默认是mp4mux，即文件输出格式为mp4。<br/>flags: readable, writable<br/>Object of type "GstElement" |
+
+###### Element Signals
+
+| signal          | desc                                                         |
+| --------------- | ------------------------------------------------------------ |
+| format-location | 当确定好输出格式之后，返回输出文件的地址<br/>gchararray user_function (GstElement* object,<br/>                                                 guint arg0,<br/>
+                                                 gpointer user_data); |
+
+
+
 #### plugin
 
 ##### rtph264depay
