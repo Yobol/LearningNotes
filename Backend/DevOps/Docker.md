@@ -2,14 +2,13 @@
 
 ## Registry & Reposity
 
-A registry is a collection of repositories, and a repository is a collection of
-images
+A registry is a collection of repositories, and a repository is a collection of images.
 
 ## Docker的优点
 
-- 平台无关，可移植；
-- 轻量，多个容器共享主机内核；
-- 灵活可扩展，一个镜像可以衍生出多个容器；
+- 平台无关，可移植：Docker将应用/软件打包成与平台无关的标准化单元/构件，每个容器包含会程序源码、运行时、系统工具、系统依赖库和其所需要的所有依赖，使得应用与具体平台解耦，便于快速、可靠地进行迁移；
+- 灵活可扩展，一个镜像可以衍生出多个容器：Docker是一个容器引擎，Docker会在需要时使用镜像实例化一个对应的容器，并且由Docker来运行该容器；
+- 轻量，多个容器共享主机内核：Docker与机器共享OS内核，能够有效降低服务器和许可开销，提高服务器效率；
 
 ## 查看Docker支持的指令
 

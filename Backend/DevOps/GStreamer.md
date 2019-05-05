@@ -157,6 +157,81 @@ stream-type：流媒体类型，GST_APP_STREAM_TYPE_STREAM表示实时数据不�
 “push buffer”: 应用程序需要往往appsrc喂数据，该接口可以被调用；
 ```
 
+##### splitmuxsrc
+
+用于读取由splitmuxsink创建的一系列文件。
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SRC template: 'video'
+    Availability: Sometimes
+    Capabilities:
+      ANY
+
+  SRC template: 'audio_%u'
+    Availability: Sometimes
+    Capabilities:
+      ANY
+
+  SRC template: 'subtitle_%u'
+    Availability: Sometimes
+    Capabilities:
+      ANY
+```
+
+###### Element Properties
+
+| name     | desc                                                         |
+| -------- | ------------------------------------------------------------ |
+| location | 要读取的文件的绝对地址，如file:///tmp/record/1556512099.mkv<br/>flags: readable, writable<br/>String. Default: null |
+
+#### encoder
+
+给媒体流按指定格式编码。
+
+##### x264enc
+
+将无编码的原始二进制文件编码成H264格式的视频文件。
+
+###### Pad Templates
+
+```shell
+Pad Templates:
+  SINK template: 'sink'
+    Availability: Always
+    Capabilities:
+      video/x-raw
+                 format: { I420, YV12, Y42B, Y444, NV12, I420_10LE, I422_10LE, Y444_10LE }
+              framerate: [ 0/1, 2147483647/1 ]
+                  width: [ 16, 2147483647 ]
+                 height: [ 16, 2147483647 ]
+
+  SRC template: 'src'
+    Availability: Always
+    Capabilities:
+      video/x-h264
+              framerate: [ 0/1, 2147483647/1 ]
+                  width: [ 1, 2147483647 ]
+                 height: [ 1, 2147483647 ]
+          stream-format: { avc, byte-stream }
+              alignment: au
+                profile: { high-4:4:4, high-4:2:2, high-10, high, main, baseline, constrained-baseline, high-4:4:4-intra, high-4:2:2-intra, high-10-intra }
+```
+
+###### Element Properties
+
+| name | decs                                                         |
+| ---- | ------------------------------------------------------------ |
+| tune | Preset name for non-psychovisual tuning options<br/>flags: readable, writable<br/>
+Flags "GstX264EncTune" Default: 0x00000000, "(none)"</br>
+           (0x00000001): stillimage       - Still image<br/>
+           (0x00000002): fastdecode       - Fast decode<br/>
+           (0x00000004): zerolatency      - Zero latency |
+
+
+
 #### filter
 
 从输入的数据流中剥离出符合需求的几路数据并输出。
@@ -278,7 +353,7 @@ Pad Templates:
 
 ##### splitmuxsink
 
-是一个包含（）的bin，用于将输入流复用（mux）到多个按时间/大小分块的文件中。
+是一个包含（）的bin，用于将输入流按时间/大小分块输出（mux，复用）到多个文件中。
 
 ###### Pad Templates
 
@@ -578,6 +653,8 @@ Pad Templates:
 ```
 
 ##### flvmux
+
+将一些指定格式的音/视频流转化为flv格式的视频流。
 
 ###### Pad Templates
 
@@ -1703,46 +1780,46 @@ Ah, since Ubuntu separates binary and header packages, you need libgstreamer-plu
 int
 main (int argc, char *argv[])
 {
-  GMainLoop *loop;
-  GstRTSPServer *server;
-  GstRTSPMountPoints *mounts;
-  GstRTSPMediaFactory *factory;
+    GMainLoop *loop;
+    GstRTSPServer *server;
+    GstRTSPMountPoints *mounts;
+    GstRTSPMediaFactory *factory;
 
-  gst_init (&argc, &argv);
+    gst_init (&argc, &argv);
 
-  loop = g_main_loop_new (NULL, FALSE);
+    loop = g_main_loop_new (NULL, FALSE);
 
-  /* create a server instance */
-  server = gst_rtsp_server_new ();
+    /* create a server instance */
+    server = gst_rtsp_server_new ();
 
-  /* get the mount points for this server, every server has a default object
-   * that be used to map uri mount points to media factories */
-  mounts = gst_rtsp_server_get_mount_points (server);
+    /* get the mount points for this server, every server has a default object
+           * that be used to map uri mount points to media factories */
+    mounts = gst_rtsp_server_get_mount_points (server);
 
-  /* make a media factory for a test stream. The default media factory can use
-   * gst-launch syntax to create pipelines. 
-   * any launch line works as long as it contains elements named pay%d. Each
-   * element with pay%d names will be a stream */
-  factory = gst_rtsp_media_factory_new ();
-  gst_rtsp_media_factory_set_launch (factory,
-      "( videotestsrc is-live=1 ! x264enc ! rtph264pay name=pay0 pt=96 )");
+    /* make a media factory for a test stream. The default media factory can use
+           * gst-launch syntax to create pipelines. 
+           * any launch line works as long as it contains elements named pay%d. Each
+           * element with pay%d names will be a stream */
+    factory = gst_rtsp_media_factory_new ();
+    gst_rtsp_media_factory_set_launch (factory,
+		"( videotestsrc is-live=1 ! x264enc ! rtph264pay name=pay0 pt=96 )");
 
-  gst_rtsp_media_factory_set_shared (factory, TRUE);
+    gst_rtsp_media_factory_set_shared (factory, TRUE);
 
-  /* attach the test factory to the /test url */
-  gst_rtsp_mount_points_add_factory (mounts, "/test", factory);
+    /* attach the test factory to the /test url */
+    gst_rtsp_mount_points_add_factory (mounts, "/test", factory);
 
-  /* don't need the ref to the mapper anymore */
-  g_object_unref (mounts);
+    /* don't need the ref to the mapper anymore */
+    g_object_unref (mounts);
 
-  /* attach the server to the default maincontext */
-  gst_rtsp_server_attach (server, NULL);
+    /* attach the server to the default maincontext */
+    gst_rtsp_server_attach (server, NULL);
 
-  /* start serving */
-  g_print ("stream ready at rtsp://127.0.0.1:8554/test\n");
-  g_main_loop_run (loop);
+    /* start serving */
+    g_print ("stream ready at rtsp://127.0.0.1:8554/test\n");
+    g_main_loop_run (loop);
 
-  return 0;
+    return 0;
 }
 ```
 
