@@ -46,3 +46,15 @@ echo '$uname \n' # $uname \n
 echo `date` # Fri Apr 19 10:07:34 CST 2019
 ```
 
+## vim命令
+
+```shell
+vim <file-name>
+```
+
+> file-name
+
+```
+:/<query-string>    # 定位到 query-string 所在的位置
+```
+

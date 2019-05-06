@@ -324,9 +324,17 @@ $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 #### 启动
 
+##### 启动所有服务
+
 ```shell
 # -d表示后台运行
 $ docker-compose up -d
+```
+
+##### 启动指定服务
+
+```shell
+$ docker-compose start <service-id|service-name>
 ```
 
 #### 查看容器运行情况
@@ -337,8 +345,16 @@ $ docker-compose ps
 
 #### 关闭
 
+##### 关闭所有服务
+
 ```shell
 $ docker-compose down
+```
+
+##### 关闭指定服务
+
+```shell
+$ docker-compose stop <service-id|service-name>
 ```
 
 ### docker-compose.yml

@@ -141,6 +141,12 @@ class OuterClass:
 | Function/Method Parameters | lower_with_under   |                                                              |
 | Local Variables            | lower_with_under   |                                                              |
 
+### 更新pip
+
+```shell
+$ python -m pip install --upgrade pip
+```
+
 ### 在Ubuntu下管理Python
 
 #### 查看Ubuntu下Python当前使用的版本
