@@ -318,15 +318,12 @@ $ python route_guide_server.py
        # statements
    ```
 
-   
 
 ### 运行客户端
 
 ```shell
 $ python route_guide_client.py
 ```
-
-
 
 ## 参考
 

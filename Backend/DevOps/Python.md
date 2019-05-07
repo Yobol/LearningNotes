@@ -1,5 +1,102 @@
 # Python
 
+## 基础语法
+
+## 高级语法
+
+### yield
+
+使所在函数的返回值为一个迭代器对象。
+
+```python
+def yield_generate_iterator() {
+    yield 1
+    yield 2
+    yield 3
+    for i in range(4, 10):
+    	yield i
+}
+
+if __name__ == '__main__':
+    yield_iterator =  yield_generate_iterator()
+    for i in yield_iterator:
+        print(i, end=' ')
+        
+########################
+#########Output#########
+1 2 3 4 5 6 7 8 9
+########################
+```
+
+### with
+
+**用法**
+
+with语句适用于对资源进行访问的场合，确保不管使用过程中是否发生异常都会执行必要的“清理”操作，释放资源。
+
+可以替代`try...catch...finally...`语句，减少冗长，自动处理上下文环境产生的异常。
+
+```python
+# 使用try...catch...finally...完成文件读操作
+try:
+    file_a = open('a.txt', 'r')
+    data_a = file.read()
+    print(data_a)
+    
+    file_b = open('b.txt', 'r')
+    data_b = file.read()
+    print(data_b)
+except IOError:
+    print('Fail to open')
+finally:
+    file_a.close()
+    file_b.close()
+
+# 使用with完成两个文件的读操作
+with open('a.txt', 'r') as file_a， open('b.txt', 'r') as file_b:
+    data_a = file_a.read()
+    print(data_a)
+    
+    data_b = file_b.read()
+    print(data_b)
+```
+
+**原理**
+
+1. 紧跟在`with`后面语句被求值后，将调用返回对象的`__enter__()`方法，该方法的返回值将被赋值给`as`后面的变量；
+2. 当with中的代码块全部被执行完后，将调用前面返回对象的`__exit__()方法`。
+
+```python
+class Sample():
+    
+    def __enter__(self):
+        print('_enter__')
+        return 'foo'
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        :param exc_type: 错误的类型
+        :param exc_val: 错误类型对应的值
+        :param exc_tb: 代码中发生错误的位置
+        """
+        print('__exit__')
+        
+def get_sample():
+    return Sample()
+
+if __name__ == '__main__':
+	with get_sample() as sample:
+        print('Sample: %s', sample)
+        
+########################
+__enter__
+Sample: foo
+__exit__
+########################
+```
+
+参考：[**Python 中 with用法及原理**](https://blog.csdn.net/u012609509/article/details/72911564)
+
 ## 内置函数
 
 ### enumerate()
@@ -30,8 +127,6 @@ for i, element in enumerate(seq):
 2 three
 ########
 ```
-
-
 
 ## 附录
 
@@ -94,8 +189,7 @@ class OuterClass(object):
     class InnerClass(object):
         pass
 
-
-
+    
 # error style
 class SampleClass:
 	pass
