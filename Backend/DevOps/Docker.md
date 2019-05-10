@@ -1,5 +1,9 @@
 # Docker
 
+## 安装
+
+[Install Docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce)
+
 ## Registry & Reposity
 
 A registry is a collection of repositories, and a repository is a collection of images.
@@ -92,7 +96,7 @@ $ sudo vim /etc/docker/daemon.json
 }
 
 # 重新启动Docker
-$ docker service restart
+$ service docker restart
 ```
 
 With insecure registries enabled, Docker goes through the following steps:
@@ -298,7 +302,7 @@ $ docker rmi nginx
 
 ### [安装](https://docs.docker.com/compose/install/)
 
-[Docker及相关资源的国内高速镜像](http://get.daocloud.io/)
+参考：[Docker及相关资源的国内高速镜像](http://get.daocloud.io/)
 
 ```shell
 # 下载Docker Compose 1.24.0版本，1.24.0 为版本号，可以替换成其他版本。

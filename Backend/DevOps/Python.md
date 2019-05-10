@@ -243,7 +243,26 @@ $ python -m pip install --upgrade pip
 
 ### 在Ubuntu下管理Python
 
-#### 查看Ubuntu下Python当前使用的版本
+#### 下载指定的版本
+
+```shell
+# 下载3.5版本
+$ sudo apt-get update
+$ sudo apt-get install python3.5
+
+# 查看版本信息
+$ sudo python3.5 -v
+
+# 配置环境变量
+# 1 需要根据系统update-alternatives --list python结果决定
+# update-alternatives --list python显示没有可供替代的python版本，就将该数字配置为1
+$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 0
+$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
+```
+
+参考：[安装Python 3.6 在Ubuntu 16.04 LTS 版本](https://blog.csdn.net/lzzyok/article/details/77413968)
+
+#### 查看当前使用的版本
 
 ```shell
 $ python -v
@@ -253,13 +272,13 @@ $ python -v
 $ which python
 ```
 
-#### 查看Ubuntu下安装的所有Python版本
+#### 查看安装的所有版本
 
 ```shell
 $ update-alternatives --list python
 ```
 
-#### 切换Ubuntu下默认使用的Python版本
+#### 切换默认使用的版本
 
 ```shell
 $ sudo update-alternatives --config python
