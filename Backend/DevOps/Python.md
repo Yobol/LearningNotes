@@ -235,6 +235,49 @@ class OuterClass:
 | Function/Method Parameters | lower_with_under   |                                                              |
 | Local Variables            | lower_with_under   |                                                              |
 
+### 在Ubuntu下管理Python
+
+#### 下载指定的版本
+
+```shell
+# 下载3.5版本
+$ sudo apt-get update
+$ sudo apt-get install python3.5
+
+# 查看版本信息
+$ sudo python3.5 -v
+
+# 配置环境变量
+# 1 需要根据系统update-alternatives --list python结果决定
+# update-alternatives --list python显示没有可供替代的python版本，就将该数字配置为1
+$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 0
+$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
+```
+
+参考：[安装Python 3.6 在Ubuntu 16.04 LTS 版本](https://blog.csdn.net/lzzyok/article/details/77413968)
+
+#### 查看当前使用的版本
+
+```shell
+$ python -v
+# 或者 python --version
+
+# 查看当前使用的Python对应的文件目录
+$ which python
+```
+
+#### 查看安装的所有版本
+
+```shell
+$ update-alternatives --list python
+```
+
+#### 切换默认使用的版本
+
+```shell
+$ sudo update-alternatives --config python
+```
+
 ### pip
 
 pip是Python包管理工具，提供的对Python包的查找，安装，更新和卸载功能。
@@ -314,46 +357,10 @@ $ pip3 list -o
 1. [Python pip 安装与使用](https://www.runoob.com/w3cnote/python-pip-install-usage.html)
 2. [pip documentation - installation](https://pip.pypa.io/en/stable/installing/)
 
-### 在Ubuntu下管理Python
+### unittest
 
-#### 下载指定的版本
 
-```shell
-# 下载3.5版本
-$ sudo apt-get update
-$ sudo apt-get install python3.5
 
-# 查看版本信息
-$ sudo python3.5 -v
+#### 参考
 
-# 配置环境变量
-# 1 需要根据系统update-alternatives --list python结果决定
-# update-alternatives --list python显示没有可供替代的python版本，就将该数字配置为1
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 0
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
-```
-
-参考：[安装Python 3.6 在Ubuntu 16.04 LTS 版本](https://blog.csdn.net/lzzyok/article/details/77413968)
-
-#### 查看当前使用的版本
-
-```shell
-$ python -v
-# 或者 python --version
-
-# 查看当前使用的Python对应的文件目录
-$ which python
-```
-
-#### 查看安装的所有版本
-
-```shell
-$ update-alternatives --list python
-```
-
-#### 切换默认使用的版本
-
-```shell
-$ sudo update-alternatives --config python
-```
-
+[The Python Standard Library - unittest](https://docs.python.org/3/library/unittest.html)

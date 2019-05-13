@@ -58,3 +58,15 @@ vim <file-name>
 :/<query-string>    # 定位到 query-string 所在的位置
 ```
 
+## 网络
+
+ifconfig
+
+route -n查看路由信息
+
+/data/thinger-svcmgr/remove_service:/thinger/etc/remote_service
+
+```
+echo '{"client_id":"hyf", "params":[{"id":"0", "type":"jpg", "data":"'`base64 -w 0 /home/hyf/hyf.jpg`'"}]}' | curl -H "Content-Type: application/json" -H "Expect:" -d @- http://172.16.30.3:7796/api/face_process
+```
+
