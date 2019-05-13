@@ -235,11 +235,84 @@ class OuterClass:
 | Function/Method Parameters | lower_with_under   |                                                              |
 | Local Variables            | lower_with_under   |                                                              |
 
-### 更新pip
+### pip
+
+pip是Python包管理工具，提供的对Python包的查找，安装，更新和卸载功能。
+
+#### 安装pip
 
 ```shell
-$ python -m pip install --upgrade pip
+# 下载安装脚本
+$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+
+# 运行安装脚本
+# 使用哪个版本的Python运行安装脚本，pip就被关联到哪个版本
+$ sudo python3 get-pip.py
 ```
+
+#### 查看当前pip版本
+
+```shell
+$ pip3 --verson
+```
+
+#### 更新pip
+
+```shell
+$ pip3 install -U pip
+```
+
+#### 安装包
+
+```shell
+$ pip3 install some-package 			# 最新版本
+$ pip3 install some-package==1.0.0 	# 指定版本
+$ pip3 install 'some-package>=1.0.0' # 最小版本
+```
+
+#### 更新包
+
+```shell
+# 升级指定的包，通过使用>=, >, ==, <, <=来指定版本
+$ pip3 install --upgrade some-package
+```
+
+#### 卸载包
+
+```shell
+$ pip3 uninstall some-package
+```
+
+#### 搜索包
+
+```shell
+$ pip3 search some-package
+```
+
+#### 查看指定包的详细信息
+
+```shell
+$ pip3 show -f some-package
+```
+
+#### 列出已安装的包
+
+```shell
+$ pip3 list
+```
+
+#### 查看可升级的包
+
+```shell
+$ pip3 list -o
+```
+
+#### 常用命令
+
+#### 参考
+
+1. [Python pip 安装与使用](https://www.runoob.com/w3cnote/python-pip-install-usage.html)
+2. [pip documentation - installation](https://pip.pypa.io/en/stable/installing/)
 
 ### 在Ubuntu下管理Python
 

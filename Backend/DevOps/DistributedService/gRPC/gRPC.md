@@ -30,7 +30,7 @@ RPC采用C/S模式，请求服务的终端为客户机，提供服务的终端�
 ## 安装
 
 ```shell
-# pip版本应该在9.0.1以上
+# 确保pip版本应该在9.0.1以上
 $ python -m pip install grpcio
 ```
 
