@@ -252,3 +252,4 @@ void fun4() {
 2. [Replace Nested Conditional with Guard Clauses - Martin Fowler](https://refactoring.com/catalog/replaceNestedConditionalWithGuardClauses.html)
 3. [Flattening Arrow Code](https://blog.codinghorror.com/flattening-arrow-code/)
 
+x
