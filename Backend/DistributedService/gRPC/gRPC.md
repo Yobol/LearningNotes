@@ -188,7 +188,7 @@ message RouteSummary {
 # -I <proto file folder>		指定 *.proto 文件所在目录
 # --python_out=. 				指定 *_pb2.py 文件输出目录
 # --grpc_python_out=.   		指定 *_pb2_grpc.py 文件输出目录
-# <protobuf file path>  		指定 *.proto 文件路径
+# <protobuf file path>  		指定 *.proto 文件路径，可指定多个proto文件，以空格相隔
 $ python -m grpc_tools.protoc -I ../../protos --python_out=. --grpc_python_out=. ../../protos/route_guide.proto
 ```
 

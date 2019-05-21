@@ -58,6 +58,14 @@ vim <file-name>
 :/<query-string>    # 定位到 query-string 所在的位置
 ```
 
+## 进程
+
+### 关闭进程
+
+```shell
+$ kill -9 PID
+```
+
 ## 网络
 
 ifconfig
