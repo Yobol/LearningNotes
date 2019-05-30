@@ -107,6 +107,16 @@ With insecure registries enabled, Docker goes through the following steps:
 
 参考：[Deploy a plain HTTP registry](https://docs.docker.com/registry/insecure/)
 
+## 加载本地镜像
+
+```shell
+# 加载镜像
+$ docker load -i ***.tar
+
+# 给镜像改名
+$ docker tag <image-id|image-name> <new-name>
+```
+
 ## 自定义镜像
 
 使用docker build命令创建镜像：
@@ -296,6 +306,9 @@ $ docker commit -m="webapp-v2" -a="yobol" 21cd4e52d620 yobol/webapp:v2
 ```shell
 # docker rmi <image-id|image-name>
 $ docker rmi nginx
+
+# 删除指定tag的镜像
+$ docker rmi -f <registry:tag>
 ```
 
 ## docker-compose

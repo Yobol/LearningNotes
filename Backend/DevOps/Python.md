@@ -357,6 +357,47 @@ $ pip3 list -o
 1. [Python pip 安装与使用](https://www.runoob.com/w3cnote/python-pip-install-usage.html)
 2. [pip documentation - installation](https://pip.pypa.io/en/stable/installing/)
 
+### os 目录/文件操作
+
+#### os.walk()
+
+**介绍**
+
+在目录树中向上或向下游走，帮助我们输出目录中的文件名。
+
+**语法**
+
+```python
+os.walk(top[, topdown=True[, onerror=None[, followlinks=False]]])
+```
+
+**参数**
+
+- **top** -- 是你所要遍历的目录的地址, 返回的是一个三元组(root,dirs,files)。
+  - root 所指的是当前正在遍历的这个文件夹的本身的地址
+  - dirs 是一个 list ，内容是该文件夹中所有的**目录的名字**(不包括子目录)
+  - files 同样是 list , 内容是该文件夹中所有的**文件的名字**(不包括子目录)
+- **topdown** --可选， 默认为True。当为 True时，则优先遍历 top 目录；否则优先遍历 top 的子目录。
+- **onerror** -- 可选，需要一个 callable 对象，当 walk 出现异常时，会调用。
+- **followlinks** -- 可选，如果为 True，则会遍历目录下的快捷方式(linux 下是软连接 symbolic link )实际所指的目录(默认关闭)，如果为 False，则优先遍历 top 的子目录。
+
+**返回值**
+
+要遍历目录及其下所有子目录的(root, dirs, files)元组列表。
+
+**示例**
+
+```python
+import os
+
+
+for root, dirs, files in os.walk('.', topdown=False):
+    for name in dirs:
+        print(os.path.join(root, name))
+    for name in files:
+        print(os.path.join(root, name))
+```
+
 ### unittest
 
 
