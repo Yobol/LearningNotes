@@ -34,6 +34,40 @@ $ mosquitto_pub -h localhost -t 'topic_name' -m 'message_body'
 $ mosqutto_sub -h localhost -t 'topic_name'
 ```
 
+## Python paho-mqtt
+
+### 安装
+
+#### 使用PyPi（Python Package Index）
+
+```shell
+$ pip install paho-mqtt
+```
+
+#### 使用virtualenv
+
+```shell
+virtualenv paho-mqtt
+source paho-mqtt/bin/activate
+pip install paho-mqtt
+```
+
+
+
+#### 编译源码
+
+```shell
+$ git clone https://github.com/eclipse/paho.mqtt.python
+$ cd pacho.mqtt.python
+$ python setup.py install
+```
+
+
+
+### 参考
+
+[Python MQTT客户端实现](https://blog.csdn.net/itas109/article/details/78873257)
+
 ## 参考
 
 [在ubuntu上安装，使用MQTT Mosquitto](https://blog.csdn.net/swedenfeng/article/details/53510048)
