@@ -398,9 +398,155 @@ for root, dirs, files in os.walk('.', topdown=False):
         print(os.path.join(root, name))
 ```
 
-### unittest
+### threading多线程
+
+threading是Python中常用的线程模块。
+
+> 多进/线程并发处理都能够提高任务处理效率：
+>
+> - IO密集型（不用CPU）：多线程；
+>
+> - 计算密集型（使用CPU）：多进程。
+
+#### 线程创建&启动
+
+```python
+import threading
+import time
+
+def run(a, b):
+    time.sleep(5)
+    print(a + b)
+
+# 创建线程
+t = threading.Thread(target=run, args=(12,13))
+# 启动线程
+t.start()
+```
+
+#### 线程销毁
+
+#### 线程间通信和同步
+
+##### threading.Thread.setDaemon(bool)
+
+在主线程A中，创建子线程B并调用了B.setDaemon(True)；那么表示B把主线程A设置为自己的守护线程，要是主线程A执行结束了，就不管子线程B是否完成，一并和主线程A退出。此外，还有个要特别注意的：必须在start() 方法调用之前设置，如果不设置为守护线程，主线程会被无限挂起，只有等待了所有子线程结束它才结束。
+
+```python
+t = threading.Thread(target=f, args=())
+# 默认情况下，主线程会等待所有子线程全部执行完毕后再结束
+t.setDaemon(True) # 主线程无需等待子线程，主线程结束则全部结束
+t.start()
+```
+
+##### threading.Thread.join([timeout])
+
+在主线程A中，创建子线程B并调用了B.join()；那么，主线程A会在调用的地方被阻塞，直到子线程B执行完毕后，才可以接着往下执行。Thread.join([timeout]) 里面的参数时可选的，代表线程运行的最大时间，即如果超过这个时间，不管这个此线程有没有执行完毕都会被回收，然后主线程或函数都会接着执行；如果线程执行时间小于参数表示的时间，则接着执行，不用一定要等待到参数表示的时间。
+
+```python
+t = threading.Thread(target=f, args=())
+# 默认情况下，主线程会和所有子线程抢占CPU执行，即主线程和子线程并发执行
+t.join() # 主线程会等待子线程执行完毕后再执行
+t.start()
+```
+
+##### threading.Event()
+
+```python
+import threading
+import time
 
 
+def do(event):
+    print('start')
+    event.wait()  # 红灯，所有线程执行都这里都在等待
+    print('end')
+
+
+event_obj = threading.Event()  # 创建一个事件
+for i in range(5):  # 创建5个线程
+    t = threading.Thread(target=do, args=(event_obj,))
+    t.start()
+
+time.sleep(1)
+
+data = input('是否让子线程继续执行(y/n)：')
+if data == 'y':
+    event_obj.set()  # 变绿灯
+```
+
+##### threading.Condition() 条件变量
+
+Condition被称为条件变量，除了提供与Lock类似的acquire和release方法外，还提供了wait，notify和notifyAll等方法。
+
+线程首先acquire一个条件变量，然后判断一些条件：
+
+- 如果条件不满足则wait；
+- 如果条件满足，进行一些处理改变条件后，通过notify通知其他线程，其他处于wait状态的线程接到通知后会重新判断条件，不断地重复这一过程，从而解决复杂的同步问题。
+
+可以认为Condition对象维护了一个锁（Lock/RLock）和一个waiting池。线程通过acquire获得Condition对象，当调用wait方法时，线程会释放Condition内部的锁并进入blocked状态，同时在waiting池中记录这个线程。当调用notify方法时，Condition对象会从waiting池中挑选出一个线程，通知其调用acquire方法尝试取到锁。
+
+Condition对象的构造函数可以接受一个Lock/RLock对象作为参数，如果没有指定，则会自行创建一个RLock。
+
+notifyAll方法会通知waiting池中的所有线程尝试acquire锁，防止有线程永远处于阻塞状态。
+
+```python
+import threading
+import time
+
+con = threading.Condition()
+counter = 0
+
+
+class Producer(threading.Thread):
+
+    def run(self):
+        while True:
+            global counter
+            if con.acquire():
+                if counter > 1000:
+                    con.wait()
+                else:
+                    counter += 100
+                    msg = threading.current_thread().name + ' produce 100, count = ' + str(counter)
+                    print(msg)
+                    con.notifyAll()
+                con.release()
+                time.sleep(1)
+
+
+class Consumer(threading.Thread):
+
+    def run(self):
+        global counter
+        while True:
+            if con.acquire():
+                if counter < 100:
+                    con.wait()
+                else:
+                    counter -= 30
+                    msg = threading.current_thread().name + ' consume 30, count = ' + str(counter)
+                    print(msg)
+                    con.notifyAll()
+                con.release()
+                time.sleep(3)
+
+
+if __name__ == '__main__':
+    p = Producer()
+    c = Consumer()
+    p.start()
+    c.start()
+```
+
+
+
+#### 参考
+
+1. [Python之threading多线程](https://www.cnblogs.com/xiaobeibei26/p/6481707.html)
+2. [Python Docs - threading](https://docs.python.org/3/library/threading.html)
+
+### unittest单元测试
 
 #### 参考
 

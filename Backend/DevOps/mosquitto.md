@@ -34,7 +34,7 @@ $ mosquitto_pub -h localhost -t 'topic_name' -m 'message_body'
 $ mosqutto_sub -h localhost -t 'topic_name'
 ```
 
-## Python paho-mqtt
+## Python [paho-mqtt](https://pypi.org/project/paho-mqtt/)
 
 ### 安装
 
@@ -42,17 +42,23 @@ $ mosqutto_sub -h localhost -t 'topic_name'
 
 ```shell
 $ pip install paho-mqtt
+# Question enhanced
+# WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None))
+# after connection broken by 'ReadTimeoutError("HTTPSConnectionPool(host='pypi.org', 
+# port=443): Read timed out. (read timeout=15)",)': /simple/paho-mqtt/
+
+
+# Solution: change image registry
+# pip install paho-mqtt -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
 ```
 
 #### 使用virtualenv
 
 ```shell
-virtualenv paho-mqtt
-source paho-mqtt/bin/activate
-pip install paho-mqtt
+$ virtualenv paho-mqtt
+$ source paho-mqtt/bin/activate
+$ pip install paho-mqtt
 ```
-
-
 
 #### 编译源码
 
@@ -60,6 +66,14 @@ pip install paho-mqtt
 $ git clone https://github.com/eclipse/paho.mqtt.python
 $ cd pacho.mqtt.python
 $ python setup.py install
+```
+
+#### 客户端实现
+
+```python
+import paho.mqtt.client as mqtt
+
+
 ```
 
 

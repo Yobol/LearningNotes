@@ -36,6 +36,51 @@ $ systemctl stop firewalld.service
 $ systemctl disable firewalld.service
 ```
 
+##### 开放端口
+
+```shell
+$ firewall-cmd --zone=public --add-port=[port]/tcp --permanent
+$ firewall-cmd --reload
+```
+
+##### 关闭端口
+
+```shell
+$ firewall-cmd --remove-port=[port]/udp --permanent
+$ firewall-cmd --reload
+```
+
+##### 查看端口使用情况
+
+```shell
+$ ss
+
+# 查看指定端口
+$ ss -lpn src :[port]
+```
+
+
+
+##### 查看开放了哪些端口
+
+```shell
+$ firewall-cmd --list-all
+
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: eno1 ens7f1
+  sources: 
+  services: ssh dhcpv6-client
+  ports: 10081/tcp 8080/tcp
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules:
+```
+
 
 
 #### Ubuntu
