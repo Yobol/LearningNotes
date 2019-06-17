@@ -324,3 +324,22 @@ feature分支是否推送到远程，取决于是否和团队成员合作开发
 
 `git tag -d <tag-name>` 删除指定的标签；
 
+## 常见场景
+
+### git push提交成功后尝试撤销
+
+```shell
+# 查看本地的操作日志
+$ git reflog
+# 1. 将本地的内容回退到自己想要的版本，HEAD表示当前版本，~n表示向前回退n个版本
+# git reset --soft HEAD~1只会改变HEAD的指向，本地代码不会改变，使用git status仍然可以看到
+# git reset --head HEAD~1不仅改变HEAD的指向，还会直接改变本地代码
+$ git reset --soft HEAD~1
+$ git rm --cached file_location # 结合git reset --soft只删除部分文件
+# 不使用--fore直接提交会提示提交失败，因为当前分支的版本远低于远程分支的版本，所以需要使用force覆盖它
+
+$ git add *
+$ git commit -m 'new commit'
+$ git push origin local_branch --force
+```
+
