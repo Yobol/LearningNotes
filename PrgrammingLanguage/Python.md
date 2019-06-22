@@ -539,14 +539,102 @@ if __name__ == '__main__':
     c.start()
 ```
 
-
-
 #### 参考
 
 1. [Python之threading多线程](https://www.cnblogs.com/xiaobeibei26/p/6481707.html)
 2. [Python Docs - threading](https://docs.python.org/3/library/threading.html)
 
+### subprocess执行CMD命令
+
+```python
+import subprocess
+
+# subprocess.Popen会以当前进程为父进程开启一个子进程
+# stdout=subprocess.PIPE的作用是重定向标准输出，不出现在命令行中
+# stderr=subprocess.PIPE的作用是重定向错误输出，不出现在命令行中
+sp = subprocess.POpen('cd /etc/hosts', shell=True, 
+                      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+# 阻塞当前进程，等待子线程sp运行结束
+sp.wait()
+```
+
+### requests网络请求与响应
+
+#### get请求
+
+**用法**
+
+```python
+import requests
+
+response = request.get(url, params, kwargs)
+```
+
+**用例：在URL中传递参数**
+
+```python
+import requests
+
+payload = {
+    'user_id': '7f955504-9331-11e9-86de-a402b97f912b',
+}
+url = 'http://127.0.0.1:8080/api/user'
+
+r = requests.get(url=url, params=payload)
+# 打印请求的URL
+print(r.url)
+```
+
+#### post请求
+
+**用法**
+
+```python
+import requests
+
+# 发起post请求
+response = requests.post(url, data, json, kwargs)
+# 打印请求的响应码
+# 请求成功返回 200
+print(response.status_code)
+```
+
+**用例：在Request Body中传递Json**
+
+> a.json
+
+```json
+{
+	"name": "Yobol",
+	"password": "123456"
+}
+```
+
+> test_post.py
+
+```python
+import requests
+import os
+import json
+
+# 发送Json数据
+fd = open('./a.json','rb')
+r = request.post(url='http://127.0.0.1:8080/api/user', json=json.load(fd))
+```
+
+#### delete请求
+
+**用法**
+
+```python
+import requests
+
+response = requests.delete(url, kwargs)
+```
+
 ### unittest单元测试
+
+
 
 #### 参考
 

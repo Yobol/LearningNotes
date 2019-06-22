@@ -76,7 +76,11 @@ import paho.mqtt.client as mqtt
 
 ```
 
+### 关闭
 
+```shell
+$ sudo service mosquitto stop
+```
 
 ### 参考
 
