@@ -23,7 +23,7 @@
 
 1. Synchronized 的实现原理以及锁优化？
 2. volatile 的实现原理？
-3. Java 的信号灯？
+3. Java 的信号灯（Semophore）？
 4. 怎么实现所有线程在等待某个事件的发生才会去执行？
 5. CAS？CAS 有什么缺陷，如何解决？
 6. 同步（Synchronized） 和 锁（Lock） 有什么区别？
