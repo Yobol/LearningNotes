@@ -107,6 +107,12 @@ With insecure registries enabled, Docker goes through the following steps:
 
 参考：[Deploy a plain HTTP registry](https://docs.docker.com/registry/insecure/)
 
+## 导出本地镜像
+
+```shell
+$ docker save <image-id|image-name> > export_path/*.tar
+```
+
 ## 加载本地镜像
 
 ```shell
@@ -310,6 +316,14 @@ $ docker rmi nginx
 # 删除指定tag的镜像
 $ docker rmi -f <registry:tag>
 ```
+
+## 一键清理
+
+```shell
+$ docker system prune -a
+```
+
+
 
 ## docker-compose
 

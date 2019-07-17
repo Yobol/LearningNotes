@@ -1,5 +1,84 @@
 # OS
 
+## Process Scheduling
+
+### Process Status
+
+```shell
+# 动态地查看系统整体的运行情况
+$ top
+
+# 直接查看系统当前的进程状态
+# a - 显示所有用户的进程，否则只显示当前用户的进程
+# u - 显示进程的拥有者
+# x - 显示后台运行的程序，否则只显示所有依赖于终端的进程
+$ ps -aux
+# 查看与Python相关的进程
+$ ps -aux | grep python
+```
+
+### Kill Process
+
+```shell
+# 首先使用top或者ps命令查看进程ID
+# 然后通过进程ID或者名字结束进程
+# Signal Name	Single Value	Effect
+# SIGHUP		1				挂起
+# SIGINT		2				键盘的中断信号
+# SIGKILL		9				发出杀死信号
+# SIGTERM		15				发出终止信号
+# SIGSTOP		17, 19, 23		停止进程
+
+# kill SIGNAL PID
+# 通过进程ID来结束进程
+$ kill -9 8080
+
+# killall SIGNAL PNAME
+# 通过进程名来结束所有相关进程
+$ killall -9 python
+```
+
+## File System
+
+### Device Mount
+
+#### 挂载设备
+
+```shell
+# 将设备（包括磁盘）里的文件树连接到Linux系统的文件树上
+# type表示要挂载设备文件系统的类型
+# device表示要挂载的设备
+# dir表示设备在系统上的挂载点
+$ mount -t type device dir
+```
+
+##### 挂载U盘
+
+```shell
+# 查看系统的磁盘列表
+$ fdisk -l
+
+# 新建一个目录作为U盘的挂载点
+$ mkdir /mnt/usb
+
+# 挂载
+$ mount /dev/sda1 /mnt/usb
+```
+
+##### 解除挂载设备
+
+```shell
+$ umount dir
+```
+
+##### 解除挂载U盘
+
+```shell
+$ mount umount /mnt/usb
+```
+
+
+
 ## Safety
 
 ### Firewall

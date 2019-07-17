@@ -183,3 +183,28 @@ $ etcdctl lease revoke 694d6ad41b4a2018
 lease 694d6ad41b4a2018 revoked
 ```
 
+## 数据备份与恢复
+
+`注：etcd v2和v3的数据不能混合存放。若使用v3备份时存在v2的数据则不影响恢复，但是使用v2备份数据时存在v3的数据则会导致恢复失败。`
+
+### 备份数据
+
+```shell
+$ export ETCDCTL_API=3
+# 备份数据
+$ etcdctl --endpoints localhost:2379 snapshot save snapshot.db
+```
+
+### 恢复数据
+
+```shell
+$ export ETCDCTL_API=3
+# 恢复数据
+# 恢复数据后的文件需要修改权限为etcd:etcd
+# --name 重新指定一个数据目录，默认为default.etcd
+# --data-dir 指定数据目录
+# 建议使用时不指定name但是指定data-dir。并将data-dir对应于etcd服务中配置的data-dir
+$ etcdctl snapshot restore snapshot.db --name m3 --data--dir=/home/etcd_data
+$ sudo chown -R etcd:etcd /home/etcd_data
+```
+
