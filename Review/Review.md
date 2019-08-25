@@ -122,15 +122,6 @@ Object.hashCode的通用约定：
 
 #### int
 
-##### int的范围
-
--2^31 ~ 2 ^ 31 - 1，即-2147483648 ~ 2147483647。
-
-##### int 和 Integer 有什么区别
-
-- int是java的一种基本数据类型，直接存储数据（默认值为0）；
-- Integer是int的包装类，是引用类型，当new一个Integer时，实际上是生成一个指针指向此对象（默认值为null）。
-
 #### double
 
 ##### double为什么不能直接使用==判断相等？
@@ -720,19 +711,6 @@ finally块用于处理在异常处理流程中总会执行的代码块。
 try块中可以抛出异常。
 
 参考：[Java语言如何进行异常处理，关键字：throws、throw、try、catch、finally分别代表什么意义？在try块中可以抛出异常吗？](https://blog.csdn.net/cwh615/article/details/52954474)
-
-#### 异常分类？运行时异常和受检异常有什么区别？
-
-所有异常都是Throwable的子类，分为Error（致命异常，JVM内部的严重问题，程序员无法处理）和Exception（非致命异常，普通问题，程序员可以进行合理地处理，使程序回到正常执行流程）。
-
-Exception又分为 checked（受检型）异常和 unchecked（非受检型）异常：
-
-- 受检型异常是必须要显式处理的异常，需要在当前代码块中处理或者向上抛出（在方法或类名之后使用throws关键字进行声明），**一般是由一些外部的偶然因素所引起的**，如SQLException，IOException，ClassNotFoundException，FileNotFoundException；
-- 非受检型异常又称为运行时异常，派生自RuntimeException，不需要显式地进行捕获并处理，**一般是由程序员处理不当而导致的逻辑上的问题**，如NullPointerException，ArrayIndexOutOfBoundsException，ClassCastException，ArithmeticException。
-
-当受检异常未威胁到系统的安全稳定运行时，可以转换为非受检异常，其它情况下则必须要处理。
-
-参考：[Java 受检异常和非受检异常](<https://www.liangzl.com/get-article-detail-124053.html>)
 
 #### 异常处理机制（简单原理和应用）
 
