@@ -4,7 +4,7 @@
 
 ## [目标](https://docs.influxdata.com/kapacitor/v1.5/working/custom_output/#the-goal)
 
-将新节点添加到Kapacitor，可以将数据输出到自定义断点。对于本指南，假设我们要将数据输出到名为HouseDB的虚拟内部数据库。
+将新节点添加到Kapacitor，可以将数据输出到自定义端点。对于本指南，假设我们要将数据输出到名为HouseDB的虚拟内部数据库。
 
 ## [概观](https://docs.influxdata.com/kapacitor/v1.5/working/custom_output/#overview)
 
@@ -24,16 +24,16 @@ Kapacitor通过`pipeline`处理数据。`pipeline`实际上一个是有向无环
 
 ### [更新TICKscript](https://docs.influxdata.com/kapacitor/v1.5/working/custom_output/#updating-tickscript)
 
-首先，我们需要更新TICKscript，以便用户可以定义我们的新节点。TICKscript应该如何将数据发送到HouseDB？要连接到HouseDB实例，我们需要URL和数据库名称，因此我们需要一种方法来提供该信息。这个怎么样？
+首先，我们需要更新TICKscript，以便用户可以定义我们的新节点。TICKscript应该如何将数据发送到HouseDB？要连接到HouseDB实例，我们需要一个URL和数据库名，因此我们需要一种方法来提供该信息。这个怎么样？
 
 ```js
-    node
-        |houseDBOut()
-            .url('house://housedb.example.com')
-            .database('metrics')
+node
+    |houseDBOut()
+    .url('house://housedb.example.com')
+    .database('metrics')
 ```
 
-为了更新TICKscript以支持这些新方法，我们需要编写一个实现该`pipeline.Node`接口的Go类型。可以在[此处](https://github.com/influxdb/kapacitor/blob/master/pipeline/node.go)找到该接口 以及通过该`pipeline.node`类型的完整实现。由于`Node`为我们完成了实现，我们只需要使用它。首先我们需要一个名字。`HouseDBOutNode`遵循命名惯例。让我们定义一个Go `struct`，它将通过组合实现接口。在使用以下内容`pipeline`调用的目录中创建一个文件`housedb_out.go`：
+为了更新TICKscript以支持这些新方法，我们需要编写一个实现该`pipeline.Node`接口的Go类型。可以在[此处](https://github.com/influxdb/kapacitor/blob/master/pipeline/node.go)找到该接口以及`pipeline.node`类型的完整实现。由于`Node`为我们完成了实现，我们只需要使用它。首先我们需要一个名字。`HouseDBOutNode`遵循命名惯例。让我们定义一个Go `struct`，它将通过组合实现该接口。在使用以下内容`pipeline`调用的目录中创建一个文件`housedb_out.go`：
 
 ```go
 package pipeline
@@ -46,7 +46,7 @@ type HouseDBOutNode struct {
 }
 ```
 
-就像我们在Go中有一个类型实现了所需的接口。为了允许我们需要的`.url`和`.database`方法，只需在类型上定义具有相同名称的字段。第一个字母需要大写，以便导出。导出字段非常重要，因为它们将被`kapacitor`包中的节点使用。名称的其余部分应与方法名称具有相同的人均化。TICKscript将在运行时匹配案例。更新`housedb_out.go`文件。
+就像我们在Go中有一个类型实现了所需的接口。为了允许我们需要的`.url`和`.database`方法，只需在类型上定义具有相同名称的字段。第一个字母需要大写，以便导出。导出字段非常重要，因为它们将被`kapacitor`包中的节点使用。名称的其余部分应与方法名称一样需要首字母大写。TICKscript将在运行时进行匹配。更新`housedb_out.go`文件。
 
 ```go
 package pipeline
@@ -74,15 +74,16 @@ func newHouseDBOutNode(wants EdgeType) *HouseDBOutNode {
         node: node{
             desc: "housedb",
             wants: wants,
+            // 如果有出边的话， NoEdge换为wants
             provides: NoEdge,
         }
     }
 }
 ```
 
-通过明确写明节点边`wants`和`provides`的类型，Kapacitor会做必要的类型检查，以防止无效管道。
+通过明确写明节点边`wants`和`provides`的类型，Kapacitor会做必要的类型检查，以防止无效`pipeline`。
 
-最后，我们需要添加一个新的`chaining method`以便用户可以将HouseDBOutNodes连接到他们现有的管道。A `chaining method`是创建新节点并将其添加为调用节点的子节点。实际上，该方法将节点链接在一起。该`pipeline.chainnode`类型包含可用于链接节点的所有方法的集合。一旦我们将方法添加到该类型，任何其他节点现在都可以使用HouseDBOutNode链接。将此函数添加到`pipeline/node.go`文件末尾：
+最后，我们需要添加一个新的`chaining method`以便用户可以将HouseDBOutNodes连接到他们现有的`pipeline`。在chainnode中为结点添加 `chaining method`方法，来创建新节点并将其添加为调用节点的子节点。实际上，该方法将节点链接在一起。该`pipeline.chainnode`类型包含可用于链接节点的所有方法的集合。一旦我们将方法添加到该类型，任何其他节点现在都可以使用HouseDBOutNode链接。将此函数添加到`pipeline/node.go`文件末尾：
 
 ```go
 // Create a new HouseDBOutNode as a child of the calling node.
@@ -104,7 +105,7 @@ func (c *chainnode) HouseDBOut() *HousPeDBOutNode {
 
 ### [实现HouseDB输出](https://docs.influxdata.com/kapacitor/v1.5/working/custom_output/#implementing-the-housedb-output)
 
-现在TICKscript可以定义我们的新输出节点，我们需要实际提供一个实现，以便Kapacitor知道如何处理节点。`pipeline`包中的每个节点在包中都有一个同名的节点`kapacitor`。创建一个名为的文件`housedb_out.go`并将其放在repo的根目录中。将下面的内容放在文件中。
+现在TICKscript可以定义我们的新输出节点，我们需要实际提供一个实现，以便Kapacitor知道如何处理节点。`pipeline`包中的每个节点在`kapacitor`包中都有一个同名的节点。创建一个名为`housedb_out.go`的文件并将其放在repo的根目录中。将下面的内容放在文件中。
 
 ```go
 package kapacitor
@@ -121,7 +122,7 @@ type HouseDBOutNode struct {
 }
 ```
 
-该`kapacitor`软件包还定义了一个名为`Node`的接口，并通过`kapacitor.node`类型提供默认实现。我们再次使用组合来实现接口。请注意，我们还有一个字段，其中包含我们刚刚完成定义的`pipeline.HouseDBOutNode`的实例。这个`pipeline.HouseDBOutNode`字段就像一个配置结构，告诉`kapacitor.HouseDBOutNode`它需要做什么工作。
+`kapacitor`包还定义了一个名为`Node`的接口，并通过`kapacitor.node`类型提供默认实现。我们再次使用组合来实现接口。请注意，我们还有一个字段，其中包含我们刚刚完成定义的`pipeline.HouseDBOutNode`的实例。这个`pipeline.HouseDBOutNode`字段就像一个配置结构，告诉`kapacitor.HouseDBOutNode`它需要做什么工作。
 
 现在我们有了一个结构，让我们定义一个用于创建新结构实例的函数。`kapacitor`包中的`newXXXNode`方法遵循以下约定：
 
@@ -129,7 +130,7 @@ type HouseDBOutNode struct {
 func newXXXNode(et *ExecutingTask, n *pipeline.NodeName) (*NodeName, error) {}
 ```
 
-在我们的例子中，我们想要定义一个名为的函数`newHouseDBOutNode`。将以下方法添加到`housedb_out.go`文件中：
+在我们的例子中，我们想要定义一个名为`newHouseDBOutNode`的函数。将以下方法添加到`housedb_out.go`文件中：
 
 ```go
 func newHouseDBOutNode(et *ExecutingTask, n *pipeline.HouseDBOutNode, d NodeDiagnostic) (*HouseDBOutNode, error) {
@@ -146,7 +147,7 @@ func newHouseDBOutNode(et *ExecutingTask, n *pipeline.HouseDBOutNode, d NodeDiag
 }
 ```
 
-为了创建节点的实例，我们需要将它与`pipeline`包中的节点相关联。这可以通过`task.go`文件中`createNode`方法中的switch语句来完成。继续我们的例子：
+为了创建节点的实例，我们需要将它与`pipeline`包中的节点相关联。这可以通过`task.go`文件中`createNode`方法中的switch语句来完成：
 
 ```go
 // Create a node from a given pipeline node.
@@ -159,7 +160,7 @@ func (et *ExecutingTask) createNode(p pipeline.Node, d NodeDiagnostic) (n Node, 
 }
 ```
 
-现在我们已经关联了两种类型，让我们回过头来实现输出代码。请注意线路`h.node.runF = h.runOut`的`newHouseDBOutNode`函数。该行设置`kapacitor.HouseDBOutNode`节点开始执行时将调用的方法。现在我们需要定义`runOut`方法。在文件中`housedb_out.go`添加此方法：
+现在我们已经关联了两种类型，让我们回过头来实现输出代码。请注意`newHouseDBOutNode`函数中的`h.node.runF = h.runOut`。该行设置`kapacitor.HouseDBOutNode`节点开始执行时将调用的方法。现在我们需要定义`runOut`方法。在文件中`housedb_out.go`添加此方法：
 
 ```go
 func (h *HouseDBOutNode) runOut(snapshot []byte) error {
@@ -169,7 +170,7 @@ func (h *HouseDBOutNode) runOut(snapshot []byte) error {
 
 随着这种变化，`HouseDBOutNode`语法完整，但还没有做任何事情。让我们来做点什么吧！
 
-我们之前了解到节点通过边进行通信。有一种Go类型`edge.Edge`可以处理这种通信。我们要做的就是从边读取数据并将其发送到HouseDB。数据以`edge.Message`类型的形式表示。节点使用读取消息`edge.Consumer`，通过实现`edge.Receiver`接口来处理消息。`Consumer`和`Receiver`接口在[edge/customer.go](https://github.com/influxdb/kapacitor/blob/master/edge/consumer.go)中定义。
+我们之前了解到节点通过边进行通信。有一种Go类型`edge.Edge`可以处理这种通信。我们要做的就是从边读取数据并将其发送到HouseDB。数据以`edge.Message`类型的形式表示。节点使用`edge.Consumer`读取消息，通过实现`edge.Receiver`接口来处理消息。`Consumer`和`Receiver`接口在[edge/customer.go](https://github.com/influxdb/kapacitor/blob/master/edge/consumer.go)中定义。
 
 我们通过组合方式包含在`HouseDBOutNode`中的`node`提供了名为`ins`字段的入边列表。由于`HouseDBOutNode`只能有一个父项，我们所关注的边是第0条边（只有一条边）。我们可以使用`customer.go`中`NewConsumerWithReceiver`函数从边消费和处理消息。
 
@@ -247,11 +248,13 @@ func (h *HouseDBOutNode) write(batch edge.BufferedBatchMessage) error {
 }
 ```
 
-一旦我们实施了该`write`方法，我们就完成了。当数据到达时`HouseDBOutNode`，它将被写入指定的HouseDB实例。
+一旦我们实现了`write`方法，我们就完成了。当数据到达时`HouseDBOutNode`，它将被写入指定的HouseDB实例。
 
 ### [摘要](https://docs.influxdata.com/kapacitor/v1.5/working/custom_output/#summary)
 
-我们首先在`pipeline`包中编写了一个节点（filepath `pipeline/housedb_out.go`:)来定义TICKscript API，以便将数据发送到HouseDB实例。然后我们在`kapacitor`包中编写了该节点的实现（filepath : `housedb_out.go`)。我们还更新`pipeline/node.go`了添加新的链接方法并`task.go`关联这两种类型。
+1. 首先在`pipeline`包中编写了一个节点（filepath: `pipeline/housedb_out.go`)来定义TICKscript API，以便将数据发送到HouseDB实例。
+2. 然后在`kapacitor`包中编写了该节点的实现（filepath:  `housedb_out.go`)。
+3. 更新`pipeline/node.go`了添加新的链接方法并`task.go`关联这两种类型。
 
 以下是完整的文件内容：
 
@@ -409,7 +412,7 @@ func (et *ExecutingTask) createNode(p pipeline.Node, d NodeDiagnostic) (n Node, 
 1. `tick:ignore`：可以添加到任何字段，方法，函数或结构中。`tickdoc`将跳过它并且不为它生成任何文档。这对于忽略通过属性方法设置的字段非常有用。
 2. `tick:property`：仅添加到方法中。通知`tickdoc`该方法`property method`不是a `chaining method`。
 
-将其中一条注释单独放在一行上，`tickdoc`找到它并按行为进行操作。否则，hi您的代码，`tickdoc`并完成其余的工作。
+将其中一条注释单独放在一行上，`tickdoc`找到它并按行为进行操作。否则，将为您的代码生成文档，`tickdoc`并完成其余的工作。
 
 ### [贡献非输出节点。](https://docs.influxdata.com/kapacitor/v1.5/working/custom_output/#contributing-non-output-node)
 

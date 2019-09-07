@@ -751,3 +751,109 @@ public class Solution {
 }
 ```
 
+## 16. [数值的整数次方](https://www.nowcoder.com/practice/1a834e5e3e1a4b7ba251417554e07c00?tpId=13&tqId=11165&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+**题目描述**
+
+给定一个 double 类型的浮点数 base 和 int 类型的整数 exponent，求 base 的 exponent 次方。 
+
+**解题思路**
+
+下面的讨论中 x 代表 base，n 代表 exponent。 
+
+![1567411187458](assets/1567411187458.png)
+
+因为 (x*x)^n/2^ 可以通过递归求解，并且每次递归 n 都减小一半，因此整个算法的时间复杂度为 O(logN)。 
+
+```Java
+public class Solution {
+    
+    public int power(double base, int exponent) {
+        if (base == 0) return 0;
+        if (exponent == 0) return 1;
+        
+        boolean isNegative = false;
+        if (exponent < 0) {
+            exponent = -exponent;
+            isNegative = true;
+        }
+        double pow = power(base * base, exponent / 2);
+        if ((exponent & 1) == 1) pow *= base;
+        return isNegative ? 1 / pow : pow;
+    }
+}
+```
+
+## 17. 打印从 1 到最大的 n 位数
+
+**题目描述**
+
+输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 ，一直到最大的 3 位数即 999。 
+
+**解题思路**
+
+由于 n 可能会非常大，因此不能用 int 表示数字，而是用 char 数组进行存储。
+
+使用回溯法得到所有的数。
+
+```Java
+public class Solution {
+    
+    public void print1ToMaxOfNDigits(int n) {
+        if (n <= 0) return;
+        char[] number = new char[n];
+        // 递归入口
+        print1ToMaxOfDigits(number, 0);
+    }
+    
+    private void print1ToMaxOfDigits(char[] number, int digit) {
+        // 当递归到第n层时，开始打印number，数字1在数组中存储为['0', '0', '1']
+        if (digit == number.length) {
+            printNumber(number);
+            return;
+        }
+        for (int i = 0; i < 10; i++) {
+            number[digit] = (char)(i + '0');
+            print1ToMaxOfDigits(number, digit + 1);
+        }
+    }
+    
+    // 打印一个数， 当 n = 3 时
+    // ['0', '0', '1']
+    // ...
+    // ['9', '9', '9']
+    private void printNumber(char[] number) {
+        int index = 0;
+        while (index < number.length && number[index] == '0')
+            index++;
+        while (index < number.length)
+            System.out.print(number[index++])
+        System.out.println()
+    }
+}
+```
+
+## 18. 删除链表结点
+
+### 18.1 在 O(1) 时间内删除链表结点
+
+**题目描述**
+
+
+
+**解题思路**
+
+
+
+### 18.2 删除链表中重复的结点
+
+**题目描述**
+
+
+
+**解题思路**
+
+
+
+
+
