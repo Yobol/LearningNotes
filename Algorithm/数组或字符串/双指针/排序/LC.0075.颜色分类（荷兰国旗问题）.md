@@ -56,7 +56,7 @@ class Solution {
 
 - 初始化0的最右边界：p0 = 0（在整个算法执行过程中 nums[idx < p0] = 0）；
 
-- 初始化2的最左边界 ：p2 = n - 1（在整个算法执行过程中 nums[idx > p2] = 2）；
+- 初始化2的最左边界：p2 = n - 1（在整个算法执行过程中 nums[idx > p2] = 2）；
 
 - 初始化当前考虑的元素序号 ：curr = 0；
 
@@ -84,7 +84,8 @@ class Solution {
             if (nums[cur] == 0) {
                 swap(nums, cur++, p0++);
             } else if (nums[cur] == 2) { 
-                // 因为p2属于cur未扫描到的区域，交换过后需要再扫描一遍所以cur不用加一
+                // 因为p2之前指向的元素属于cur未扫描到的区域，和cur指向的元素交换之后，
+                // cur现在指向的元素是未被扫描过的元素，需要进行扫描，所以cur不用加一
                 swap(nums, cur, p2--);
             } else {
                 cur++;
