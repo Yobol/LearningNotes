@@ -1,5 +1,3 @@
-
-
 # Go
 
 ## [安装](https://golang.google.cn/dl/)
@@ -332,9 +330,39 @@ newSlice := append(newSlice, 6)
 // 底层数组变为： [1, 2, 3, 6, 5]
 ```
 
-如果切片的底层数组没有足够的可用容量，`append()`函数会创建一个的新的底层数组，将被引用的现有的值复制到新数组里，再追加新的值。
+如果切片的底层数组没有足够的可用容量，`append()`函数会创建一个的新的底层数组，将被引用的现有的值复制到新数组里，再追加新的值。因此，**`append()`有返回值，且会返回新数组的地址**。
 
 当切片容量小于1000时，总是会成倍地增加容量；一旦容量超过1000时，容量的增长因子会变为1.25。
+
+```Go
+slice := make([]int, 0)
+fmt.Printf("%d %d", len(slice), cap(slice)) // 0 0
+
+append(slice, 1)
+fmt.Printf("%d %d", len(slice), cap(slice)) // 1 1
+
+append(slice, 1)
+fmt.Printf("%d %d", len(slice), cap(slice)) // 2 2
+
+append(slice, 1)
+fmt.Printf("%d %d", len(slice), cap(slice)) // 3 4
+
+append(slice, 1)
+fmt.Printf("%d %d", len(slice), cap(slice)) // 4 4
+
+append(slice, 1)
+fmt.Printf("%d %d", len(slice), cap(slice)) // 5 8
+
+
+slice1 := make([]int, 10)
+append(slice1, 1)
+fmt.Printf("%d %d", len(slice1), cap(slice1)) // 11 20
+
+
+slice1 := make([]int, 10)
+append(slice1, 1)
+fmt.Printf("%d %d", len(slice1), cap(slice1)) // 11 20
+```
 
 ##### 迭代切片
 
@@ -365,6 +393,12 @@ var myMap = make(map [string]Type)
 // 构建一个无缓冲的通道
 channel := make(chan *Type)
 ```
+
+### 基本类型
+
+#### string
+
+各类型之间的相互转换
 
 ### 常量
 
@@ -662,7 +696,15 @@ go func() {
 Display(results)
 ```
 
+## Go 异常处理机制
 
+> Go语言追求简洁优雅，所以，Go语言不支持传统的 try…catch…finally 这种异常，因为Go语言的设计者们认为，将异常与控制结构混在一起会很容易使得代码变得混乱。因为开发者很容易滥用异常，甚至一个小小的错误都抛出一个异常。在Go语言中，使用多值返回来返回错误。不要用异常代替错误，更不要用来控制流程。在极个别的情况下，才使用Go中引入的Exception处理：defer, panic, recover。
+
+### panic()
+
+`panic()`是一个内置函数。如果函数`F()`中调用了`panic()`，会终止其后要执行的代码，如果`F()`中存在要执行的`defer`语句列表，则逆序执行`defer`语句。直到函数`F()`整个退出，报告错误。
+
+**参考：**[Go语言 异常panic和恢复recover用法](https://www.jianshu.com/p/0cbc97bd33fb)
 
 ## Go 关键字
 
@@ -671,6 +713,10 @@ Display(results)
 defer 后面必须是函数调用语句，defer 后面的函数会在 defer 语句所在的函数执行结束时被调用。
 
 即使函数意外停止，也能保证 defer 后面的函数被执行。defer 关键字可以缩短相关操作（如打开文件和关闭文件）之间间隔的代码行数，有助于提高代码可读性，减少错误。
+
+```go
+defer fmt.Println("defer")
+```
 
 
 
