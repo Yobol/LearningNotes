@@ -43,7 +43,7 @@
 
 **注意：**
 
-- 如果两个链表没有交点，返回 null.
+- 如果两个链表没有交点，返回 null。
 - 在返回结果后，两个链表仍须保持原有的结构。
 - 可假定整个链表结构中没有循环。
 - 程序尽量满足 O(n) 时间复杂度，且仅用 O(1) 内存。
@@ -54,7 +54,7 @@
 
 先将其中一个链表放到`HashSet`中，然后遍历另一个链表中的元素，看是否存在于`Set`中。
 
-```Java
+```Go
 import java.util.HashSet;
 
 /**
@@ -92,34 +92,37 @@ public class Solution {
 
 ### 最优解（双指针法）
 
+设链表`A`和`B`的长度分别为`a + c`和`b + c`，其中`c`为公共尾部长度，则`a + c + b` = `b + c + a`。
+
 1. 创建两个指针`pA`和`pB`，分别初始化为链表`A`和`B`的头结点，然后让它们向后逐结点遍历；
 2. 当`pA`到达链表`A`的尾部时，将它重定位到链表`B`的头结点；类似地，当`pB`到达链表`B`的尾部时，将它重定位到链表`A`的头结点；
-3. 若在某一时刻`pA == pB`，则表示链表`A`和`B`在`pA|pB`处相遇。
+3. 这样能够保证，`pA`和`pB`能够同时访问到交点。
 
-```Java
+```Go
 /**
  * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) {
- *         val = x;
- *         next = null;
- *     }
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
  * }
  */
-public class Solution {
-    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        ListNode pA = headA, pB = headB;
-        while (pA != null && pB != null) {
-            if (pA == pB) return pA;
-            
-            if (pA.next == null && pB.next == null) return null;
-            pA = (pA.next == null) ? headB : pA.next;
-            pB = (pB.next == null) ? headA : pB.next;
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    pA := headA
+    pB := headB
+    for ; pA != pB; {
+        if pA == nil {
+            pA = headB
+        } else {
+            pA = pA.Next
         }
-        return null;
+        
+        if pB == nil {
+            pB = headA
+        } else {
+            pB = pB.Next
+        }
     }
+    return pA
 }
 ```
 

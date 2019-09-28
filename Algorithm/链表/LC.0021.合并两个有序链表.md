@@ -21,32 +21,33 @@
 
 在循环终止的时候， l1 和 l2 至多有一个是非空的。由于输入的两个链表都是有序的，所以不管哪个链表是非空的，它包含的所有元素都比前面已经合并链表中的所有元素都要大。这意味着我们只需要简单地将非空链表接在合并链表的后面，并返回合并链表。
 
-```Java
+```Go
 /**
  * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
  * }
  */
-class Solution {
-    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        ListNode dummy = new ListNode(-1);
-        ListNode prev = dummy;
-        while (l1 != null || l2 != null) {
-            if (l1.val < l2.val) {
-                prev.next = l1;
-                l1 = l1.next;
-            } else {
-                prev.next = l2;
-                l2 = l2.next;
-            }
-            prev = prev.next;
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+    var dummy *ListNode = new(ListNode)
+    var prev *ListNode = dummy
+    for ; l1 != nil && l2 != nil; {
+        if l1.Val < l2.Val {
+            prev.Next = l1
+            l1 = l1.Next
+        } else {
+            prev.Next = l2
+            l2 = l2.Next
         }
-        prev.next = (l1 == l2) ? l2 : l1;
-        return dummy.next;
+        prev = prev.Next
     }
+    if l1 == nil {
+        prev.Next = l2
+    } else {
+        prev.Next = l1
+    }
+    return dummy.Next
 }
 ```
 

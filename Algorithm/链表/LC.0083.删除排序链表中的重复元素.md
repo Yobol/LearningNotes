@@ -27,27 +27,25 @@
 - 如果两元素相等，则跳过下一个元素；
 - 否则遍历下一个元素。
 
-```Java
+```Go
 /**
  * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
  * }
  */
-class Solution {
-    public ListNode deleteDuplicates(ListNode head) {
-        ListNode cur = head;
-        while (cur != null && cur.next != null) {
-            if (cur.val == cur.next.val) {
-                cur.next = cur.next.next;
-            } else {
-                cur = cur.next;
-            }
+func deleteDuplicates(head *ListNode) *ListNode {
+    var curr *ListNode = head
+    for ; curr != nil && curr.Next != nil; {
+        if curr.Val == curr.Next.Val {
+            curr.Next = curr.Next.Next
+            // 进入下一个循环，比较curr与curr.Next的值
+        } else {
+            curr = curr.Next
         }
-        return head;
     }
+    return head
 }
 ```
 

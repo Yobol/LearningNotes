@@ -21,33 +21,31 @@
 
 在遍历列表时：
 
-- 需要断开当前结点和下一个结点的连接，需要首先保存下一个结点：`next = cur.next`；
-- 然后，将当前节点的 next 指针改为指向前一个元素：`cur.next` = `prev`；
-- 在反转之后，更新`prev`为当前结点：`prev = cur`；
-- 最后更新`cur`原链表中的下一个结点`next`；
+- 需要断开当前结点和下一个结点的连接，需要首先保存下一个结点：`next = curr.next`；
+- 然后，将当前节点的 next 指针改为指向前一个元素：`curr.next` = `prev`；
+- 在反转之后，更新`prev`为当前结点：`prev = curr`；
+- 最后更新`curr`原链表中的下一个结点`next`；
 
 不要忘记在最后返回新的头引用，由`prev`指针指向新的头引用！
 
-```Java
+```Go
 /**
  * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
  * }
  */
-class Solution {
-    public ListNode reverseList(ListNode head) {
-        ListNode prev = null, cur = head, next = null;
-        while (cur != null) {
-            next = cur.next;
-            cur.next = prev;
-            prev = cur;
-            cur = next;
-        }
-        return prev;
+func reverseList(head *ListNode) *ListNode {
+    var prev, curr, next *ListNode = nil, head, nil
+    for ; curr != nil; {
+        next = curr.Next
+        curr.Next = prev
+        prev = curr
+        
+        curr = next
     }
+    return prev
 }
 ```
 
@@ -59,26 +57,23 @@ class Solution {
 
 ![1569121306744](assets/1569121306744.png)
 
-```Java
+```Go
 /**
  * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
  * }
  */
-class Solution {
-    public ListNode reverseList(ListNode head) {
-        if (null == head || null == head.next) return head;
-        // 反转剩余链表，返回反转后的头结点
-        ListNode lastOfRest = reverseList(head.next);
-        // 反转当前结点和下一个结点
-        head.next.next = head;
-        head.next = null; // 不然会产生死循环
-        // 返回的始终是原链表中的最后一个元素
-        return lastOfRest;
+func reverseList(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return head
     }
+    var next *ListNode = head.Next
+    var headOfRest *ListNode = reverseList(head.Next)
+    next.Next = head
+    head.Next = nil
+    return headOfRest
 }
 ```
 
