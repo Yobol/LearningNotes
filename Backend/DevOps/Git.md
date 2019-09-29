@@ -288,7 +288,7 @@ git remote -v
 
 ```shell
 # git push将本地当前分支上的所有提交都推送到远程库，可以指定本地分支
-git push origin dev
+git push origin dev  # 将本地分支推送到并合并到远程master分支
 ```
 
 master是主分支，时刻要与远程同步

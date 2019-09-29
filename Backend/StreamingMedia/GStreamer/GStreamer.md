@@ -876,7 +876,7 @@ $ gst-inspect-1.0 videotestsrc ! videoconvert ! autovideosink
 $ gst-launch-1.0 videotestsrc pattern=11 ! videoconvert ! autovideosink
 ```
 
-pattern属性用来指定videotestsrc元件的模式，GStreame提供了25种视频源。
+pattern属性用来指定videotestsrc元件的模式，GStreamer提供了25种视频源。
 
 #### Named elements
 
