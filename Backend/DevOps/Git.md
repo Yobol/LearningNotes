@@ -169,6 +169,9 @@ HEAD指向分支，而分支指向版本（或提交），因此HEAD就指向当
 # 查看当前所有分支
 # *表示HEAD，指向当前分支
 $ git branch
+
+# 查看远程分支
+$ git branch -a
 ```
 
 ### 新建分支
@@ -341,5 +344,21 @@ $ git rm --cached file_location # 结合git reset --soft只删除部分文件
 $ git add *
 $ git commit -m 'new commit'
 $ git push origin local_branch --force
+```
+
+### GITLAB： 将本地分支上传到远程仓库，关联JIRA，并提交到master分支的mr
+
+```bash
+# 创建AIP-889-fast-fourier-transform分支
+git checkout -b AIP-889-fast-fourier-transform
+
+git add *
+# 关联JIRA Issue
+git commit -m "AIP-889 Resolve fast fourier transform node"
+
+# 将本地分支提交到远程仓库
+git push origin AIP-889-fast-fourier-transform
+
+# 再在gitlab上提交merge request
 ```
 

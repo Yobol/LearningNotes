@@ -100,9 +100,9 @@ finalize方法是在java.lang.Object中定义的，可以覆写任何一个类�
 
 而equals是方法，所有继承自java.lang.Object的类都可以覆盖这个方法，通常用来比较两个对象的内容是否相同。
 
-#### 若不重写hashCode()的话，hashCode()如何计算出来的？
+#### 若不重写hashCode()的话，hash值如何计算出来的？
 
-java.lang.Obejct中的hashCode默认为本地方法，不被重写（原生）的hashCode值是根据**内存地址换算**出来的一个值。
+java.lang.Obejct中的hashCode默认为本地方法，不被重写（原生）的hashCode值是根据**对象内存地址换算**出来的一个值。
 
 #### 为什么重写equals还要重写hashCode方法？
 
@@ -112,7 +112,7 @@ equals()和hashCode()用来标识对象，两个方法协同工作用来判断�
 
 Object.hashCode的通用约定：
 
-1. 在一个应用程序执行期间，如果一个对象的equals方法做比较所用到的信息没有被修改的话，那么，对该对象调用hashCode方法多次，它必须始终如一地返回 同一个整数。在同一个应用程序的多次执行过程中，这个整数可以不同，即这个应用程序这次执行返回的整数与下一次执行返回的整数可以不一致。
+1. 在一个应用程序执行期间，如果一个对象的equals方法做比较所用到的信息没有被修改的话，那么，对该对象调用hashCode方法多次，它必须始终如一地返回同一个整数。在同一个应用程序的多次执行过程中，这个整数可以不同，即这个应用程序这次执行返回的整数与下一次执行返回的整数可以不一致。
 2. 如果两个对象根据equals(Object)方法是相等的，那么调用这两个对象中任一个对象的hashCode方法必须产生同样的整数结果。
 3. 如果两个对象根据equals(Object)方法是不相等的，那么调用这两个对象中任一个对象的hashCode方法，不要求必须产生不同的整数结果。然而，程序员应该意识到这样的事实，对于不相等的对象产生截然不同的整数结果，有可能提高散列表（hash table）的性能。
 
@@ -121,15 +121,6 @@ Object.hashCode的通用约定：
 ### 数据类型
 
 #### int
-
-##### int的范围
-
--2^31 ~ 2 ^ 31 - 1，即-2147483648 ~ 2147483647。
-
-##### int 和 Integer 有什么区别
-
-- int是java的一种基本数据类型，直接存储数据（默认值为0）；
-- Integer是int的包装类，是引用类型，当new一个Integer时，实际上是生成一个指针指向此对象（默认值为null）。
 
 #### double
 
@@ -720,19 +711,6 @@ finally块用于处理在异常处理流程中总会执行的代码块。
 try块中可以抛出异常。
 
 参考：[Java语言如何进行异常处理，关键字：throws、throw、try、catch、finally分别代表什么意义？在try块中可以抛出异常吗？](https://blog.csdn.net/cwh615/article/details/52954474)
-
-#### 异常分类？运行时异常和受检异常有什么区别？
-
-所有异常都是Throwable的子类，分为Error（致命异常，JVM内部的严重问题，程序员无法处理）和Exception（非致命异常，普通问题，程序员可以进行合理地处理，使程序回到正常执行流程）。
-
-Exception又分为 checked（受检型）异常和 unchecked（非受检型）异常：
-
-- 受检型异常是必须要显式处理的异常，需要在当前代码块中处理或者向上抛出（在方法或类名之后使用throws关键字进行声明），**一般是由一些外部的偶然因素所引起的**，如SQLException，IOException，ClassNotFoundException，FileNotFoundException；
-- 非受检型异常又称为运行时异常，派生自RuntimeException，不需要显式地进行捕获并处理，**一般是由程序员处理不当而导致的逻辑上的问题**，如NullPointerException，ArrayIndexOutOfBoundsException，ClassCastException，ArithmeticException。
-
-当受检异常未威胁到系统的安全稳定运行时，可以转换为非受检异常，其它情况下则必须要处理。
-
-参考：[Java 受检异常和非受检异常](<https://www.liangzl.com/get-article-detail-124053.html>)
 
 #### 异常处理机制（简单原理和应用）
 
