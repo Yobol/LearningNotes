@@ -49,7 +49,7 @@ class Solution {
             fast = fast.next.next;
         }
         // 奇数长，fast指向最后一个结点，slow指向中间结点；
-        // 偶数长，fast指向null，slow指向后半段的第一个结点
+        // 偶数长，fast指向null，slow指向后半段的第一个结点；
         // 反转后半段
         ListNode second = reverseList(slow); // 当反转完成后，slow.next变为null
         // 比较
