@@ -6,17 +6,17 @@
 
 ## Kafka介绍
 
-Kafka是由Linked开发的基于发布/订阅的分布式消息系统，使用Scala语言编写。
+Kafka是由LinkedIn开发的基于发布/订阅模式的分布式消息系统，使用Scala语言编写。
 
 ## Kafka特性
 
 * **异步通信**：将消息放入Kafka中，可以不立即处理；
 
-* **应用解耦**：在应用处理过程中插入一个隐含的、基于数据的接口层；
+* **应用解耦**：消息生产者只需往Kafka中push消息，消息消费者只需从Kafka中pull消息即可；
 
   ![1543033600353](assets/1543033600353.png)
 
-* **峰值处理**：使关键应用能够抵挡住访问峰值，不会因超出负荷而崩溃；
+* **削峰**：使关键应用能够抵挡住访问峰值，不会因超出负荷而崩溃；
 
 * **高性能**：采用时间复杂度O(1)的磁盘存储结构，即使TB级以上数据也能保证常数时间的访问速度；
 
@@ -40,13 +40,13 @@ Kafka是由Linked开发的基于发布/订阅的分布式消息系统，使用Sc
 * **Topic**（主题）是Kafka中同类数据的集合，相当于SQL中的表；Topic是逻辑概念，即只需要指定Topic就可以写入/读取数据，而不必关心数据的存储位置；
 * **Producer**（生产者）将同类数据写入同一个Topic（producer自己控制将消息推送哪些partition）；
 * **Consumer**（消费者）从同一个Topic中读取同类数据（consumer自己维护读取消息的offset）；
-* **Consumer Group**（CG，消费者组），一个Consumer都隶属于一个特定的CG，（分组是为了加快读取速度，并行消费同一个Topic）；
+* **Consumer Group**（CG，消费者组），每个Consumer都隶属于一个特定的CG（分组是为了加快读取速度，并行消费同一个Topic）；
 * 一条消息被多个不同的CG订阅（即CG之间是平等的）；但是一个CG中只能有一个Consumer读取该消息（CG中的Consumer之间是竞争的）；
 * **Partition**（分区）是一个有序的、不可修改的MQ，分区内消息有序存储；Partition是物理概念，每个分区对应一个文件夹，其中存储分区的数据和索引文件；
 * 一个Topic可分为多个Partition，即把一个数据集合分为多个部分，分别存储在不同的分区中；
 * **Replication**（副本）是Partition的拷贝；
 * 一个Partition可以设置多个Replication，Replication存储在多个Broker中；
-* **ZooKeeper**负责Kafka集群管理，包括配置管理、动态扩展、Broker负载均衡、Laeder选取以及CG变化时的Rebalance，Kafka将元数据存储在ZooKeeper中。
+* **ZooKeeper**负责Kafka集群管理，包括配置管理、动态扩展、Broker负载均衡、Leader选取以及CG变化时的Rebalance，Kafka将元数据存储在ZooKeeper中。
 
 ### Kafka工作机制
 
@@ -58,11 +58,11 @@ Kafka生产者客户端采用push模式将消息发送到broker，而消费者�
 
 ![1543033795632](assets/1543033795632.png)
 
-消息在broker中按照topic进行分类，一个topic分为多个partition，一个partition有多个replication，消息存储在broker的topic的partition中，并且同时存在多个副本。
+消息在broker中按照topic进行分类，一个topic分为多个partition，一个partition有多个replication，即消息存储在broker的topic的partition中，并且同时存在多个副本。
 
 ![1543033813681](assets/1543033813681.png)
 
-partition是一个FIFO队列，在队列尾追加写入消息，在队列头顺序读取消息，而且仅保证消息在统一partition中有序，并不保证topic整体有序
+partition是一个FIFO队列，在队列尾追加写入消息，在队列头顺序读取消息，而且仅保证消息在同一partition中有序，并不保证topic整体有序。
 
 Kafka集群会保存所有的消息，不管消息有没有被消费，只有当消息过期时，Kafka将其清除以释放磁盘空间。
 
