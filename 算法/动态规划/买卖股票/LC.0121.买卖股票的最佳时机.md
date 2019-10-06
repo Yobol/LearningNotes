@@ -50,6 +50,33 @@ class Solution {
 }
 ```
 
+**时间复杂度：** $O(n)$；
+
+**空间复杂度：** $O(1)$。
+
 ### 最优解
 
-同上。
+#### [状态转移方程](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-iii/solution/yi-ge-tong-yong-fang-fa-tuan-mie-6-dao-gu-piao-wen/)
+
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length == 0) return 0;
+        // 当i == 0时
+        // dp_i_0表示第1天手里未持有股票，收益为0
+        // dp_i_1表示第1天手里会持有股票，收益为负的当天股票的价格
+        int dp_i_0 = 0, dp_i_1 = -prices[0];
+        for (int i = 1; i < prices.length; i++) {
+            // dp_i_0表示第i天手里未持有股票，可能前一天就没持有股票，也可能前一天持有股票，但是今天售出了
+            dp_i_0 = Math.max(dp_i_0, dp_i_1 + prices[i]);
+            // dp_i_1表示第i天手里会持有股票，只可能前一天未持有股票，但是今天购买了；因为只允许交易一次
+            dp_i_1 = Math.max(dp_i_1, -prices[i]);
+        }
+        return dp_i_0;
+    }
+}
+```
+
+**时间复杂度：** $O(n)$；
+
+**空间复杂度：** $O(1)$。
