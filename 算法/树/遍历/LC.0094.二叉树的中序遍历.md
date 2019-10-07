@@ -1,0 +1,47 @@
+# 二叉树的中序遍历
+
+## 题目描述
+
+## 解题思路
+
+### 个人AC
+
+#### 递归解法
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> list = new LinkedList<>();
+        helper(list, root);
+        return list;
+    }
+    
+    public void helper(List<Integer> list, TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        helper(list, root.left);
+        list.add(root.val);
+        helper(list, root.right);
+    }
+}
+```
+
+时间复杂度： $O(n)$，每个结点都会遍历一遍；
+
+空间复杂度： $O(log(n))$，树的深度，或者递归栈的深度。
+
+#### 迭代解法（需借助栈）
+
+### 最优解
+
+同上。
