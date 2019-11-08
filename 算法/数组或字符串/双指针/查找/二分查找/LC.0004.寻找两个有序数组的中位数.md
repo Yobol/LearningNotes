@@ -41,23 +41,24 @@ nums2 = [3, 4]
 - 若`a < b`，说明第`k`个数位于`a`的后半段或者`b`的前半段；
 - 否则`a >= b`，则第`k`个数位于`a`的前半段或者`b`的后半段；
 
-问题规模缩小了一般，递归处理即可。时间复杂度为`O(log(m + n))`。
+问题规模缩小了一半，递归处理即可。时间复杂度为`O(log(m + n))`。
 
 ```Java
 public class Solution {
     
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        if (null == nums1 || null == nums2) throw new IllegalArgument("Input array can't be null");
+        if (null == nums1 || null == nums2) throw new IllegalArgumentException("Input array can't be null");
         
         int n1 = nums1.length, n2 = nums2.length;
         // 处理任何一个nums为空的情况
+        // 当其中一个nums为空的时候，需要针对另一个nums的奇偶性求中位数
         if (n1 == 0) {
-            if ((n1 & 1) == 1) return 1.0 * nums2[n2 / 2];
-            return (nums2[n2 / 2] + nums2[n2 / 2 - 1]) / 2.0;
+            if ((n2 & 1) == 1) return 1.0 * nums2[n2 / 2];
+            return (nums2[n2 / 2 - 1] + nums2[n2 / 2]) / 2.0;
         }
         if (n2 == 0) {
             if ((n1 & 1) == 1) return 1.0 * nums1[n1 / 2];
-            return (nums1[n1 / 2] + nums1[n1 / 2 - 1]) / 2.0;
+            return (nums1[n1 / 2 - 1] + nums1[n1 / 2]) / 2.0;
         }
         
         int n = n1 + n2; // 数组总长度
@@ -68,9 +69,31 @@ public class Solution {
         return (find_kth(nums1, 0, nums2, 0, n / 2) + find_kth(nums1, 0, nums2, 0, n / 2 + 1)) / 2.0;
     }
     
-    public int find_kth(int[] nums1, )
+    public int find_kth(int[] a, int a_begin, int[] b, int b_begin, int k) {
+        // 当a_begin或b_begin超过数组长度，则第k个数为另一个数组第k个数
+        if (a_begin >= a.length) return b[b_begin + k - 1];
+        if (b_begin >= b.length) return a[a_begin + k - 1];
+        // 当k为1时，两数组最小的那个为第一个数
+        if (k == 1)
+        	return Math.min(a[a_begin], b[b_begin]);
+        
+        int mid_a = Integer.MAX_VALUE, mid_b = Integer.MAX_VALUE;
+        if (a_begin + k / 2 - 1 < a.length)
+            mid_a = a[a_begin + k / 2 - 1];
+        if (b_begin + k / 2 - 1 < b.length)
+            mid_b = b[b_begin + k / 2 - 1];
+        // 如果a数组的第(k / 2)个数小于b数组的第(k / 2)个数，
+        // 表示总的第k个数位于a的第(k / 2)个数的后半段，或者是b的第(k / 2)个数的前半段
+        // 由于范围缩小了(k / 2)个数，此时总的第k个数实际上等于新的范围内的第(k - k / 2)个数，依次递归
+        if (mid_a < mid_b)
+            return find_kth(a, a_begin + k / 2, b, b_begin, k - k / 2);
+        //否则相反
+        return find_kth(a, a_begin, b, b_begin + k / 2, k - k / 2);
+    }
 }
 ```
 
+时间复杂度： $O(log(m, n))$；
 
+空间复杂度： $O(1)$。
 

@@ -21,33 +21,38 @@
 
 在循环终止的时候， l1 和 l2 至多有一个是非空的。由于输入的两个链表都是有序的，所以不管哪个链表是非空的，它包含的所有元素都比前面已经合并链表中的所有元素都要大。这意味着我们只需要简单地将非空链表接在合并链表的后面，并返回合并链表。
 
-```Go
+```java
 /**
  * Definition for singly-linked list.
- * type ListNode struct {
- *     Val int
- *     Next *ListNode
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
  * }
  */
-func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
-    var dummy *ListNode = new(ListNode)
-    var prev *ListNode = dummy
-    for ; l1 != nil && l2 != nil; {
-        if l1.Val < l2.Val {
-            prev.Next = l1
-            l1 = l1.Next
-        } else {
-            prev.Next = l2
-            l2 = l2.Next
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(-1); // 使用伪结点可以避免处理边缘情况，简化代码逻辑
+        ListNode p = dummy; // 指向新链表的最后一个结点
+        while (l1 != null && l2 != null) {
+            // 因为l1 和 l2都不为空，所以可以直接比较二者值的大小
+            if (l1.val < l2.val) {
+                p.next = l1;
+                // l1指针后移
+                l1 = l1.next;
+            } else {
+                p.next = l2;
+                // l2指针后移
+                l2 = l2.next;
+            }
+            // p指针后移，追踪新链表当前最后一个结点
+            p = p.next;
         }
-        prev = prev.Next
+        
+        if (l1 == null) p.next = l2;
+        if (l2 == null) p.next = l1;
+        return dummy.next;
     }
-    if l1 == nil {
-        prev.Next = l2
-    } else {
-        prev.Next = l1
-    }
-    return dummy.Next
 }
 ```
 

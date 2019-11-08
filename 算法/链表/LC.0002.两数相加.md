@@ -21,73 +21,10 @@
 ### 个人AC
 
 1. 首先需要判空操作保证程序健壮性（好像不加也行）；
-2. 然后从头（最低位）开始遍历，并依次考虑以下三种情况：
+2. 然后从最低位开始遍历，并依次考虑以下三种情况：
    1. 两个链表重叠的部分；
    2. 其中一个链表剩余的部分；
    3. 进位。
-
-```Java
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) { val = x; }
- * }
- */
-class Solution {
-    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        if (null == l1) return l2;
-        if (null == l2) return l1;
-        
-        ListNode dummy = new ListNode(-1);
-        ListNode prev = dummy;
-        ListNode cur = null;
-        boolean flag = false; // 进位标识符
-        while (l1 != null && l2 != null) {
-            int value = l1.val + l2.val + (flag ? 1 : 0);
-            cur = new ListNode(value % 10);
-            flag = value >= 10;
-            prev.next = cur;
-            prev = cur;
-            
-            l1 = l1.next;
-            l2 = l2.next;
-        }
-        while (l1 != null) {
-            int value = l1.val + (flag ? 1 : 0);
-            cur = new ListNode(value % 10);
-            flag = value >= 10;
-            prev.next = cur;
-            prev = cur;
-            
-            l1 = l1.next;
-        }
-        while (l2 != null) {
-            int value = l2.val + (flag ? 1 : 0);
-            cur = new ListNode(value % 10);
-            flag = value >= 10;
-            prev.next = cur;
-            prev = cur;
-            
-            l2 = l2.next;
-        }
-        if (flag) {
-            cur = new ListNode(1);
-            prev.next = cur;
-        }
-        return dummy.next;
-    }
-}
-```
-
-虽然AC了，思路也很清晰，但是代码冗余程度高、变量名可读性不高，可以做如下调整。
-
-### 最优解
-
-1. 去除判空操作；
-2. 将进位标识符`flag`变为`int`类型并更名为`carry`；
-3. 将遍历的三种情况合并到一个`while`循环中。
 
 ```Java
 /**
@@ -121,6 +58,14 @@ class Solution {
     }
 }
 ```
+
+**时间复杂度：** $O(max(m, n))$；
+
+**空间复杂度：** $O(max(m, n))$，新链表的长度最多为$max(m, n) + 1$。
+
+### 最优解
+
+同上。
 
 
 

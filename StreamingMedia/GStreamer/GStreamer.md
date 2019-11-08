@@ -230,8 +230,6 @@ Flags "GstX264EncTune" Default: 0x00000000, "(none)"</br>
            (0x00000002): fastdecode       - Fast decode<br/>
            (0x00000004): zerolatency      - Zero latency |
 
-
-
 #### filter
 
 从输入的数据流中剥离出符合需求的几路数据并输出。
