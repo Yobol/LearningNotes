@@ -74,21 +74,20 @@ class Solution {
         nums[j] = tmp;
     }
     public void sortColors(int[] nums) {
-        if (null == nums) throw new IllegalArgumentException("Input array can't be null");
         int n = nums.length;
         
         // p0指向0的最右边界，最终坐标小于p0的都等于0
         // p2指向2的最左边界，最终坐标大于p2的都等于2
         int p0 = 0, p2 = n - 1;
-        for (int cur = 0; cur <= p2;) {
-            if (nums[cur] == 0) {
-                swap(nums, cur++, p0++);
-            } else if (nums[cur] == 2) { 
-                // 因为p2之前指向的元素属于cur未扫描到的区域，和cur指向的元素交换之后，
-                // cur现在指向的元素是未被扫描过的元素，需要进行扫描，所以cur不用加一
-                swap(nums, cur, p2--);
+        for (int curr = 0; curr <= p2;) {
+            if (nums[curr] == 0) {
+                swap(nums, curr++, p0++);
+            } else if (nums[curr] == 2) { 
+                // 因为p2之前指向的元素属于curr未扫描到的区域，和curr指向的元素交换之后，
+                // curr现在指向的元素是未被扫描过的元素，需要进行扫描，所以curr不用加一
+                swap(nums, curr, p2--);
             } else {
-                cur++;
+                curr++;
             }
         }
     }

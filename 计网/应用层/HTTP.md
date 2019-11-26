@@ -48,6 +48,8 @@ HTTP（Hyper-Text Transfer Protocol，即超文本传输协议）位于应用层
 
 #### **常见取值**
 
+可参考：[HTTP状态码100、200、300、400、500、600的含义](https://www.jianshu.com/p/760b1b579b0f)
+
 **1XX**
 
 | 状态码 | 状态码描述 | 解释及注意事项 |
@@ -64,11 +66,19 @@ HTTP（Hyper-Text Transfer Protocol，即超文本传输协议）位于应用层
 
 **3XX**
 
-| 状态码 | 状态码描述 | 解释及注意事项 |
-| ------ | ---------- | -------------- |
-|        |            |                |
+| 状态码 | 状态码描述        | 解释及注意事项                                               |
+| ------ | ----------------- | ------------------------------------------------------------ |
+| 300    | Multiple Choices  | 多项选择：针对请求，服务器可执行多种操作。服务器可根据请求者选择一项操作，或提供操作列表供请求者选择 |
+| 301    | Permanently Moved | 永久性转移：被请求的资源已永久性地移除了（资源不可访问），搜索引擎在抓取新内容的同时也将旧网址A替换为重定向后的网址B |
+| 302    | Temporarily Moved | 临时性转移：被请求的资源还在（仍然可以访问），此重定向只是临时地从旧地址A跳转到重定向后的网址B，搜索引擎会抓取新的内容而保存旧的网址 |
+
+301和302状态码都表示重定向，即浏览器在接收到这两个响应码后都会自动跳转到一个新的URL地址（从首部`Location`字段中获取）。
 
 
+
+**参考：**
+
+1. [http状态码301和302详解及区别](https://blog.csdn.net/grandPang/article/details/47448395)；
 
 **4XX**
 
@@ -79,6 +89,10 @@ HTTP（Hyper-Text Transfer Protocol，即超文本传输协议）位于应用层
 |        |              |                                                              |
 | 403    | Forbidden    | 服务器能够正确理解请求，但是**拒绝提供服务**，该请求不会重发给服务器 |
 | 404    | Not Found    | 请求资源不存在，eg. 输入了错误的URL                          |
+
+> 400会在什么情况下返回？
+>
+> 如服务器要求请求头中Content-Type为application/json类型，但是实际传输中是以URL格式传递参数。
 
 > 401和403有什么区别？
 >
@@ -93,6 +107,7 @@ HTTP（Hyper-Text Transfer Protocol，即超文本传输协议）位于应用层
 1. [HTTP响应码403 Forbidden和401 Unauthorized对比](https://www.jianshu.com/p/6dceeebbde5b)
 2. [HTTP Status Codes Decision Diagram – Infographic](https://www.loggly.com/blog/http-status-code-diagram/)
 3. [HTTP报错401和403详解及解决办法 -- Java](https://blog.csdn.net/spicyboiledfish/article/details/78903932)
+4. [400状态码示例](https://www.cnblogs.com/mengfangui/p/11505124.html)
 
 **5XX**
 

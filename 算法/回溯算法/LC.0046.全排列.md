@@ -34,33 +34,36 @@
 ```java
 class Solution {
     public List<List<Integer>> permute(int[] nums) {
-        // construct output list
-        List<List<Integer>> outer = new LinkedList<>();
-        
-        // convert nums into list since output is a list of lists
-        ArrayList<Integer> inner = new ArrayList<>();
-        for (int num : nums) {
-            inner.add(num);
-        }
-        int n = nums.length;
-        backtrack(n, outer, inner, 0);
-        return outer;
+        List<List<Integer>> output = new LinkedList<>();
+        backtrace(output, nums, 0);
+        return output;
     }
-    
-    private void backtrack(int n, List<List<Integer>> outer, ArrayList<Integer> inner, int first) {
-        // if all integers are used up
-        if (first == n - 1) {
-            outer.add(new ArrayList<>(inner));
+
+    private void backtrace(List<List<Integer>> output, int[] nums, int first) {
+        if (first == nums.length - 1) {
+            List<Integer> inner = new ArrayList<>();
+            for (int num : nums) {
+                inner.add(num);
+            }
+            output.add(inner);
             return;
         }
-        for (int i = first; i < n; i++) {
-            // place i-th integer first in the current permutation
-            Collections.swap(inner, first, i);
-            backtrack(n, outer, inner, first + 1);
-            // backtrack
-            Collections.swap(inner, first, i);
+
+        for (int i = first; i < nums.length; i++) {
+            swap(nums, i, first);
+            backtrace(output, nums, first + 1);
+            swap(nums, i, first);
         }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 }
 ```
 
+**时间复杂度：** $O(A^{n}_{n})$；
+
+**空间复杂度：** $O(nA^{n}_{n})$。
