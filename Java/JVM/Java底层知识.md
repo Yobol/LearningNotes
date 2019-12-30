@@ -73,7 +73,7 @@ public class ReflectDemo {
 }
 ```
 
-`getMethod()`方法只能获取该类声明的`public`方法，并且能获取可继承的方法、实现自某接口的方法。
+`getMethod()`方法只能获取该类声明的`public`方法，并且能获取从继承的方法、实现自某接口的方法。
 
 `getDeclaredMethod()`方法能获取该类声明的所有方法，不能获取继承的、实现自某接口的方法。
 
@@ -85,7 +85,7 @@ public class ReflectDemo {
 
 **反射应用场景：**
 
-1. `Class.forName()加载数据库的驱动程序`；
+1. `Class.forName()`加载数据库的驱动程序；
 2. Spring通过XML配置加载Bean；
 
 ## ClassLoader（类加载器）

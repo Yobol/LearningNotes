@@ -110,8 +110,8 @@ class Solution {
             } else if (token.equals("*")) {
                 stack.push(stack.pop() * stack.pop());
             } else if (token.equals("/")) {
-                int dividend = stack.pop();
-                stack.push(dividend / stack.pop());
+                int divisor = stack.pop();
+                stack.push(stack.pop() / divisor);
             } else {
                 stack.push(Integer.parseInt(token));
             }

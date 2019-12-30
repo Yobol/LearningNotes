@@ -59,5 +59,3 @@ class Solution {
 ### 最优解
 
 同上。
-
-"cupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupucu"

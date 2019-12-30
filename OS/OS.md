@@ -1,5 +1,11 @@
 # OS
 
+## Linux Architecture
+
+Linux的体系结构主要分为用户态和内核态。
+
+![1575193646152](assets/1575193646152.png)
+
 ## Process Scheduling
 
 ### Process Status
@@ -39,6 +45,104 @@ $ killall -9 python
 ```
 
 ## File System
+
+### File Search
+
+#### `find`查找特定的文件
+
+```shell
+# find指令用来在指定目录下查找文件
+$ find path [options] params
+
+# 在当前目录下（会递归查找子目录）查找名为Hello.java的文件
+$ find -name "Hello.java"
+
+# 进行全局搜索，即指定path为根目录/
+# 在全局范围内查找名为Hello.java的文件
+$ find / -name "Hello.java"
+
+# 查找当前用户目录下以“os”开头的文件
+# find ~ -iname "os*" 可以忽略大小写
+$ find ~ -name "os*"
+```
+
+#### `grep`检索文件内容
+
+```shell
+# grep指令用来在指定文件中检索符合RE的内容
+# Global Regular Expression Print
+$ grep [options] pattern file
+
+# 输出Hello.java中包含“hello”的行
+$ grep "hello" Hello.java
+
+# 输出jre.log中包含“TYPE[ERROR]”的行，[]为正则表达式中的特殊字符，需要用\转义
+$ grep "TYPE\[ERROR\]" jre.log
+
+# 输出jre.log中满足"ENGINE\[[0-9a-z]*\]"正则表达式的内容，去除冗余内容
+$ grep -o "ENGINE\[[0-9a-z]*\]" jre.log
+# 对上面输出的信息做统计
+# 创建一个map，key为engine字符串，value为其出现的次数
+# END之前表示遍历一遍输入的信息，END之后表示遍历结束后要执行的操作
+$ grep -o "ENGINE\[[0-9a-z]*\]" jre.log | awk '{enginearr[$1]++}END{for (i in enginearr) print i "\t" enginearr[i]}'
+
+# 过滤掉jre.log中包含“TYPE[ERROR]”的行
+$ grep -v "TYPE\[WARNING\]" jre.log
+
+# 如果不跟file_path，则会将标准输入作为检索来源
+```
+
+##### | 管道操作符
+
+可将指令连接起来，将前一个指令的输出作为后一个指令的输入。
+
+![image-20191203165534485](assets/image-20191203165534485.png)
+
+```shell
+$ find ~ -name "Hello*"
+# 等价于
+$ find ~ | grep "Hello"
+```
+
+![image-20191203165854676](assets/image-20191203165854676.png)
+
+#### `awk`对文件内容做统计
+
+```shell
+# awk指令用来处理格式化数据
+# 一次读取一行文本，按输入分隔符进行切片，默认分隔符为空格
+# 将切片保存在内建的变量中，$1,$2,...($0表示行的全部)
+# 支持对单个切片的判断，支持循环判断
+$ awk [options] 'cmd' file
+
+# cat netstat.txt
+# Proto Recv-Q Send-Q Local Address		Foreign Address			State
+# tcp		 0	   48 115.28.159.6:ssh	113.46.178.155:63873	ESTABLISHED
+# tcp		 0		0 localhost:mysql	localhost:40334			ESTABLISHED
+
+# 打印netstat.txt文件中第一列和第四列的内容
+$ awk '{print $1,$2}' netstat.txt
+# Proto Local
+# tcp 115.28.159.6:ssh
+# tcp localhost:mysql
+
+# 过滤出第一列为“tcp”且第四列大于0的行
+# 即满足''中{}之前的条件时，会执行{}中的命令
+$ awk '$1 == "tcp" && $3 > 0{print $0}' netstat.txt
+# tcp		 0	   48 115.28.159.6:ssh	113.46.178.155:63873	ESTABLISHED
+
+# 输出上面的内容及其头信息
+# NR表示行数，NR==1为第一行
+$ awk '($1 == "tcp" && $3 > 0) || NR == 1{print $0}' netstat.txt
+# Proto Recv-Q Send-Q Local Address		Foreign Address			State
+# tcp		 0	   48 115.28.159.6:ssh	113.46.178.155:63873	ESTABLISHED
+
+# 用-F指定分隔符
+# 指定“,”为分隔符
+$ awk -F "," '{print $2}' score.csv
+```
+
+
 
 ### Device Mount
 
