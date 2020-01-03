@@ -37,13 +37,45 @@ sudo apt-get install shutter
 
 截取指定区域后，双击图片后会默认将图片保存到剪贴板，并且会进入图片编辑页面。
 
-## Terminal
+## Network
 
-### zsh
+### slurm——网卡带宽监控
 
 #### 安装
 
-```sh
+```shell
+# 安装
+sudo apt-get install slurm
+```
+
+#### 使用
+
+```shell
+# 指定网卡
+slurm -i <网卡名称>
+```
+
+#### 常用命令
+
+在slurm界面中可以执行如下命令：
+
+| 按键 | 功能           |
+| ---- | -------------- |
+| l    | 显示lx/tx状态  |
+| c    | 切换到经典界面 |
+| r    | 手动刷新界面   |
+| q    | 退出工具       |
+|      |                |
+
+
+
+## Terminal
+
+### zsh——终端
+
+#### 安装
+
+```shell
 # 安装
 sudo apt-get install -y zsh
 
