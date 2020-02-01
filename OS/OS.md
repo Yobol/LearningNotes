@@ -6,6 +6,40 @@ Linux的体系结构主要分为用户态和内核态。
 
 ![1575193646152](assets/1575193646152.png)
 
+## CPU
+
+```shell
+# 查看CPU信息
+$ cat /proc/cpuinfo
+# 查看CPU型号
+$ cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+
+```
+
+
+
+## Network
+
+### MAC
+
+```shell
+# 查看指定名称的网卡序列号
+# /sys/class/net下存放了所有网卡的信息
+$ cat /sys/class/net/<name>/address
+```
+
+
+
+### Port
+
+```bash
+# 查看端口被哪个进程占用
+# lsof -i:<port>
+$ lsof -i:8080
+```
+
+
+
 ## Process Scheduling
 
 ### Process Status

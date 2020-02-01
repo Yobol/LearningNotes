@@ -99,6 +99,32 @@ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/i
 # ZSH_THEME="sunrise"
 ```
 
+### 插件
+
+#### 自动补全
+
+前置条件： 已经安装了 on-my-zsh
+
+参        考： [官方文档](https://gist.github.com/dogrocker/1efb8fd9427779c827058f873b94df95)
+
+```shell
+# 自动补全插件
+$ git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+
+# 高亮插件
+$ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+
+# 插件配置
+vim ~/.zshrc
+# 1.    :/plugins=(git) 定位到plugins=(git...
+# 2.    append zsh-autosuggestions & zsh-syntax-highlighting plugins
+#       plugins=(git zsh-autosuggestions zsh-syntax-highlighting plugins)
+# 3.    :wq save configuration
+# 4.    Reopen Terminal
+```
+
+
+
 ### Tmux——终端分栏
 
 参考：[Tmux 终端复用详解](https://www.cnblogs.com/wangqiguo/p/8905081.html)
