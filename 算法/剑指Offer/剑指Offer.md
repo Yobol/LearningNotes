@@ -685,6 +685,54 @@ public class Solution {
 }
 ```
 
+## 15. 链表中倒数第k个结点
+
+**题目描述**
+
+输入一个链表，输出该链表中倒数第k个结点。
+
+**解题思路**
+
+假设链表长度为n：
+
+1. 设置两个指针`fast`和`slow`，初始化指向头结点；
+2. 先让`fast`向后移动`k - 1`个结点，则还有`n - k`个结点可以移动；
+3. 然后让`fast`和`slow`同时向后移动，当`fast`移动到链表结尾时，`slow`就指向倒数第`k`个结点。
+
+```java
+/*
+public class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}*/
+public class Solution {
+    public ListNode FindKthToTail(ListNode head,int k) {
+        if (head == null || k <= 0) return null;
+        
+        ListNode fast = head;
+        while (fast != null && k-- > 0) {
+            fast = fast.next;
+        }
+        if (k > 0) {
+            return null;
+        }
+        
+        ListNode slow = head;
+        while (fast != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        return slow;
+    }
+}
+```
+
+
+
 ## *. 数组中重复的数字
 
 **题目描述**
