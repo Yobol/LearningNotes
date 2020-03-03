@@ -88,10 +88,12 @@ chsh -s `which zsh`
 
 #### 美化
 
+[zsh配置管理](https://github.com/ohmyzsh/ohmyzsh)
+
 ```shell
 # 美化
 # 安装oh-my-zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # 选择主题
 # 在https://github.com/ohmyzsh/ohmyzsh/wiki/Themes中选择喜欢的主题
