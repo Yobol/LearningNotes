@@ -839,21 +839,46 @@ public class Solution {
 
 **题目描述**
 
-
+给定单项链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。
 
 **解题思路**
 
+1. 如果该结点不是尾结点，则直接将下一个结点的值赋值给该结点，然后将该结点指向下下个结点（即删除下一个结点），时间复杂度为O(1)；
+2. 否则如果该结点还是头结点（链表中只有一个结点），则直接将head置为null；
+3. 否则，从头开始遍历，找到要删除结点的前一个结点。
 
+```java
+public class Solution {
+    
+    public ListNode deleteNode(ListNode head, ListNode toBeDeleted) {
+        if (head == null || toBeDeleted == null) return;
+        
+        if (toBeDeleted.next != null) { // toBeDeleted非尾结点
+            ListNode next = toBeDeleted.next;
+            toBeDeleted.val = next.val;
+            toBeDeleted.next = next.next;
+        } else {
+            if (toBeDeteletd == head) { // 链表中只有一个结点
+                head = null;
+            } else {
+                ListNode node = head;
+                while (node.next != null) {
+                    node = node.next;
+                }
+                node.next = null;
+            }
+        }
+        return head;
+    }
+}
+```
 
 ### 18.2 删除链表中重复的结点
 
 **题目描述**
 
-
+在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5。
 
 **解题思路**
 
-
-
-
-
+[Yobol.LearningNotes - LC.0082 删除排序链表中的重复元素II]([https://github.com/Yobol/LearningNotes/blob/master/%E7%AE%97%E6%B3%95/%E9%93%BE%E8%A1%A8/LC.0082.%E5%88%A0%E9%99%A4%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0II.md](https://github.com/Yobol/LearningNotes/blob/master/算法/链表/LC.0082.删除排序链表中的重复元素II.md))
