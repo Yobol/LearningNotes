@@ -1,59 +1,6 @@
 # 剑指Offer
 
-## 3. 数组中重复的数字
-
-**题目描述**
-
-在一个长度为 n 的数组里的所有数字都在 0 到 n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字是重
-复的，也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 
-
-返回第一个重复的数字即可。要求时间复杂度 O(N)，空间复杂度 O(1)。 
-
-```
-Input:
-{2, 3, 1, 0, 2, 5}
-
-Output:
-2
-```
-
-**解题思路**
-
-要求时间复杂度为 O(N)，空间复杂度为 O(1)。因此不可能使用排序的方法，也不能使用额外的数组。
-
-对于这种长为 n，且数组元素在 [0, n - 1] 范围内的问题，可以将值为 i 的元素调整到第 i 个位置上进行求解。
-
-从数组第 0 个位置开始遍历，当第 i 个位置上的元素不等于 i 时，将第 i 个位置上的元素与该数值对应下标的元素进行交换`swap(nums, i, nums[i])`，直到我们当前遍历到的元素在对应位置上已经有相同元素时返回结果。
-
-```Java
-public class Solution {
-    // duplication是一个长度为1的数组，保存第一个重复的数字。
-    public boolean duplicate(int[] nums, int length, int[] duplication) {
-        if (nums == null || length <= 1) return false;
-        
-        for (int i = 0; i < length; i++) {
-            while (nums[i] != i) {
-                // 以当前元素为下标的位置上已经存在该元素时返回结果
-                if (nums[i] == nums[nums[i]]) {
-                    duplication[0] = nums[i];
-                    return true;
-                }
-                // 将第 i 个位置上的元素与该数值对应下标的元素进行交换
-                swap(nums, i, nums[i]);
-            }
-        }
-        return false;
-    }
-    
-    private void swap(int[] nums, int i, int j) {
-        int tmp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = tmp;
-    }
-}
-```
-
-## 4. [二维数组中的查找](https://www.nowcoder.com/practice/abc3fe2ce8e146608e868a70efebf62e?tpId=13&tqId=11154&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
+## 3. [二维数组中的查找](https://www.nowcoder.com/practice/abc3fe2ce8e146608e868a70efebf62e?tpId=13&tqId=11154&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
 
 **题目描述**
 
@@ -103,7 +50,7 @@ public class Solution {
 }
 ```
 
-## 5. [替换空格](https://www.nowcoder.com/practice/4060ac7e3e404ad1a894ef3e17650423?tpId=13&tqId=11155&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
+## 4. [替换空格](https://www.nowcoder.com/practice/4060ac7e3e404ad1a894ef3e17650423?tpId=13&tqId=11155&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
 
 **题目描述**
 
@@ -147,7 +94,7 @@ public class Solution {
 }
 ```
 
-## 6. [从尾到头打印链表](https://www.nowcoder.com/practice/d0267f7f55b3412ba93bd35cfa8e8035?tpId=13&tqId=11156&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
+## 5. [从尾到头打印链表](https://www.nowcoder.com/practice/d0267f7f55b3412ba93bd35cfa8e8035?tpId=13&tqId=11156&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
 
 **题目描述**
 
@@ -226,7 +173,7 @@ public class Solution {
 }
 ```
 
-## 7. [重建二叉树（前 + 中）](https://www.nowcoder.com/practice/8a19cbe657394eeaac2f6ea9b0f6fcf6?tpId=13&tqId=11157&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
+## 6. [重建二叉树（前 + 中）](https://www.nowcoder.com/practice/8a19cbe657394eeaac2f6ea9b0f6fcf6?tpId=13&tqId=11157&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
 
 **题目描述**
 
@@ -264,66 +211,13 @@ public class Solution {
         int rootPosForInOrder = mapForInOrder.get(pre[preL]);
         int leftTreeSize = rootPosForInOrder - inL;
         root.left = helper(pre, preL + 1, preL + leftTreeSize, inL);
-        root.right = helper(pre, preL + leftTreeSize + 1, preR, inL + leftTreeSize + 1);
+        root.right = helper(pre, preL + leftTreeSize + 1, preR, rootPosForInOrder + 1);
         return root;
     }
 }
 ```
 
-## 8. [二叉树的下一个结点](https://www.nowcoder.com/practice/9023a0c988684a53960365b889ceaf5e?tpId=13&tqId=11210&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=3)
-
-**题目描述**
-
-给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子
-结点，同时包含指向父结点的指针。 
-
-```Java
-public class TreeLinkNode {
-	int val;
-	TreeLinkNode left = null;
-	TreeLinkNode right = null;
-    // 指向父结点
-	TreeLinkNode parent = null;
-    
-	TreeLinkNode(int val) {
-		this.val = val;
-	}
-}
-```
-
-**解题思路**
-
-找规律：
-
-1. 如果给定结点的右子树不为空，则该结点中序遍历的下一个结点为`右子树的最左结点`；
-2. 否则，向上找第一个左子树中包含该结点的结点。
-
-```Java
-public class Solution {
-    
-    public TreeLinkNode getNext(TreeLinkNode pNode) {
-        if (pNode == null) return null;
-        // 如果结点的右子树不为空，则该结点中序遍历的下一个结点为右子树的最左结点
-        if (pNode.right != null) {
-            // 取得结点右子树的根结点
-            TreeLinkNode node = pNode.right;
-            // 找到最左结点
-            while (node.left != null) node = node.left;
-            return node;
-        } else {
-            // 否则，通过node.parent向上找第一个左子树中包含该结点的结点
-            while (pNode.next != null) {
-                TreeLinkNode parent = pNode.parent;
-                if (parent.left == pNode) return parent;
-                pNode = parent;
-            }
-        }
-        return null;
-    }
-}
-```
-
-## 9. [用两个栈实现队列](https://www.nowcoder.com/practice/54275ddae22f475981afa2244dd448c6?tpId=13&tqId=11158&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
+## 7. [用两个栈实现队列](https://www.nowcoder.com/practice/54275ddae22f475981afa2244dd448c6?tpId=13&tqId=11158&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
 
 **题目描述**
 
@@ -359,124 +253,7 @@ public class Solution {
 }
 ```
 
-## 10. 斐波那契动规解法及衍生问题
-
-### 10.1 [斐波那契数列](https://www.nowcoder.com/practice/c6c7742f5ba7442aada113136ddea0c3?tpId=13&tqId=11160&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
-
-**题目描述**
-
-求斐波那契数列的第`n`项。
-
-![1567322056640](assets/1567322056640.png)
-
-**解题思路**
-
-如果使用递归求解，会重复计算一些子问题。例如，计算 f(4) 需要计算 f(3) 和 f(2)，计算 f(3) 需要计算 f(2) 和 f(1)，可以看到 f(2) 被重复计算了。 
-
-递归是将一个问题划分为多个子问题求解，动态规划也是如此，但是**动态规划会将子问题的解缓存起来，避免重复计算**。
-
-```Java
-public class Solution {
-    
-    public int Fibonacci(int n) {
-        if (n <= 1) return n;
-        
-        int[] fib = new int[n + 1];
-        fib[1] = 1; // fib[0] = 0;
-        for (int i = 2; i <= n; i++) {
-            fib[i] = fib[i - 1] + fib[i - 2];
-        }
-        return fib[n];
-    }
-}
-```
-
-考虑到第 i 项只与第 i-1 和第 i-2 项有关，因此只需要存储前两项的值就能求解第 i 项，从而将空间复杂度由 O(N) 降
-低为 O(1)。 
-
-```Java
-public class Solution {
-    
-    public int Fibonacci(int n) {
-        if (n <= 1) return n;
-        int pre2 = 0, pre1 = 1;
-        for (int i = 2; i <= n; i++) {
-            int fib = pre2 + pre1;
-            pre2 = pre1;
-            pre1 = fib;
-        }
-        return fib;
-    }
-}
-```
-
-### 10.2 [矩形覆盖](https://www.nowcoder.com/practice/72a5a919508a4251859fb2cfb987a0e6?tpId=13&tqId=11163&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
-
-**题目描述**
-
-我们可以用`2*1`的小矩形横着或者竖着去覆盖更大的矩形。请问用 n 个`2*1`的小矩形无重叠地覆盖一个`2*n`的大矩
-形，总共有多少种方法？ 
-
-**解题思路**
-
-当`n=1`时，只有一种覆盖方法；
-
-当`n=2`时，有两种覆盖方法，横向和纵向。
-
-要覆盖`2*n`的大矩形，可以先覆盖`2*1`的矩形，再覆盖`2*(n-1)`的矩形；或者先覆盖`2*2`的矩形，再覆盖`2*(n-2)`
-的矩形。而覆盖`2*(n-1)`和`2*(n-2)`的矩形可以看成子问题。该问题的递推公式如下：
-
-![1567324093836](assets/1567324093836.png)
-
- ```Java
-public class Solution {
-    
-    public int rectCover(int n) {
-        if (n <= 2) return n;
-        
-        int pre2 = 1, pre1 = 2;
-        int result = 0;
-        for (int i = 3; i <= n; i++) {
-            result = pre2 + pre1;
-            pre2 = pre1;
-            pre1 = result;
-        }
-        return result;
-    }
-}
- ```
-
-### 10.3 [跳台阶](https://www.nowcoder.com/practice/8c82a5b80378478f9484d87d1c5f12a4?tpId=13&tqId=11161&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
-
-**题目描述**
-
-一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
-
-**解题思路**
-
-同矩阵覆盖问题。
-
-### 10.4 [变态跳台阶](https://www.nowcoder.com/practice/22243d016f6b47f2a6928b4313c85387?tpId=13&tqId=11162&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
-
-**题目描述**
-
-一只青蛙一次可以跳上 1 级台阶，也可以跳上 2 级... 它也可以跳上 n 级。求该青蛙跳上一个 n 级的台阶总共有多少
-种跳法。 
-
-**解题思路**
-
-跳上 n-1 级台阶，可以从 n-2 级跳 1 级上去，也可以从 n-3 级跳 2 级上去...，那么`f(n-1) = f(n-2) + f(n-3) + ... + f(0) `，同样，跳上 n 级台阶，可以从 n-1 级跳 1 级上去，也可以从 n-2 级跳 2 级上去... ，那么`f(n) = f(n-1) + f(n-2) + ... + f(0)`，综上可得`f(n) - f(n-1) = f(n-1)`，即`f(n) = 2 * f(n - 1)`。所以`f(n)`是一个首项为1，公比为2的等比数列。
-
-```Java
-public class Solution {
-   
-    public int jumpFloorII(int n) {
-    	return (int)Math.pow(2, target - 1);
-    }
-}
-```
-
-## 11. [旋转数组中的最小数字](https://www.nowcoder.com/practice/9f3231a991af4f55b95579b44b7a01ba?tpId=13&tqId=11159&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 8. [旋转数组中的最小数字](https://www.nowcoder.com/practice/9f3231a991af4f55b95579b44b7a01ba?tpId=13&tqId=11159&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 **题目描述**
 
@@ -543,7 +320,480 @@ public class Solution {
 }
 ```
 
-## 12. [矩阵中的路径]()
+## 9. 斐波那契动规解法及衍生问题
+
+### 9.1 [斐波那契数列](https://www.nowcoder.com/practice/c6c7742f5ba7442aada113136ddea0c3?tpId=13&tqId=11160&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+**题目描述**
+
+求斐波那契数列的第`n`项。
+
+![1567322056640](assets/1567322056640.png)
+
+**解题思路**
+
+如果使用递归求解，会重复计算一些子问题。例如，计算 f(4) 需要计算 f(3) 和 f(2)，计算 f(3) 需要计算 f(2) 和 f(1)，可以看到 f(2) 被重复计算了。 
+
+递归是将一个问题划分为多个子问题求解，动态规划也是如此，但是**动态规划会将子问题的解缓存起来，避免重复计算**。
+
+```Java
+public class Solution {
+    
+    public int Fibonacci(int n) {
+        if (n <= 1) return n;
+        
+        int[] fib = new int[n + 1];
+        fib[1] = 1; // fib[0] = 0;
+        for (int i = 2; i <= n; i++) {
+            fib[i] = fib[i - 1] + fib[i - 2];
+        }
+        return fib[n];
+    }
+}
+```
+
+考虑到第 i 项只与第 i-1 和第 i-2 项有关，因此只需要存储前两项的值就能求解第 i 项，从而将空间复杂度由 O(N) 降
+低为 O(1)。 
+
+```Java
+public class Solution {
+    
+    public int Fibonacci(int n) {
+        if (n <= 1) return n;
+        int pre2 = 0, pre1 = 1;
+        for (int i = 2; i <= n; i++) {
+            int fib = pre2 + pre1;
+            pre2 = pre1;
+            pre1 = fib;
+        }
+        return fib;
+    }
+}
+```
+
+### 9.2 [矩形覆盖](https://www.nowcoder.com/practice/72a5a919508a4251859fb2cfb987a0e6?tpId=13&tqId=11163&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+**题目描述**
+
+我们可以用`2*1`的小矩形横着或者竖着去覆盖更大的矩形。请问用 n 个`2*1`的小矩形无重叠地覆盖一个`2*n`的大矩
+形，总共有多少种方法？ 
+
+**解题思路**
+
+当`n=1`时，只有一种覆盖方法；
+
+当`n=2`时，有两种覆盖方法，横向和纵向。
+
+要覆盖`2*n`的大矩形，可以先覆盖`2*1`的矩形，再覆盖`2*(n-1)`的矩形；或者先覆盖`2*2`的矩形，再覆盖`2*(n-2)`
+的矩形。而覆盖`2*(n-1)`和`2*(n-2)`的矩形可以看成子问题。该问题的递推公式如下：
+
+![1567324093836](assets/1567324093836.png)
+
+ ```Java
+public class Solution {
+    
+    public int rectCover(int n) {
+        if (n <= 2) return n;
+        
+        int pre2 = 1, pre1 = 2;
+        int result = 0;
+        for (int i = 3; i <= n; i++) {
+            result = pre2 + pre1;
+            pre2 = pre1;
+            pre1 = result;
+        }
+        return result;
+    }
+}
+ ```
+
+### 9.3 [跳台阶](https://www.nowcoder.com/practice/8c82a5b80378478f9484d87d1c5f12a4?tpId=13&tqId=11161&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+**题目描述**
+
+一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法（先后次序不同算不同的结果）。
+
+**解题思路**
+
+同矩阵覆盖问题。
+
+### 9.4 [变态跳台阶](https://www.nowcoder.com/practice/22243d016f6b47f2a6928b4313c85387?tpId=13&tqId=11162&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+**题目描述**
+
+一只青蛙一次可以跳上 1 级台阶，也可以跳上 2 级... 它也可以跳上 n 级。求该青蛙跳上一个 n 级的台阶总共有多少
+种跳法。 
+
+**解题思路**
+
+跳上 n-1 级台阶，可以从 n-2 级跳 1 级上去，也可以从 n-3 级跳 2 级上去...，那么`f(n-1) = f(n-2) + f(n-3) + ... + f(0) `，同样，跳上 n 级台阶，可以从 n-1 级跳 1 级上去，也可以从 n-2 级跳 2 级上去... ，那么`f(n) = f(n-1) + f(n-2) + ... + f(0)`，综上可得`f(n) - f(n-1) = f(n-1)`，即`f(n) = 2 * f(n - 1)`。所以`f(n)`是一个首项为1，公比为2的等比数列。
+
+```Java
+public class Solution {
+   
+    public int jumpFloorII(int n) {
+    	return (int)Math.pow(2, target - 1);
+    }
+}
+```
+
+## 10. [二进制中1的个数](https://www.nowcoder.com/practice/8ee967e43c2c4ec193b040ea7fbb10b8?tpId=13&tqId=11164&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
+
+**题目描述**
+
+输入一个整数，输出该数二进制表示中 1 的个数。
+
+**解题思路**
+
+`n & (n - 1)` 运算去除 n 的二进制表示中最后的1。
+
+```
+n : 10110100
+n - 1 : 10110011
+n & (n - 1) : 10110000
+```
+
+时间复杂度：O(M)，其中 M 表示 1 的个数。 
+
+```Java
+public class Solution {
+    public int numberOf1(int n) {
+        int cnt = 0;
+        while (n != 0) {
+            n &= (n - 1);
+            cnt++;
+        }
+        return cnt;
+    }
+}
+```
+
+## 11. [数值的整数次方](https://www.nowcoder.com/practice/1a834e5e3e1a4b7ba251417554e07c00?tpId=13&tqId=11165&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+
+**题目描述**
+
+给定一个 double 类型的浮点数 base 和 int 类型的整数 exponent，求 base 的 exponent 次方。 
+
+**解题思路**
+
+下面的讨论中 x 代表 base，n 代表 exponent。 
+
+![1567411187458](assets/1567411187458.png)
+
+因为 (x*x)^n/2^ 可以通过递归求解，并且每次递归 n 都减小一半，因此整个算法的时间复杂度为 O(logN)。 
+
+```Java
+public class Solution {
+    
+    public int power(double base, int exponent) {
+        if (base == 0) return 0;
+        if (exponent == 0) return 1;
+        
+        boolean isNegative = false;
+        if (exponent < 0) {
+            exponent = -exponent;
+            isNegative = true;
+        }
+        double pow = power(base * base, exponent / 2);
+        if ((exponent & 1) == 1) pow *= base;
+        return isNegative ? 1 / pow : pow;
+    }
+}
+```
+
+## 12. 打印从 1 到最大的 n 位数
+
+**题目描述**
+
+输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 ，一直到最大的 3 位数即 999。 
+
+**解题思路**
+
+由于 n 可能会非常大，因此不能用 int 表示数字，而是用 char 数组进行存储。
+
+使用回溯法得到所有的数。
+
+```Java
+public class Solution {
+    
+    public void print1ToMaxOfNDigits(int n) {
+        if (n <= 0) return;
+        char[] number = new char[n];
+        // 递归入口
+        print1ToMaxOfDigits(number, 0);
+    }
+    
+    private void print1ToMaxOfDigits(char[] number, int digit) {
+        // 当递归到第n层时，开始打印number，数字1在数组中存储为['0', '0', '1']
+        if (digit == number.length) {
+            printNumber(number);
+            return;
+        }
+        for (int i = 0; i < 10; i++) {
+            number[digit] = (char)(i + '0');
+            print1ToMaxOfDigits(number, digit + 1);
+        }
+    }
+    
+    // 打印一个数， 当 n = 3 时
+    // ['0', '0', '1']
+    // ...
+    // ['9', '9', '9']
+    private void printNumber(char[] number) {
+        int index = 0;
+        while (index < number.length && number[index] == '0')
+            index++;
+        while (index < number.length)
+            System.out.print(number[index++])
+        System.out.println()
+    }
+}
+```
+
+## 13. 删除链表结点
+
+### 13.1 在 O(1) 时间内删除链表结点
+
+**题目描述**
+
+给定单项链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。
+
+**解题思路**
+
+1. 如果该结点不是尾结点，则直接将下一个结点的值赋值给该结点，然后将该结点指向下下个结点（即删除下一个结点），时间复杂度为O(1)；
+2. 否则如果该结点还是头结点（链表中只有一个结点），则直接将head置为null；
+3. 否则，从头开始遍历，找到要删除结点的前一个结点。
+
+```java
+public class Solution {
+    
+    public ListNode deleteNode(ListNode head, ListNode toBeDeleted) {
+        if (head == null || toBeDeleted == null) return;
+        
+        if (toBeDeleted.next != null) { // toBeDeleted非尾结点
+            ListNode next = toBeDeleted.next;
+            toBeDeleted.val = next.val;
+            toBeDeleted.next = next.next;
+        } else {
+            if (toBeDeteletd == head) { // 链表中只有一个结点
+                head = null;
+            } else {
+                ListNode node = head;
+                while (node.next != null) {
+                    node = node.next;
+                }
+                node.next = null;
+            }
+        }
+        return head;
+    }
+}
+```
+
+### 13.2 删除链表中重复的结点
+
+**题目描述**
+
+在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5。
+
+**解题思路**
+
+[Yobol.LearningNotes - LC.0082 删除排序链表中的重复元素II]([https://github.com/Yobol/LearningNotes/blob/master/%E7%AE%97%E6%B3%95/%E9%93%BE%E8%A1%A8/LC.0082.%E5%88%A0%E9%99%A4%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0II.md](https://github.com/Yobol/LearningNotes/blob/master/算法/链表/LC.0082.删除排序链表中的重复元素II.md))
+
+## 14. 调整数组顺序使奇数位于偶数前面
+
+### 14.1 无须保证相对顺序
+
+**题目描述**
+
+输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有奇数位于数组的前半部分，所有偶数位于数组的后半部分。
+
+**解题思路**
+
+参考快排中的partition方法：
+
+1. 声明两个指针`l`和`r`分别初始化为`0`和`n-1`，当`l < r`时；
+2. 不断左移`r`，直到找到第一个奇数；
+3. 不断右移`l`，直到找到第一个偶数；
+4. 交换`l`和`r`指向的元素值
+5. 重复上述步骤，直到`l >= r`。
+
+```java
+public class Solution {
+    public void reorderOddEven(int[] array) {
+        if (array == null || array.length == 0) return;
+        int l = 0, r = array.length - 1;
+        while (l < r) {
+            while (l < r && isEven(array[r])) r--;
+            while (l < r && !isEven(array[l])) l++;
+            if (l < r) {
+                swap(array, l, r);
+            }
+        }
+    }reOrderArray
+    
+    private boolean isEven(int n) {
+        return (n & 0x1) == 0;
+    }
+    
+    private void swap(int[] array, int i, int j) {
+        int tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+}
+```
+
+### 14.2 [保证奇数和奇数，偶数和偶数之间的相对顺序不变（Newcoder）](https://www.nowcoder.com/practice/beb5aa231adc45b2a5dcc5b62c93f593)
+
+**题目描述**
+
+输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间的相对位置不变。
+
+**解题思路**
+
+快排并不能保证稳定性（相同元素相对顺序不变），冒泡排序可以保证稳定性，我们可以学习冒泡思想，每次都将当前偶数上浮到待排序的末尾。
+
+**时间复杂度：** $O(n)$；
+
+**空间复杂度：** $O(1)$。
+
+```java
+public class Solution {
+    public void reorderOddEven(int[] array) {
+        if (array == null || array.length == 0) return;
+        int n = array.length;
+        
+        for (int i = n - 1; i > 0; i--) {
+            for (int j = 0; j < i; j++) {
+                if (isEven(array[j]) && !isEven(array[j + 1])) {
+                    swap(array, j, j + 1);
+                }
+            }
+        }
+    }
+    
+    private boolean isEven(int n) {
+        return (n & 0x1) == 0;
+    }
+    
+    private void swap(int[] array, int i, int j) {
+        int tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+}
+```
+
+## *. 数组中重复的数字
+
+**题目描述**
+
+在一个长度为 n 的数组里的所有数字都在 0 到 n-1 的范围内。数组中某些数字是重复的，但不知道有几个数字是重
+复的，也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 
+
+返回第一个重复的数字即可。要求时间复杂度 O(N)，空间复杂度 O(1)。 
+
+```
+Input:
+{2, 3, 1, 0, 2, 5}
+
+Output:
+2
+```
+
+**解题思路**
+
+要求时间复杂度为 O(N)，空间复杂度为 O(1)。因此不可能使用排序的方法，也不能使用额外的数组。
+
+对于这种长为 n，且数组元素在 [0, n - 1] 范围内的问题，可以将值为 i 的元素调整到第 i 个位置上进行求解。
+
+从数组第 0 个位置开始遍历，当第 i 个位置上的元素不等于 i 时，将第 i 个位置上的元素与该数值对应下标的元素进行交换`swap(nums, i, nums[i])`，直到我们当前遍历到的元素在对应位置上已经有相同元素时返回结果。
+
+```Java
+public class Solution {
+    // duplication是一个长度为1的数组，保存第一个重复的数字。
+    public boolean duplicate(int[] nums, int length, int[] duplication) {
+        if (nums == null || length <= 1) return false;
+        
+        for (int i = 0; i < length; i++) {
+            while (nums[i] != i) {
+                // 以当前元素为下标的位置上已经存在该元素时返回结果
+                if (nums[i] == nums[nums[i]]) {
+                    duplication[0] = nums[i];
+                    return true;
+                }
+                // 将第 i 个位置上的元素与该数值对应下标的元素进行交换
+                swap(nums, i, nums[i]);
+            }
+        }
+        return false;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+}
+```
+
+## *. [二叉树的下一个结点](https://www.nowcoder.com/practice/9023a0c988684a53960365b889ceaf5e?tpId=13&tqId=11210&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=3)
+
+**题目描述**
+
+给定一个二叉树和其中的一个结点，请找出中序遍历顺序的下一个结点并且返回。注意，树中的结点不仅包含左右子
+结点，同时包含指向父结点的指针。 
+
+```Java
+public class TreeLinkNode {
+	int val;
+	TreeLinkNode left = null;
+	TreeLinkNode right = null;
+    // 指向父结点
+	TreeLinkNode parent = null;
+    
+	TreeLinkNode(int val) {
+		this.val = val;
+	}
+}
+```
+
+**解题思路**
+
+找规律：
+
+1. 如果给定结点的右子树不为空，则该结点中序遍历的下一个结点为`右子树的最左结点`；
+2. 否则，向上找第一个左子树中包含该结点的结点。
+
+```Java
+public class Solution {
+    
+    public TreeLinkNode getNext(TreeLinkNode pNode) {
+        if (pNode == null) return null;
+        // 如果结点的右子树不为空，则该结点中序遍历的下一个结点为右子树的最左结点
+        if (pNode.right != null) {
+            // 取得结点右子树的根结点
+            TreeLinkNode node = pNode.right;
+            // 找到最左结点
+            while (node.left != null) node = node.left;
+            return node;
+        } else {
+            // 否则，通过node.parent向上找第一个左子树中包含该结点的结点
+            while (pNode.next != null) {
+                TreeLinkNode parent = pNode.parent;
+                if (parent.left == pNode) return parent;
+                pNode = parent;
+            }
+        }
+        return null;
+    }
+}
+```
+
+
+
+## *. [矩阵中的路径]()
 
 **题目描述**
 
@@ -603,7 +853,7 @@ public class Solution {
 
 
 
-## 13. [机器人的运动范围](https://www.nowcoder.com/practice/6e5207314b5241fb83f2329e89fdecc8?tpId=13&tqId=11219&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## *. [机器人的运动范围](https://www.nowcoder.com/practice/6e5207314b5241fb83f2329e89fdecc8?tpId=13&tqId=11219&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 **题目描述**
 
@@ -657,7 +907,7 @@ public class Solution {
 }
 ```
 
-## 14. [剪绳子——整数拆分](https://leetcode.com/problems/integer-break/description/)
+## *. [剪绳子——整数拆分](https://leetcode.com/problems/integer-break/description/)
 
 **题目描述**
 
@@ -720,165 +970,4 @@ public int integerBreak(int n) {
 }
 ```
 
-## 15. [二进制中1的个数](https://www.nowcoder.com/practice/8ee967e43c2c4ec193b040ea7fbb10b8?tpId=13&tqId=11164&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
-
-**题目描述**
-
-输入一个整数，输出该数二进制表示中 1 的个数。
-
-**解题思路**
-
-`n & (n - 1)` 运算去除 n 的二进制表示中最后的1。
-
-```
-n : 10110100
-n - 1 : 10110011
-n & (n - 1) : 10110000
-```
-
-时间复杂度：O(M)，其中 M 表示 1 的个数。 
-
-```Java
-public class Solution {
-    public int numberOf1(int n) {
-        int cnt = 0;
-        while (n != 0) {
-            n &= (n - 1);
-            cnt++;
-        }
-        return cnt;
-    }
-}
-```
-
-## 16. [数值的整数次方](https://www.nowcoder.com/practice/1a834e5e3e1a4b7ba251417554e07c00?tpId=13&tqId=11165&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
-
-**题目描述**
-
-给定一个 double 类型的浮点数 base 和 int 类型的整数 exponent，求 base 的 exponent 次方。 
-
-**解题思路**
-
-下面的讨论中 x 代表 base，n 代表 exponent。 
-
-![1567411187458](assets/1567411187458.png)
-
-因为 (x*x)^n/2^ 可以通过递归求解，并且每次递归 n 都减小一半，因此整个算法的时间复杂度为 O(logN)。 
-
-```Java
-public class Solution {
-    
-    public int power(double base, int exponent) {
-        if (base == 0) return 0;
-        if (exponent == 0) return 1;
-        
-        boolean isNegative = false;
-        if (exponent < 0) {
-            exponent = -exponent;
-            isNegative = true;
-        }
-        double pow = power(base * base, exponent / 2);
-        if ((exponent & 1) == 1) pow *= base;
-        return isNegative ? 1 / pow : pow;
-    }
-}
-```
-
-## 17. 打印从 1 到最大的 n 位数
-
-**题目描述**
-
-输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 ，一直到最大的 3 位数即 999。 
-
-**解题思路**
-
-由于 n 可能会非常大，因此不能用 int 表示数字，而是用 char 数组进行存储。
-
-使用回溯法得到所有的数。
-
-```Java
-public class Solution {
-    
-    public void print1ToMaxOfNDigits(int n) {
-        if (n <= 0) return;
-        char[] number = new char[n];
-        // 递归入口
-        print1ToMaxOfDigits(number, 0);
-    }
-    
-    private void print1ToMaxOfDigits(char[] number, int digit) {
-        // 当递归到第n层时，开始打印number，数字1在数组中存储为['0', '0', '1']
-        if (digit == number.length) {
-            printNumber(number);
-            return;
-        }
-        for (int i = 0; i < 10; i++) {
-            number[digit] = (char)(i + '0');
-            print1ToMaxOfDigits(number, digit + 1);
-        }
-    }
-    
-    // 打印一个数， 当 n = 3 时
-    // ['0', '0', '1']
-    // ...
-    // ['9', '9', '9']
-    private void printNumber(char[] number) {
-        int index = 0;
-        while (index < number.length && number[index] == '0')
-            index++;
-        while (index < number.length)
-            System.out.print(number[index++])
-        System.out.println()
-    }
-}
-```
-
-## 18. 删除链表结点
-
-### 18.1 在 O(1) 时间内删除链表结点
-
-**题目描述**
-
-给定单项链表的头指针和一个结点指针，定义一个函数在O(1)时间删除该结点。
-
-**解题思路**
-
-1. 如果该结点不是尾结点，则直接将下一个结点的值赋值给该结点，然后将该结点指向下下个结点（即删除下一个结点），时间复杂度为O(1)；
-2. 否则如果该结点还是头结点（链表中只有一个结点），则直接将head置为null；
-3. 否则，从头开始遍历，找到要删除结点的前一个结点。
-
-```java
-public class Solution {
-    
-    public ListNode deleteNode(ListNode head, ListNode toBeDeleted) {
-        if (head == null || toBeDeleted == null) return;
-        
-        if (toBeDeleted.next != null) { // toBeDeleted非尾结点
-            ListNode next = toBeDeleted.next;
-            toBeDeleted.val = next.val;
-            toBeDeleted.next = next.next;
-        } else {
-            if (toBeDeteletd == head) { // 链表中只有一个结点
-                head = null;
-            } else {
-                ListNode node = head;
-                while (node.next != null) {
-                    node = node.next;
-                }
-                node.next = null;
-            }
-        }
-        return head;
-    }
-}
-```
-
-### 18.2 删除链表中重复的结点
-
-**题目描述**
-
-在一个排序的链表中，存在重复的结点，请删除该链表中重复的结点，重复的结点不保留，返回链表头指针。 例如，链表1->2->3->3->4->4->5 处理后为 1->2->5。
-
-**解题思路**
-
-[Yobol.LearningNotes - LC.0082 删除排序链表中的重复元素II]([https://github.com/Yobol/LearningNotes/blob/master/%E7%AE%97%E6%B3%95/%E9%93%BE%E8%A1%A8/LC.0082.%E5%88%A0%E9%99%A4%E6%8E%92%E5%BA%8F%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E5%85%83%E7%B4%A0II.md](https://github.com/Yobol/LearningNotes/blob/master/算法/链表/LC.0082.删除排序链表中的重复元素II.md))
+## 
