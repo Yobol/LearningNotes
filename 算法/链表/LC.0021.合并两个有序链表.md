@@ -15,6 +15,8 @@
 
 ### 个人AC
 
+#### 迭代
+
 设置一个`dummy node`，用来返回合并后的新链表；同时声明一个`prev node`，用来追踪新链表的尾结点，以便可以更新新结点。
 
 我们重复以下过程，直到 l1 或者 l2 指向了 null ：如果 l1 当前位置的值小于等于 l2 ，我们就把 l1 的值接在 prev 节点的后面同时将 l1 指针往后移一个。否则，我们对 l2 做同样的操作。不管我们将哪一个元素接在了后面，我们都把 prev 向后移一个元素。
@@ -59,6 +61,42 @@ class Solution {
 时间复杂度： $O(m + n)$；
 
 空间复杂度： $O(1)$。
+
+#### 递归
+
+给定两个链表L1和L2。如果L1且L2为null，则返回null，否则如果L1为null返回L2，如果L2为null则返回L1，否则返回两者中较小的那一个。
+
+```java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        }
+        
+        ListNode mergedHead = null;
+        if (l1.val < l2.val) {
+            mergeHead = l1;
+            mergeHead.next = mergeTwoLists(l1.next, l2);
+        } else {
+            mergeHead = l2;
+            mergeHead.next = mergeTwoLists(l1, l2.next);
+        }
+        return mergeHead;
+    }
+}
+```
+
+
 
 ## 最优解
 

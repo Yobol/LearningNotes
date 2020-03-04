@@ -320,9 +320,7 @@ public class Solution {
 }
 ```
 
-## 9. 斐波那契动规解法及衍生问题
-
-### 9.1 [斐波那契数列](https://www.nowcoder.com/practice/c6c7742f5ba7442aada113136ddea0c3?tpId=13&tqId=11160&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+## 9. 斐波那契数列
 
 **题目描述**
 
@@ -371,7 +369,7 @@ public class Solution {
 }
 ```
 
-### 9.2 [矩形覆盖](https://www.nowcoder.com/practice/72a5a919508a4251859fb2cfb987a0e6?tpId=13&tqId=11163&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+### 9.1 [矩形覆盖](https://www.nowcoder.com/practice/72a5a919508a4251859fb2cfb987a0e6?tpId=13&tqId=11163&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 **题目描述**
 
@@ -407,7 +405,7 @@ public class Solution {
 }
  ```
 
-### 9.3 [跳台阶](https://www.nowcoder.com/practice/8c82a5b80378478f9484d87d1c5f12a4?tpId=13&tqId=11161&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+### 9.2 [跳台阶](https://www.nowcoder.com/practice/8c82a5b80378478f9484d87d1c5f12a4?tpId=13&tqId=11161&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 **题目描述**
 
@@ -417,7 +415,7 @@ public class Solution {
 
 同矩阵覆盖问题。
 
-### 9.4 [变态跳台阶](https://www.nowcoder.com/practice/22243d016f6b47f2a6928b4313c85387?tpId=13&tqId=11162&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
+### 9.3 [变态跳台阶](https://www.nowcoder.com/practice/22243d016f6b47f2a6928b4313c85387?tpId=13&tqId=11162&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
 **题目描述**
 
@@ -731,7 +729,45 @@ public class Solution {
 }
 ```
 
+### 15.1 求链表的中间结点
 
+**题目描述**
+
+求链表的中间结点。
+
+**解题思路**
+
+[Yobol.LearningNotes - LC.0876.链表的中间结点](https://github.com/Yobol/LearningNotes/blob/master/算法/链表/双指针/LC.0876.链表的中间结点.md)
+
+### 15.2 判断一个单向链表是否形成了环形结构
+
+**题目描述**
+
+判断链表中是否有环。
+
+**解题思路**
+
+[Yobol.LearningNotes - LC.0141.环形链表](https://github.com/Yobol/LearningNotes/blob/master/算法/链表/双指针/LC.0141.环形链表.md)
+
+## 16. 反转链表
+
+**题目描述**
+
+定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的头结点。
+
+**解题思路**
+
+[Yobol.LearningNotes - LC.0206.反转链表](https://github.com/Yobol/LearningNotes/blob/master/算法/链表/LC.0206.反转链表.md)
+
+## 17.  合并两个排序的链表
+
+**题目描述**
+
+输入两个单调递增的链表，输出两个链表合成后的链表，当然我们需要合成后的链表满足单调不减规则。
+
+**解题思路**
+
+[Yobol.LearningNotes - LC.0021.合并两个有序链表](https://github.com/Yobol/LearningNotes/blob/master/算法/链表/LC.0021.合并两个有序链表.md)
 
 ## *. 数组中重复的数字
 
@@ -785,6 +821,8 @@ public class Solution {
     }
 }
 ```
+
+
 
 ## *. [二叉树的下一个结点](https://www.nowcoder.com/practice/9023a0c988684a53960365b889ceaf5e?tpId=13&tqId=11210&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=3)
 
