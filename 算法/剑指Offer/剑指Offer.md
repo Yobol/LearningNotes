@@ -1,5 +1,10 @@
 # 剑指Offer
 
+- 要注重平时积累，而不是临时抱佛脚，抱着平时划水面试突击就能拿Offer的心态，只会原地踏步，没有长进；
+- 基础的数据结构及算法一定要熟练掌握；
+- 编码要规范（命名/缩进/逻辑清晰）、完整（基本功能/考虑边界条件）；
+- 明确解题思路后再动手编程，否则上来就写代码，一旦写不出来，给面试官的印象就极度不好；
+
 ## 3. [二维数组中的查找](https://www.nowcoder.com/practice/abc3fe2ce8e146608e868a70efebf62e?tpId=13&tqId=11154&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
 
 **题目描述**
@@ -812,6 +817,59 @@ public class Solution {
     }
 }
 ```
+
+## 19. 二叉树的镜像
+
+**题目描述**
+
+操作给定的二叉树，将其变换为源二叉树的镜像。
+
+**解题思路**
+
+1. 前序遍历二叉树的每个结点；
+2. 交换它的左右子结点。
+
+```java
+/**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    public void Mirror(TreeNode root) {
+        if (root == null) return;
+        
+        TreeNode tmp = root.left;
+        root.left = root.right;
+        root.right = tmp;
+        
+        Mirror(root.left);
+        Mirror(root.right);
+    }
+}
+```
+
+类似：有返回值[LearningNotes - LC.0226.翻转二叉树](https://github.com/Yobol/LearningNotes/blob/master/算法/树/LC.0226.翻转二叉树.md)
+
+## 20. 顺时针打印矩阵
+
+**题目描述**
+
+输入一个矩阵，按照从里到外以顺时针的顺序依次打印出每一个数字。
+
+**解题思路**
+
+[Yobol.LearningNotes - 螺旋矩阵](https://github.com/Yobol/LearningNotes/blob/master/算法/数组或字符串/LC.0054.螺旋矩阵.md)
+
+
 
 ## *. 数组中重复的数字
 
