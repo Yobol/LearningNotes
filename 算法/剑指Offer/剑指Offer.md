@@ -3,7 +3,10 @@
 - 要注重平时积累，而不是临时抱佛脚，抱着平时划水面试突击就能拿Offer的心态，只会原地踏步，没有长进；
 - 基础的数据结构及算法一定要熟练掌握；
 - 编码要规范（命名/缩进/逻辑清晰）、完整（基本功能/考虑边界条件）；
-- 明确解题思路后再动手编程，否则上来就写代码，一旦写不出来，给面试官的印象就极度不好；
+- 明确解题思路后再动手编程，否则上来就写代码，一旦写不出来，给面试官的印象就极度不好，可以采用如下方法寻找思路：
+  - 画图
+  - 举例
+  - 分解
 
 ## 3. [二维数组中的查找](https://www.nowcoder.com/practice/abc3fe2ce8e146608e868a70efebf62e?tpId=13&tqId=11154&rp=1&ru=%2Fta%2Fcoding-interviews&qru=%2Fta%2Fcoding-interviews%2Fquestion-ranking&tPage=1)
 
@@ -869,7 +872,162 @@ public class Solution {
 
 [Yobol.LearningNotes - 螺旋矩阵](https://github.com/Yobol/LearningNotes/blob/master/算法/数组或字符串/LC.0054.螺旋矩阵.md)
 
+## 21. 包含min函数的栈
 
+**题目描述**
+
+定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
+
+**解题思路**
+
+```java
+import java.util.Stack;
+
+public class Solution {
+    
+    Stack<Integer> dataStack = new Stack<>();
+    Stack<Integer> minStack = new Stack<>();
+
+    
+    public void push(int node) {
+        if (this.minStack.isEmpty()) {
+            this.minStack.push(node);
+        } else if (node <= this.minStack.peek()) {
+            this.minStack.push(node);
+        }
+        this.dataStack.push(node);
+    }
+    
+    public void pop() {
+        if (this.dataStack.isEmpty()) {
+            throw new RuntimeException("Stack is empty!");
+        }
+        if (this.dataStack.pop() == this.minStack.peek()) {
+            this.minStack.pop();
+        }
+    }
+    
+    public int top() {
+        if (this.dataStack.isEmpty()) {
+            throw new RuntimeException("Stack is empty!");
+        }
+        return this.dataStack.peek();
+    }
+    
+    public int min() {
+        if (this.minStack.isEmpty()) {
+            throw new RuntimeException("Stack is empty!");
+        }
+        return this.minStack.peek();
+    }
+}
+```
+
+## 22. 栈的压入、弹出序列
+
+**题目描述**
+
+输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否可能为该栈的弹出顺序。
+
+假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，序列4,5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。
+
+注：这两个序列的长度是相等的。
+
+**解题思路**
+
+要让出栈序列中的元素完全匹配上入栈序列的元素，声明两个指针`push`和`pop`分别指向入栈和出栈序列的起始位置：
+
+1. 如果当前入栈元素等于出栈元素，则表示匹配，不用模拟入栈操作，直接跳过；
+2. 否则：
+   1. 如果栈为空，则将入栈元素直接压入栈中，并后移`push`指针；
+   2. 否则如果栈顶元素等于出栈元素，表示匹配，将栈顶元素弹出，并后移`pop`指针；
+   3. 否则如果`push`指针小于n，将入栈元素直接压入栈中，并后移`push`指针；
+   4. 否则不能匹配，返回false。
+
+```java
+import java.util.Stack;
+
+public class Solution {
+    
+    private Stack<Integer> stack = new Stack<>();
+    
+    public boolean IsPopOrder(int [] pushA,int [] popA) {
+        int push = 0;
+        int pop = 0;
+        int n = pushA.length;
+        while (pop < n) {
+            if (push < n && pushA[push] == popA[pop]) {
+                push++;
+                pop++;
+            } else {
+                if (stack.isEmpty()) {
+                    stack.push(pushA[push++]);
+                } else if (stack.peek() == popA[pop]) {
+                    pop++;
+                    stack.pop();
+                } else if (push < n){
+                    stack.push(pushA[push++]);
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
+## 23. 从上往下打印二叉树
+
+**题目描述**
+
+从上往下打印出二叉树的每个结点，同一层的节点按照从左到右的顺序打印。
+
+**解题思路**
+
+不分层。
+
+```java
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+/**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+
+}
+*/
+public class Solution {
+    public ArrayList<Integer> PrintFromTopToBottom(TreeNode root) {
+        ArrayList<Integer> array = new ArrayList<>();
+        if (root == null) return array;
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        
+        while (!queue.isEmpty()) {
+            int cnt = queue.size();
+            while (cnt > 0) {
+                TreeNode tmp = queue.poll();
+                array.add(tmp.val);
+                if (tmp.left != null) queue.add(tmp.left);
+                if (tmp.right != null) queue.add(tmp.right);
+                cnt--;
+            }
+        }
+        return array;
+    }
+}
+```
+
+[Yobol.LearningNotes - LC.0102.二叉树的层次遍历](https://github.com/Yobol/LearningNotes/blob/master/算法/树/遍历/广度优先遍历/LC.0102.二叉树的层次遍历.md)
 
 ## *. 数组中重复的数字
 
