@@ -769,6 +769,50 @@ public class Solution {
 
 [Yobol.LearningNotes - LC.0021.合并两个有序链表](https://github.com/Yobol/LearningNotes/blob/master/算法/链表/LC.0021.合并两个有序链表.md)
 
+## 18. 树的子结构
+
+**题目描述**
+
+输入两棵二叉树A和B，判断B是不是A的子结构（约定空树不是任意一个树的子结构）。
+
+**解题思路**
+
+1. locate（IsSubTree）：找到B在A中的位置B'；
+2. contains：判断以B'为根节点的子树中是否包含B。
+
+```java
+/**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+    }
+
+}
+*/
+public class Solution {
+    public boolean HasSubtree(TreeNode root1,TreeNode root2) {
+        if (root1 == null || root2 == null) return false;
+        
+        return IsSubtree(root1, root2) || HasSubtree(root1.left, root2) || HasSubtree(root1.right, root2);
+    }
+    
+    private boolean IsSubtree(TreeNode root1, TreeNode root2) {
+        if (root2 == null) return true;
+        if (root1 == null) return false;
+        
+        if (root1.val == root2.val) {
+            return IsSubtree(root1.left, root2.left) && IsSubtree(root1.right, root2.right);
+        } else {
+            return false;
+        }
+    }
+}
+```
+
 ## *. 数组中重复的数字
 
 **题目描述**
