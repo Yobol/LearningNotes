@@ -1029,6 +1029,169 @@ public class Solution {
 
 [Yobol.LearningNotes - LC.0102.二叉树的层次遍历](https://github.com/Yobol/LearningNotes/blob/master/算法/树/遍历/广度优先遍历/LC.0102.二叉树的层次遍历.md)
 
+## 24. 二叉搜索树的后序遍历序列
+
+**题目描述**
+
+输入一个整数数组，判断该数组是不是某二叉搜索树后序遍历的结果，如果是则返回true，否则返回false。
+
+假设输入的数组任意两个数字都互不相同。
+
+**解题思路**
+
+在后序遍历得到的序列中，最后一个数字是树的根节点的值。数组中前面的数字可以分为两部分：第一部分是左子树中的结点值，它们都比根节点小，第二部分是右子树中的结点值，它们都比根节点的值大。
+
+```java
+public class Solution {
+    public boolean VerifySquenceOfBST(int [] sequence) {
+        if (sequence == null || sequence.length == 0) return false;
+        return verify(sequence, 0, sequence.length - 1);
+    }
+    
+    private boolean verify(int[] sequence, int l, int r) {
+        if (l >= r) return true;
+
+        int i = r;
+        while (i > l && sequence[i - 1] > sequence[r]) i--;
+        for (int j = i - 1; j >= l; j--) {
+            if (sequence[j] > sequence[r]) {
+                return false;
+            }
+        }
+        return verify(sequence, l, i - 1) && verify(sequence, i + 1, r);
+    }
+}
+```
+
+## 25. 二叉树中和为某一值的路径
+
+**题目描述**
+
+输入一棵二叉树的根节点和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根节点开始往下一直到叶节点所经过的结点形成一条路径。
+
+**解题思路**
+
+```java
+import java.util.ArrayList;
+/**
+public class TreeNode {
+    int val = 0;
+    TreeNode left = null;
+    TreeNode right = null;
+
+    public TreeNode(int val) {
+        this.val = val;
+
+    }
+}
+*/
+public class Solution {
+    public ArrayList<ArrayList<Integer>> FindPath(TreeNode root,int target) {
+        ArrayList<ArrayList<Integer>> output = new ArrayList<>();
+        FindPath(output, root, new ArrayList<>(), target);
+        return output;
+    }
+    
+    private void FindPath(ArrayList<ArrayList<Integer>> output, TreeNode root, 
+                          ArrayList<Integer> path, int target) {
+        if (root == null) return ;
+        target -= root.val;
+        path.add(root.val);
+        if (root.left == null && root.right == null) { // leaf node
+            if (target == 0) {
+                output.add(path);
+            }
+        } else {
+            FindPath(output, root.left, new ArrayList<>(path), target);
+            FindPath(output, root.right, new ArrayList<>(path), target);
+        }
+    }
+}
+```
+
+
+
+## *. 链表中环的入口结点
+
+**题目描述**
+
+给一个链表，若其中包含环，请找出该链表的环的入口结点，否则，输出null。
+
+**解题思路**
+
+使用双指针，一个指针`fast`每次移动两个节点，一个指针`slow`每次移动一个节点。因为存在环，所以两个指针必定相遇在环中的某个节点上。
+
+假设相遇点在下图的`z1`位置，此时`fast`移动的节点数为`x+2y+z`，`slow`为`x+y`，由于`fast`速度比`slow`快一倍，因此`x+2y+z=2(x+y)`，得到`x=z`。
+在相遇点，`slow`要到环的入口点还需要移动`z`个节点，如果让`fast`重新从头开始移动，并且速度变为每次移动一个节点，那么它到环入口点还需要移动`x`个节点。在上面已经推导出`x=z`，因此`fast`和`slow`将在环入口点相遇。
+
+```java
+/*
+ public class ListNode {
+    int val;
+    ListNode next = null;
+
+    ListNode(int val) {
+        this.val = val;
+    }
+}
+*/
+public class Solution {
+
+    public ListNode EntryNodeOfLoop(ListNode pHead) {
+        if (pHead == null || pHead.next == null) return null;
+        
+        ListNode fast = pHead, slow = pHead;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                break; // 有环
+            }
+        }
+        fast = pHead;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+}
+```
+
+## *. 字符流中第一个不重复的数字
+
+**题目描述**
+
+请实现一个函数用来找出字符流中第一个只出现一次的字符。例如，当从字符流中只读出前两个字符"go"时，第一个只出现一次的字符是"g"。当从该字符流中读出前六个字符“google"时，第一个只出现一次的字符是"l"。
+
+`注：如果当前字符流没有存在出现一次的字符，返回#字符。`
+
+**解题思路**
+
+```java
+import java.util.*;
+
+public class Solution {
+    private int[] cnts = new int[256];
+    private Queue<Character> queue = new LinkedList<>();
+    
+    //Insert one char from stringstream
+    public void Insert(char ch) {
+        cnts[ch]++;
+        queue.add(ch);
+        while (!queue.isEmpty() && cnts[queue.peek()] > 1) {
+            queue.poll();
+        }
+    }
+  //return the first appearence once char in current stringstream
+    public char FirstAppearingOnce() {
+        return queue.isEmpty() ? '#' : queue.peek();
+    }
+}
+```
+
+
+
 ## *. 数组中重复的数字
 
 **题目描述**
@@ -1197,7 +1360,15 @@ public class Solution {
 }
 ```
 
+## *. 数组中只出现一次的数字
 
+**题目描述**
+
+一个整型数组里除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个只出现一次的数字。
+
+**解题思路**
+
+[Yobol.LearningNotes - LC.0260.只出现一次的数字III](https://github.com/Yobol/LearningNotes/blob/master/算法/位或数位操作/LC.0260.只出现一次的数字III.md)
 
 ## *. [机器人的运动范围](https://www.nowcoder.com/practice/6e5207314b5241fb83f2329e89fdecc8?tpId=13&tqId=11219&tPage=1&rp=1&ru=/ta/coding-interviews&qru=/ta/coding-interviews/question-ranking)
 
@@ -1316,4 +1487,3 @@ public int integerBreak(int n) {
 }
 ```
 
-## 
