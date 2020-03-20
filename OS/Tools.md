@@ -105,9 +105,9 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 #### 自动补全
 
-前置条件： 已经安装了 on-my-zsh
+**前置条件：** 已经安装了 on-my-zsh
 
-参        考： [官方文档](https://gist.github.com/dogrocker/1efb8fd9427779c827058f873b94df95)
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting [官方文档](https://gist.github.com/dogrocker/1efb8fd9427779c827058f873b94df95)
 
 ```shell
 # 自动补全插件

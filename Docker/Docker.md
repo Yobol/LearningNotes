@@ -130,13 +130,15 @@ ERROR: Get https://IP地址/v2/: x509: certificate signed by unknown authority
 ```
 
 ```shell
-$ sudo vim /etc/docker/daemon.json
-{
-    "insecure-registries": "https://IP地址"
-}
-
+$ sudo vim /lib/systemd/system/docker.service
+# 为ExecStart属性添加可信赖HUB
+################################################################
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+ --insecure-registry=172.16.1.99
+################################################################
+$ sudo systemctl daemon-reload
 # 重新启动Docker
-$ service docker restart
+$ sudo systemctl restart docker
 ```
 
 With insecure registries enabled, Docker goes through the following steps:
@@ -175,7 +177,9 @@ $ docker tag <image-id|image-name> <new-name>
 
 ```shell
 # login Docker Hub
-$ docker login
+# 如果省略<hub IP or DomainName>，则默认登陆Docker Hub
+# 如果登陆报Error response from daemon: Get https://172.16.1.99/v1/users/: dial tcp 172.16.1.99:443: getsockopt: connection refused错误，参考Insecure Registry解决方法
+$ docker login <hub IP or DomainName>
 # 接着输入你在Docker Hub上的用户名和密码
 
 # 给你的repository添加新的tag

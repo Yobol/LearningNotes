@@ -33,7 +33,7 @@ $ go version
 go version go1.8 linux/amd64
 # 如果存在老的版本，可以从当前版本升级或回退
 $ go get golang.org/dl/go1.12.5
-$ go1.12.5 download
+$ go1.12.5 download # 系统会将该命令最后执行时安装的版本作为当前使用的版本
 # 也可以先删除当前老的版本
 # 从 /etc/profile or $HOME/.profile 中查看Go的环境变量配置信息
 
