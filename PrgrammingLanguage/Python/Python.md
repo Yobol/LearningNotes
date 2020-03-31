@@ -552,7 +552,7 @@ import subprocess
 # subprocess.Popen会以当前进程为父进程开启一个子进程
 # stdout=subprocess.PIPE的作用是重定向标准输出，不出现在命令行中
 # stderr=subprocess.PIPE的作用是重定向错误输出，不出现在命令行中
-sp = subprocess.POpen('cd /etc/hosts', shell=True, 
+sp = subprocess.Popen('cd /etc/hosts', shell=True, 
                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 # 阻塞当前进程，等待子线程sp运行结束
 sp.wait()
