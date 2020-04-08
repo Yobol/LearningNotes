@@ -407,7 +407,186 @@ type EmptyStruct struct {}
 
 
 
+## 组合（Golang实现继承的方式）
 
+### 匿名组合
+
+#### 语法
+
+```go
+// 基类
+type Base struct {
+    // 成员变量
+}
+
+func (b *Base) 函数名(参数列表) (返回值列表) {
+    // 函数体
+}
+
+// 派生类
+type Derived struct {
+    Base
+    // 成员变量
+}
+
+func (b *Derived) 函数名(参数列表) (返回值列表) {
+    // 函数体
+}
+```
+
+#### 继承规则
+
+1. 在派生类没有改写基类的成员方法时，相应的成员方法被继承；
+2. 派生类可以直接调用基类的成员方法，譬如基类有个成员方法为Base.Func()，那么Derived.Func()等同于Derived.Base.Func()
+3. 倘若派生类的成员方法名与基类的成员方法名相同，那么基类方法将被覆盖或叫隐藏，譬如基类和派生类都有成员方法Func()，那么Derived.Func()将只能调用派生类的Func()方法，如果要调用基类版本，可以通过Derived.Base.Func()来调用。
+
+```go
+package main
+
+import "fmt"
+
+type Base struct {
+}
+
+func (b *Base) Func1() {
+    fmt.Println("Base.Func1() was invoked!")
+}
+
+func (b *Base) Func2() {
+    fmt.Println("Base.Func2() was invoked!")
+}
+
+type Derived struct {
+    Base
+}
+
+func (d *Derived) Func2() {
+    fmt.Println("Derived.Func2() was invoked!")
+}
+
+func (d *Derived) Func3() {
+    fmt.Println("Derived.Func3() was invoked!")
+}
+
+func main() {
+    d := &Derived{}
+    d.Func1()      // Base.Func1() was invoked!
+    d.Base.Func1() // Base.Func1() was invoked!
+
+    d.Func2()      // Derived.Func2() was invoked!
+    d.Base.Func2() // Base.Func2() was invoked!
+
+    d.Func3() // Derived.Func3() was invoked!
+}
+```
+
+#### 内存布局
+
+1. golang很清晰地展示类的内存布局是怎样的，即Base的位置为基类成员展开的位置；
+2. golang还可以随心所欲地修改内存布局，即Base的位置可以出现在派生类的任何位置。
+
+```go
+package main
+
+import "fmt"
+
+type Base struct {
+    BaseName string
+}
+
+func (b *Base) PrintName() {
+    fmt.Println(b.BaseName)
+}
+
+type Derived struct {
+    DerivedName string
+    Base
+}
+
+func (d *Derived) PrintName() {
+    fmt.Println(d.DerivedName)
+}
+
+func main() {
+    d := &Derived{}
+    d.BaseName = "BaseStruct"
+    d.DerivedName = "DerivedStruct"
+    d.Base.PrintName() // BaseStruct
+    d.PrintName()      // DerivedStruct
+}
+```
+
+### 指针组合
+
+#### 语法
+
+```go
+// 基类
+type Base struct {
+    // 成员变量
+}
+
+func (b *Base) 函数名(参数列表) (返回值列表) {
+    // 函数体
+}
+
+// 派生类
+type Derived struct {
+    *Base
+    // 成员变量
+}
+
+func (b *Derived) 函数名(参数列表) (返回值列表) {
+    // 函数体
+}
+```
+
+#### 继承规则
+
+1. 基类采用指针方式的组合，依然具有派生的效果，只是**派生类创建实例的时候需要外部提供一个基类实例的指针**；
+2. 其他规则与非指针方式组合一致。
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    "os"
+)
+
+type MyJob struct {
+    Command string
+    *log.Logger
+}
+
+func (job *MyJob) Start() {
+    job.Println("job started!") // job.Logger.Println
+
+    fmt.Println(job.Command)
+
+    job.Println("job finished!") // job.Logger.Println
+}
+
+func main() {
+    logFile, err := os.OpenFile("./job.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0)
+    if err != nil {
+        fmt.Println("%s", err.Error())
+        return
+    }
+    defer logFile.Close()
+
+    logger := log.New(logFile, "[info]", log.Ldate|log.Ltime|log.Llongfile)
+    job := MyJob{"programming", logger} // 需要显式指定基类实例的指针
+
+    job.Start()
+    job.Println("test finished!") // job.Logger.Println
+}
+```
+
+### **参考**
+
+1. [匿名组合](https://studygolang.com/articles/6330)
 
 ## 接口
 
