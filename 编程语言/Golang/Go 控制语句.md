@@ -8,7 +8,11 @@
 
 ```go
 // if 语句
-if condition {
+if condition1 {
+    
+} else if condition2 {
+    
+} else {
     
 }
 ```
