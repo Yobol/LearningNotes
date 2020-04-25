@@ -877,7 +877,22 @@ defer fmt.Println("defer")
 查看 Go API：
 
 - 在终端使用`go doc <pkg-name>`查看标准库文档；
-- 
+
+### time
+
+#### 格式化时间
+
+```go
+package test
+
+import "time"
+
+// 按照 2006-01-02 15:04:05 格式输出当前时间
+// 2006-01-02 15:04:05 只有这个字符串才能正确格式化时间
+time.Now().Format("2006-01-02 15:04:05")
+```
+
+
 
 ### fmt
 

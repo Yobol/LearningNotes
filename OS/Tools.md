@@ -156,3 +156,14 @@ tmux
 | z             | 最大化当前pane，再按一次后恢复                 |
 | x             | 关闭当前pane，输入y/n决定是否真正执行          |
 
+## Timer
+
+### Crontab
+
+定时执行脚本。
+
+
+
+### 参考
+
+1. [How to Use Cron in Linux](https://opensource.com/article/17/11/how-use-cron-linux)

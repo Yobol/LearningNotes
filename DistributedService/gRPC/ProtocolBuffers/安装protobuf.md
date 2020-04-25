@@ -31,6 +31,11 @@ sudo vim /etc/ld.so.conf
 /usr/local/protobuf/lib
 ##############################
 sudo ldconfig
+
+# Install Go Deps
+go get -u github.com/golang/protobuf/protoc
+go get -u github.com/golang/protobuf/protoc-gen-go
+go get github.com/micro/protoc-gen-micro
 ```
 
 ## 语法
