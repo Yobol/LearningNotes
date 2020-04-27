@@ -39,6 +39,8 @@
    - 否则左半段是旋转序列，右半段是有序序列。
 2. 然后在判断子序列类型后，进一步拆分，直到区间元素只有一个为止。
 
+#### Java
+
 ```java
 class Solution {
     public int search(int[] nums, int target) {
@@ -65,6 +67,44 @@ class Solution {
         
         return -1;
     }
+}
+```
+
+#### Golang
+
+```go
+// 可以借鉴二分查找思想解决该问题
+// 对该问题而言，每次都会将原数组分为有序数组和旋转数组，
+// 不断地对旋转数组进行二分查找，直到数组长度为1
+func search(nums []int, target int) int {
+    if len(nums) == 0 {
+        return -1
+    }
+    for left, right := 0, len(nums) - 1; left <= right; {
+        mid := (left + right) / 2
+        if nums[mid] == target {
+            return mid
+        } else if nums[mid] < nums[right] { // 左半段旋转，右半段有序
+            // 为什么不能先判断target在旋转序列再判断在有序序列？
+            // 如果先判断target在左半段有序序列，
+            // 则判断条件为 nums[left] >= target && target > nums[mid]
+            // 因为左半段是旋转数组，所以该条件是成立的！！！
+            if nums[mid] < target && target <= nums[right] { // target在右半段有序序列
+                left = mid + 1
+            } else { // target在左半段旋转序列
+                right = mid - 1
+            }
+        } else { // 左半段有序，右半段旋转
+            // 同上
+            if nums[left] <= target && target < nums[mid] { // target在左半段有序序列
+                right = mid - 1
+            } else { // target在右半段旋转序列
+                left = mid + 1
+            }
+        }
+    }
+    return -1
+
 }
 ```
 
