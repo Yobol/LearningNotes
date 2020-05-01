@@ -23,6 +23,8 @@
 
 在循环终止的时候， l1 和 l2 至多有一个是非空的。由于输入的两个链表都是有序的，所以不管哪个链表是非空的，它包含的所有元素都比前面已经合并链表中的所有元素都要大。这意味着我们只需要简单地将非空链表接在合并链表的后面，并返回合并链表。
 
+##### Java
+
 ```java
 /**
  * Definition for singly-linked list.
@@ -58,13 +60,47 @@ class Solution {
 }
 ```
 
-时间复杂度： $O(m + n)$；
+##### Golang
 
-空间复杂度： $O(1)$。
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+    dummy := &ListNode{}
+    tail := dummy
+    for ; l1 != nil && l2 != nil; {
+        if l1.Val < l2.Val {
+            tail.Next = l1
+            l1 = l1.Next 
+        } else {
+            tail.Next = l2
+            l2 = l2.Next
+        }
+        tail = tail.Next
+    }
+    if l1 != nil {
+        tail.Next = l1
+    } else {
+        tail.Next = l2
+    }
+    return dummy.Next
+}
+```
+
+**时间复杂度：** $O(m + n)$；
+
+**空间复杂度：** $O(1)$。
 
 #### 递归
 
 给定两个链表L1和L2。如果L1且L2为null，则返回null，否则如果L1为null返回L2，如果L2为null则返回L1，否则返回两者中较小的那一个。
+
+##### Java
 
 ```java
 /**
@@ -96,7 +132,38 @@ class Solution {
 }
 ```
 
+##### Golang
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+    if l1 == nil {
+        return l2
+    }
+    
+    if l2 == nil {
+        return l1
+    }
+    
+    if l1.Val < l2.Val {
+        l1.Next = mergeTwoLists(l1.Next, l2)
+        return l1
+    } else {
+        l2.Next = mergeTwoLists(l1, l2.Next)
+        return l2
+    }
+}
+```
+
+**时间复杂度：** $O(m + n)$；
+
+**空间复杂度：** $O(m + n)$。
 
 ## 最优解
 
