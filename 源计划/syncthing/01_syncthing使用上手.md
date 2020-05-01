@@ -7,7 +7,7 @@
 3. 角色：
    - 本地设备（local device）；
    - 远端设备（remote device）。
-4. 使用：在每个设备上都安装`Syncthing`，设备之间能够正常通信，然后通过前端界面进行配置。
+4. 使用：在每个设备（设备之间能够正常通信）上都安装`Syncthing`，然后通过前端界面进行配置。
 
 ## 安装
 
@@ -42,23 +42,23 @@ docker run -p 8384:8384 -p 22000:22000 \
 
 ## 配置/使用
 
- 当成功启动`Syncthing`后，可以通过浏览器访问[`http://127.0.0.1:8324/`](http://127.0.0.1:8384/#device-advanced)，并且强制要求启用`Cookies`保证GUI可用性。配置主界面如下所示：
+ 当成功启动`Syncthing`后，可以通过浏览器访问[`http://127.0.0.1:8324/`](http://127.0.0.1:8384/#device-advanced)（要求启用`Cookies`保证GUI可用性）。配置主界面如下所示：
 
-![image-20200428145732031](/home/yobol/wp/LearningNotes/源计划/syncthing/01_如何使用syncthing.assets/image-20200428145732031.png)
+![image-20200428145732031](./01_如何使用syncthing.assets/image-20200428145732031.png)
 
 ### Folders
 
 界面左边是当前设备需要同步的文件夹列表。
 
-当应用初始化时，会在`/var/syncthing（mounted in container from local /wherever）`下创建一个默认文件夹`default`。因为初始时没有配置`Remote Devices`以及同步策略，所以该目录的同步状态为`Unshared`（目录没有任何同步设备）。
+当应用初始化时，会在`/var/syncthing（设置的同步根目录）`下创建一个默认文件夹`default`。因为初始时没有配置`Remote Devices`以及同步策略，所以该目录的同步状态为`Unshared`（目录没有任何同步设备）。
 
 #### 添加同步目录/Add Folder
 
 ##### 通用配置/General
 
-![image-20200428211914020](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200428211914020.png)
+![image-20200428211914020](./01_syncthing使用上手.assets/image-20200428211914020.png)
 
-![image-20200428214041093](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200428214041093.png)
+![image-20200428214041093](./01_syncthing使用上手.assets/image-20200428214041093.png)
 
 - **Folder Label**：
   - 可选；
@@ -72,13 +72,13 @@ docker run -p 8384:8384 -p 22000:22000 \
 
 ##### 共享设备配置/Sharing
 
-![image-20200428215235540](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200428215235540.png)
+![image-20200428215235540](./01_syncthing使用上手.assets/image-20200428215235540.png)
 
-- **Currently Shared With Devices**：选择需要同步的远端设备。
+- **Currently Shared With Devices**：选择需要同步的远端设备，界面上显示的是`Device Name`，实际还是根据`Device ID`绑定设备。
 
 ##### 版本管理配置/File Versioning
 
-![image-20200428215425524](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200428215425524.png)
+![image-20200428215425524](./01_syncthing使用上手.assets/image-20200428215425524.png)
 
 - [**File Versioning**](https://docs.syncthing.net/users/versioning.html)（版本管理）：
 
@@ -88,20 +88,20 @@ docker run -p 8384:8384 -p 22000:22000 \
 
     - `Clean out after`：设置`.stversions`中文件的保存时长，`0 days`表示永久保存。
 
-    ![image-20200429105227767](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200429105227767.png)
+    ![image-20200429105227767](./01_syncthing使用上手.assets/image-20200429105227767.png)
 
   - `Simple File Versioning`：将原文件移动至`.stversions`文件夹，最多会保存`n`份旧版本的文件。
 
     - `Keep Versions`：旧版本文件的数量，旧版本文件的命名形式`filename~20200429-034355.suffix`。
 
-    ![image-20200429114135229](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200429114135229.png)
+    ![image-20200429114135229](./01_syncthing使用上手.assets/image-20200429114135229.png)
 
   - `Staggered File Versioning`：将原文件移动至同步目录的指定文件目录下，与`.stversions`同级并取代其作为旧版本文件的保存目录。
 
     - **Maximum Age**：旧版本文件的保存时间，超过这个时间会被删除，`0 days`表示永久保存；
     - **Versions Path**：设置保存旧版本文件的保存路径（支持绝对路径和相对路径，相对路径是相对于当前同步目录而言），置空表示仍用`.stversions`作为存储目录。
 
-    ![image-20200429114611585](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200429114611585.png)
+    ![image-20200429114611585](./01_syncthing使用上手.assets/image-20200429114611585.png)
 
   - `External File Versioning`：
 
@@ -127,7 +127,7 @@ docker run -p 8384:8384 -p 22000:22000 \
 
       
 
-    ![image-20200429120931931](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200429120931931.png)
+    ![image-20200429120931931](./01_syncthing使用上手.assets/image-20200429120931931.png)
 
   版本管理策略应用于从远端设备接收的改变：本地对原文件的改动不会触发存档动作；**只有来自远端设备对文件的改动才会触发本地文件的存档动作**。
 
@@ -135,11 +135,11 @@ docker run -p 8384:8384 -p 22000:22000 \
 
 `Ignore Patterns`最终会被写入到当前文件夹的`.stignore`文件下，满足过滤规则的文件（夹）将不会参与到后续的同步过程。忽略规则参考：[Syncthing Ignoring Files](https://docs.syncthing.net/users/ignoring.html)。
 
-![image-20200429135820169](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200429135820169.png)
+![image-20200429135820169](./01_syncthing使用上手.assets/image-20200429135820169.png)
 
 ##### 高级配置/Advanced
 
-![image-20200429140357875](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200429140357875.png)
+![image-20200429140357875](./01_syncthing使用上手.assets/image-20200429140357875.png)
 
 - **Scanning**：
   - `Watching for Changes`：无须周期性全局扫描就可以探测到文件变化，默认勾选；
@@ -177,13 +177,13 @@ docker run -p 8384:8384 -p 22000:22000 \
 >
 > 
 
-![image-20200428155444887](/home/yobol/wp/LearningNotes/源计划/syncthing/01_如何使用syncthing.assets/image-20200428155444887.png)
+![image-20200428155444887](./01_如何使用syncthing.assets/image-20200428155444887.png)
 
 - **Device ID**：通过远端设备主页面`Actions -> Show ID`获取。
 
 - **Device Name**：为了更好的可读性，在`Remote Devices`列表中使用`Device Name`标识设备而非`Device ID`。如果该属性被置为空，则被置为`Device ID`的前7位。
 
-![image-20200428160625965](/home/yobol/wp/LearningNotes/源计划/syncthing/01_如何使用syncthing.assets/image-20200428160625965.png)
+![image-20200428160625965](./01_如何使用syncthing.assets/image-20200428160625965.png)
 
 - **Introducer**：将`introducer`中的设备添加到设备列表中，以获取相互共享的文件夹。双向同步？？？
 
@@ -191,7 +191,7 @@ docker run -p 8384:8384 -p 22000:22000 \
 
 - **Share Folders With Device**：选择将本地设备的哪些文件夹同步到该远端设备。
 
-![image-20200428162501297](/home/yobol/wp/LearningNotes/源计划/syncthing/01_如何使用syncthing.assets/image-20200428162501297.png)
+![image-20200428162501297](./01_如何使用syncthing.assets/image-20200428162501297.png)
 
 - **Addresses**：
   - `dynamic`：支持地址的动态发现；
@@ -207,17 +207,21 @@ docker run -p 8384:8384 -p 22000:22000 \
 
 当在本地设备添加有效的远端设备后，远端设备会探测到该行为，并在前端提示是否将该设备添加到设备列表中。
 
-![image-20200428162057254](/home/yobol/wp/LearningNotes/源计划/syncthing/01_如何使用syncthing.assets/image-20200428162057254.png)
+![image-20200428162057254](./01_如何使用syncthing.assets/image-20200428162057254.png)
 
 也可在远端设备手动`Add Remove Device`。
 
 同步成功本地设备状态示意图。
 
-![image-20200428202908123](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200428202908123.png)
+![image-20200428202908123](./01_syncthing使用上手.assets/image-20200428202908123.png)
 
 同步成功远端设备状态示意图。
 
-![image-20200428203042407](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200428203042407.png)
+![image-20200428203042407](./01_syncthing使用上手.assets/image-20200428203042407.png)
+
+同步记录示意图。
+
+![image-20200429175405459](./01_syncthing使用上手.assets/image-20200429175405459.png)
 
 ## [`Syncthing`同步机制](https://docs.syncthing.net/users/syncing.html#scanning)
 
@@ -246,7 +250,7 @@ docker run -p 8384:8384 -p 22000:22000 \
 
 开启了`watcher`机制并不会进行实时同步。`Syncthing`每隔`10s`（可使用[fsWatcherDelayS](https://docs.syncthing.net/users/config.html#fswatcherdelays)调整）才会对`watcher`感知到的改动进行同步，因此改动通常会延迟几秒才会开始同步，被删除的文件有时会延迟`1min`。
 
-![image-20200429140357875](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200429140357875.png)
+![image-20200429140357875](./01_syncthing使用上手.assets/image-20200429140357875.png)
 
 
 
@@ -267,7 +271,16 @@ docker run -p 8384:8384 -p 22000:22000 \
 ## 边缘计算文件同步方案
 
 - 数据需要从边缘端同步到云端（只同步插入和更新操作，不会同步删除操作），但是云端的修改不会同步回边缘端；
-- 如果将边缘节点`node ID`下的`/deploy-root/`目录同步到云端`/datamgr`目录下，需要将`/deploy-root/`命名为`node ID`以标识数据是来自哪个边缘设备： `EdgeNode A:/deploy-root` -> `EdgeHub:/datamgr/A`；
+
+- 如果将边缘节点`node-id`下的`/thinger-deploy/thinger-edge-stack`目录同步到云端`/datamgr`目录下，可以进行如下设置：
+
+  ![image-20200429201402972](./01_syncthing使用上手.assets/image-20200429201402972.png)
+
+  ![image-20200429201518665](./01_syncthing使用上手.assets/image-20200429201518665.png)
+
+  ![image-20200429202005499](/home/yobol/wp/LearningNotes/源计划/syncthing/01_syncthing使用上手.assets/image-20200429202005499.png)
+
+   
 
 ## 参考
 

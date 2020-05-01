@@ -1,5 +1,44 @@
 # OS Tools
 
+## Performance
+
+### perf
+
+#### 安装
+
+```shell
+# Ubuntu 18.04
+$ sudo apt-get update
+$ sudo apt-get install linux-tools-common
+$ sudo apt-get install linux-tools-5.3.0-46-generic linux-cloud-tools-5.3.0-46-generic linux-tools-generic linux-cloud-tools-generic
+```
+
+#### 使用
+
+##### stat
+
+```shell
+$ sudo perf stat ./traverse_2d_array
+arr[j][i] costs 241197325ns, arr[i][j] costs 40863930ns, 5times
+ Performance counter stats for './traverse_2d_array':
+
+            337.45 msec task-clock                #    1.169 CPUs utilized          
+               492      context-switches          #    0.001 M/sec                  
+               102      cpu-migrations            #    0.302 K/sec                  
+               986      page-faults               #    0.003 M/sec                  
+   <not supported>      cycles                                                      
+   <not supported>      instructions                                                
+   <not supported>      branches                                                    
+   <not supported>      branch-misses                                               
+
+       0.288666111 seconds time elapsed
+
+       0.313371000 seconds user
+       0.034342000 seconds sys
+```
+
+
+
 ## Shortcut
 
 ### 系统自带截图工具
