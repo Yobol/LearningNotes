@@ -36,6 +36,8 @@
 
 因为要找无重复字符的最长子串（即必须连续，不同于子序列），所以我们应该记录最长子串的长度，并且维持一个“滑动”的子串来不断地与最长子串进行比较。
 
+#### Java
+
 ```Java
 class Solution {
     public int lengthOfLongestSubstring(String s) {
@@ -68,6 +70,8 @@ class Solution {
 
 ### 最优解
 
+#### Java
+
 ```Java
 public class Solution {
     public int lengthOfLongestSubstring(String s) {
@@ -84,6 +88,28 @@ public class Solution {
         }
     	return ml;
     }
+}
+```
+
+#### Golang
+
+```go
+func lengthOfLongestSubstring(s string) int {
+    n, ml := len(s), 0 // ml为最长子串的长度
+    for i, p := 0, 0; i < n; i++ { // p用来标记当前滑动窗口的起始位置，以计算窗口长度
+        for j := p; j < i; j++ {
+            if s[i] != s[j] {
+                continue
+            }
+            // 存在则更新窗口
+            p = j + 1 // 新的滑动窗口的起点为上一个滑动窗口中的重复字符在整个字符串中的位置 + 1
+            break
+        }
+        if i - p + 1 > ml {
+            ml = i - p + 1
+        }
+    }
+    return ml
 }
 ```
 
