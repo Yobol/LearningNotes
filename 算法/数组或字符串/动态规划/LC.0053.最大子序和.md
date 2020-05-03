@@ -24,6 +24,8 @@
 
 ### 最优解
 
+#### Java
+
 ```java
 class Solution {
     public int maxSubArray(int[] nums) {
@@ -40,6 +42,30 @@ class Solution {
         }
         return res;
     }
+}
+```
+
+#### Golang
+
+```go
+// 执行用时 : 8 ms, 在所有 Go 提交中击败了 64.35% 的用户
+// 内存消耗 : 3.3 MB, 在所有 Go 提交中击败了 100.00% 的用户
+func maxSubArray(nums []int) int {
+    n := len(nums)
+    sum := nums[0] // 当前最大子序和
+    maxSum := sum // 最大子序和
+    for i := 1; i < n; i++ {
+        // `sum > 0` means `sum + nums[i] > nums[i]`
+        if sum > 0 { // 如果sum > 0，则说明sum对结果有增益效果，则sum保留并加上当前遍历数字
+            sum += nums[i]
+        } else { // 否则，说明sum对结果无增益效果，舍弃并将sum直接更新为当前遍历数字
+            sum = nums[i]
+        }
+        if sum > maxSum {
+            maxSum = sum
+        }
+    }
+    return maxSum
 }
 ```
 
