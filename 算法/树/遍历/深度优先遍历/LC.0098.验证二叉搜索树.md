@@ -38,6 +38,10 @@
 
 ### 个人AC
 
+#### 递归
+
+##### Java
+
 ```java
 /**
  * Definition for a binary tree node.
@@ -65,6 +69,70 @@ class Solution {
 
         return true;
     }
+}
+```
+
+##### Golang
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isValidBST(root *TreeNode) bool {
+    return doHelper(root, math.MinInt64, math.MaxInt64)
+}
+
+func doHelper(root *TreeNode, lower int, upper int) bool {
+    if root == nil {
+        return true
+    }
+    if lower >= root.Val {
+        return false
+    }
+    if upper <= root.Val {
+        return false
+    }
+    return doHelper(root.Left, lower, root.Val) && doHelper(root.Right, root.Val, upper)
+}
+```
+
+#### 中序遍历
+
+二叉搜索树中序遍历的结果一定是升序的，所以可以在中序遍历二叉树的时候时实时判断当前结点的值是否大于前一个结点的值。
+
+##### Golang
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isValidBST(root *TreeNode) bool {
+    stack := []*TreeNode{}
+    preVal := math.MinInt64 // 用math.MinInt64代表负无穷
+    for cur := root; cur != nil || len(stack) > 0; {
+        for cur != nil {
+            stack = append(stack, cur)
+            cur = cur.Left
+        }
+        cur = stack[len(stack) - 1]
+        stack = stack[:len(stack) - 1]
+        if cur.Val <= preVal { // 如果当前结点的值小于等于前一个结点的值
+            return false
+        }
+        preVal = cur.Val
+        cur = cur.Right
+    }
+    return true
 }
 ```
 
