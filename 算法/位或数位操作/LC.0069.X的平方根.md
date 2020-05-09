@@ -2,7 +2,7 @@
 
 ## 题目描述
 
-实现`int sqrt(int x)`函数。
+实现`int sqrt(int x)`函数。s
 
 计算并返回`x`的平方根，其中`x`是非负整数。
 
@@ -30,6 +30,8 @@
 
 二分查找，因为只返回平方根的整数部分，所以使用二分查找寻找左边界的模板。
 
+#### Java
+
 ```java
 class Solution {
     public int mySqrt(int x) {
@@ -47,6 +49,29 @@ class Solution {
         }
         return (int)left;
     }
+}
+```
+
+#### Golang
+
+```go
+func mySqrt(x int) int {
+    if x == 0 {
+        return x
+    }
+    // x 的平方根必小于等于它的二分之一，且大于等于1 => (1 + x) / 2 >= sqrt(1 * x)
+    // sqrt(x) <= (x + 1) / 2
+    left, right := 1, x >> 1
+    for left < right {
+        mid := (left + right + 1) / 2
+        square := mid * mid
+        if square > x {
+            right = mid - 1
+        } else {
+            left = mid
+        }
+    }
+    return left
 }
 ```
 
