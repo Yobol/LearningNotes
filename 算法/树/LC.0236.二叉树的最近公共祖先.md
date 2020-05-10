@@ -37,9 +37,13 @@
 
 在左右子树中分别查找是否包含p和q：
 
-- 如果左子树包含p，右子树包含q或者左子树包含q，右子树包含p，那么根节点就是最近公共祖先；
+- 如果“左子树包含p，右子树包含q”或者“左子树包含q，右子树包含p”，那么根节点就是最近公共祖先；
 - 如果左子树包含p、q，那么最近公共子树在左子树中；
 - 如果右子树包含p、q，那么最近公共子树在右子树中。
+
+#### 递归
+
+##### Java
 
 ```java
 /**
@@ -57,18 +61,110 @@ class Solution {
         
         TreeNode left = lowestCommonAncestor(root.left, p, q);
         TreeNode right = lowestCommonAncestor(root.right, p, q);
-        
-        // 如果p，q不在左子树中，那么其必然在右子树中 left == null && right == null
-        // 否则如果p，q不在右子树中，那么其必然在左子树中 left != null && right == null
-        // 否则当前根节点就是最近公共祖先 left != null && right != null
         return left == null ? right : (right == null ? left : root);
     }
 }
 ```
 
-**时间复杂度：** $O(n)$；
+##### Golang
 
-**空间复杂度：** $O(n)$。
+```go
+/**
+ * Definition for TreeNode.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *ListNode
+ *     Right *ListNode
+ * }
+ */
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+    // 逻辑运算符的性能不如 分支语句
+    // if root == nil || root.Val == p.Val || root.Val == q.Val {
+    //     return root
+	// }
+    if root == nil {
+        return nil
+    }
+    if root.Val == p.Val {
+        return root
+    }
+    if root.Val == q.Val {
+        return root
+    }
+
+    // 在左右子树中分别查找是否包含p和q：
+    // - 如果“左子树包含p，右子树包含q”或者“左子树包含q，右子树包含p”，那么根节点就是最近公共祖先
+    // - 如果左子树包含p、q，那么最近公共子树在左子树中
+    // - 如果右子树包含p、q，那么最近公共子树在右子树中
+    left := lowestCommonAncestor(root.Left, p, q)
+    right := lowestCommonAncestor(root.Right, p, q)
+    if left != nil && right != nil {
+        return root
+    } else if left == nil {
+        return right
+    } else {
+        return left
+    }
+}
+```
+
+**时间复杂度：** $O(N)$，其中 `N` 表示二叉树的结点数，所有结点被且仅被访问一次；
+
+**空间复杂度：** $O(N)$，其中 `N` 表示二叉树的结点数，最坏情况下，树退化成一个链表（即树高为 `N`），此时递归栈的深度为 `N`。
+
+#### DFS
+
+##### Golang
+
+1. 从根节点遍历整棵二叉树，用哈希表记录所有结点的父结点指针；
+2. 从 `p` 结点开始，根据父结点哈希表依次向上标记已经访问过的结点，直到访问到根节点为止；
+3. 再从 `q` 结点开始不断向根节点移动，在移动过程中，遇到的第一个被访问过的结点就是 `p` 和 `q` 的最近公共父结点。
+
+```go
+/**
+ * Definition for TreeNode.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *ListNode
+ *     Right *ListNode
+ * }
+ */
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+    parent := map[int]*TreeNode{}
+    visited := map[int]bool{}
+
+    var dfs func(*TreeNode)
+    dfs = func(r *TreeNode) {
+        if r == nil {
+            return
+        }
+        if r.Left != nil {
+            parent[r.Left.Val] = r
+            dfs(r.Left)
+        }
+        if r.Right != nil {
+            parent[r.Right.Val] = r
+            dfs(r.Right)
+        }
+    }
+    dfs(root)
+
+    for p != nil {
+        visited[p.Val] = true
+        p = parent[p.Val]
+    }
+    for q != nil {
+        if visited[q.Val] {
+            return q
+        }
+        q = parent[q.Val]
+    }
+
+    return nil
+}
+```
+
+
 
 ### 最优解
 
