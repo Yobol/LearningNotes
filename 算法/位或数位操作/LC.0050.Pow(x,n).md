@@ -79,6 +79,8 @@ class Solution {
 
 #### 递归法
 
+##### Java
+
 ```java
 class Solution {
     public double myPow(double x, int n) {
@@ -91,19 +93,42 @@ class Solution {
     
     private double helper(double x, int n) {
         if (n == 0) return 1;
-        double result = 0.0;
         double tmp = helper(x, n / 2); // 递归处理相乘的幂，重复利用已经算出来的值
+        double result = tmp * tmp;
         if ((n & 1) == 1) { // 当幂为奇数时， 多乘一个x
-            result = x * tmp * tmp;
-        } else {
-            result = tmp * tmp;
-        }
+            result *= x;
+        } 
         return result;
     }
 }
 ```
 
-时间复杂度： $O(logn)$；
+##### Golang
 
-空间复杂度： $O(logn)$， 递归栈深度。
+```go
+func myPow(x float64, n int) float64 {
+    if n < 0 {
+        return 1 / helper(x, -n)
+    } else {
+        return helper(x, n)
+    }
+}
+
+func helper(x float64, n int) float64 {
+    if n == 0 {
+        return 1
+    }
+    
+    tmp := helper(x, n / 2)
+    result := tmp * tmp
+    if (n & 1) == 1 {
+        result = x * result
+    } 
+    return result
+}
+```
+
+**时间复杂度：** $O(logn)$；
+
+**空间复杂度：** $O(logn)$， 递归栈深度。
 
