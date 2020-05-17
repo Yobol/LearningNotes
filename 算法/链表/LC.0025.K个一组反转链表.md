@@ -27,6 +27,8 @@ k 是一个正整数，它的值小于或等于链表的长度。
 
 ### 个人AC
 
+#### Java
+
 ```Java
 /**
  * Definition for singly-linked list.
@@ -70,19 +72,75 @@ class Solution {
     
     private ListNode reverse(ListNode head, ListNode tail) {
         ListNode nextGroupHead = tail.next;
-        ListNode prev = null, cur = head, next = null;
+        ListNode prev = null, curr = head, next = null;
         while (cur != nextGroupHead) {
-            next = cur.next;
-            cur.next = prev;
-            prev = cur;
-            cur = next;
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
         }
         return head;
     }
 }
 ```
 
+#### Golang
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseKGroup(head *ListNode, k int) *ListNode {
+    if head == nil || k <= 1 {
+        return head
+    }
+    // 声明一个伪结点，避免对头结点进行讨论
+    var dummy *ListNode = &ListNode{
+        Val: -1,
+    }
+    // lastGroupTail用来记录已反转部分的尾结点，初始化为dummy
+    // nextGroupHead用来记录未反转部分的头结点，初始化为head
+    lastGroupTail, nextGroupHead := dummy, head
+    lastGroupTail.Next = nextGroupHead
+    cnt := 0
+    curr := head
+    for ; curr != nil; {
+        cnt++
+        if cnt % k == 0 {
+            nextGroupHead = curr.Next
+            currGroupTail := reverseGroup(lastGroupTail.Next, curr)
+            lastGroupTail.Next = curr // 连接已反转部分与该反转部分
+            currGroupTail.Next = nextGroupHead // 连接该反转部分与未反转部分
+            lastGroupTail = currGroupTail // 移动lastGroupTail指针
+            curr = nextGroupHead
+        } else {
+            curr = curr.Next
+        }
+    }
+    return dummy.Next
+}
+
+// return the tail of reversed list
+func reverseGroup(head, tail *ListNode) *ListNode {
+    nextGroupHead := tail.Next
+    var prev, curr, next *ListNode = nil, head, nil
+    for ; curr != nextGroupHead; {
+        next = curr.Next
+        curr.Next = prev
+        prev = curr
+        curr = next
+    }
+    return head // tail turns to new head after reversing
+}
+```
+
 **时间复杂度：** $O(2 * n)$，遍历k个元素后需要进行反转；
+
+**空间复杂度：** $O(1)$。
 
 ### 最优解
 
