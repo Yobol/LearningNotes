@@ -22,77 +22,69 @@
 
 理解有偏差，**没有AC**。单纯地以为T中的字母不会有重复，只需要用`HashMap`来记录每个字符出现的位置即可。
 
-```java
-class Solution {
-    public String minWindow(String s, String t) {
-        HashMap<Character, Integer> window = new HashMap() {{
-            for (int i = 0; i < t.length(); i++) {
-                this.put(t.charAt(i), -1);
-            }
-        }};
-        HashMap<Character, Integer> target = new HashMap() {{
-            for (int i = 0; i < t.length(); i++) {
-                this.put(t.charAt(i), -1);
-            }
-        }};
-        
-        int minSum = Integer.MAX_VALUE;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (!window.containsKey(c)) continue;
-            window.put(c, i);
+```go
+const (
+	INT_MAX = int(^uint((0)) >> 1)
+	INT_MIN = ^INT_MAX
+)
 
-            int sum = calDiffAbsSum(window);
-            if (sum < 0) continue;
-            if (sum < minSum) {
-                for (Character key : window.keySet()) {
-                    target.put((key), window.get(key));
-                }
-            }
-        }
-        int start = Integer.MAX_VALUE, end = Integer.MIN_VALUE;
-        for (int v : target.values()) {
-            if (v < 0) return "";
-            if (v < start) start = v;
-            if (v > end) end = v;
-        }
-        return s.substring(start, end + 1);
+func minWindow(s string, t string) string {
+    mapper := make(map[int32]int)
+    for _, c := range t {
+        mapper[c] = -1
     }
-
-    // 计算两两差值绝对值的和
-    private int calDiffAbsSum(HashMap<Character, Integer> window) {
-        int sum = 0;
-        for (int a : window.values()) {
-            if (a < 0) return -1;
-            for (int b : window.values()) {
-                if (b < 0) return -1;
-
-                if (a != b) {
-                    sum += Math.abs(a - b);
-                }
+    minLen := INT_MAX
+    left, right := 0, 0
+    for i, c := range s {
+        _, ok := mapper[c]
+        if ok {
+            mapper[c] = i
+            if l, r, len := coverT(mapper); len < minLen {
+                left = l
+                right = r
+                minLen = len
             }
         }
-        return sum / 2;
     }
+    if minLen == INT_MAX {
+        return ""
+    }
+    return s[left : right+1]
+}
+
+func coverT(mapper map[int32]int) (int, int, int) {
+    left, right := INT_MAX, INT_MIN
+    for _, v := range mapper {
+        if v < 0 {
+            return INT_MAX, INT_MIN, INT_MAX
+        }
+        if left > v {
+            left = v
+        }
+        if v > right {
+            right = v
+        }
+    }
+    return left, right, right - left + 1
 }
 ```
 
-执行结果：解答错误
+执行结果：解答错误。
 
-输入：
+**输入：**
 
 ```
 "a"
 "aa"
 ```
 
-输出：
+**输出：**
 
 ```
 "a"
 ```
 
-预期结果：
+**预期结果：**
 
 ```
 ""
@@ -161,6 +153,8 @@ return res;
 
 可以用两个哈希表当作计数器解决。用一个哈希表`needs`记录字符串`t`中包含的字符及出现次数，用另一个哈希表`window`记录当前窗口`[left, right]`中包含的字符及出现的次数，如果`window`包含所有`needs`中的键，且这些键对应的值都大于等于`needs`中的值，那么就可以知道当前窗口`[left, right]`符合要求了，然后可以移动`left`指针了。
 
+##### Java
+
 ```java
 class Solution {
     public String minWindow(String s, String t) {
@@ -213,6 +207,60 @@ class Solution {
     }
 }
 ```
+
+##### Golang
+
+```go
+const (
+	INT_MAX = int(^uint((0)) >> 1)
+	INT_MIN = ^INT_MAX
+)
+
+func minWindow(s string, t string) string {
+    // 记录最短子串的开始位置和长度，即覆盖最小子串的窗口
+    minWindowLeft, minWindowLen := 0, INT_MAX
+    // 当前窗口
+    left, right := 0, 0
+    needs := make(map[int32]int)
+    for _, c := range t {
+        needs[c]++
+    }
+    window := make(map[int32]int)
+    match := 0
+    for _, c := range s {
+        if _, ok := needs[c]; ok {
+            window[c]++
+            if window[c] == needs[c] {
+                match++
+            }
+        }
+        right++
+        
+        for match == len(needs) {
+            if right - left < minWindowLen {
+                minWindowLeft = left
+                minWindowLen = right - left
+            }
+            c = int32(s[left])
+            if _, ok := needs[c]; ok {
+                window[c]--
+                if window[c] < needs[c] {
+                    match--
+                }
+            }
+            left++
+        }
+        
+    }
+    if minWindowLen == INT_MAX {
+        return ""
+    } else {
+        return s[minWindowLeft: minWindowLeft + minWindowLen]
+    }
+}
+```
+
+
 
 **时间复杂度：** $O(m + n)$，其中`m`和`n`分别是字符串`s`和`t`的长度；
 
