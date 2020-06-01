@@ -197,7 +197,19 @@ tmux
 
 #### 激活鼠标功能
 
+1. 新建 `~/.tmux.conf`，加入：
 
+   ```shell
+   set-option -g mource on
+   ```
+
+2. 在 tmux 中进入命令模式： `ctrl+b` -> `:`；
+
+3. 输入 `source ~/.tmux.conf` 回车。
+
+
+
+复原：删除 `~/.tmux.conf`，执行 `tmux kill-server`。
 
 ## Timer
 
