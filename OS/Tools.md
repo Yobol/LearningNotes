@@ -146,7 +146,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 **前置条件：** 已经安装了 on-my-zsh
 
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting [官方文档](https://gist.github.com/dogrocker/1efb8fd9427779c827058f873b94df95)
+[官方文档](https://gist.github.com/dogrocker/1efb8fd9427779c827058f873b94df95)
 
 ```shell
 # 自动补全插件
@@ -159,7 +159,7 @@ $ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM
 vim ~/.zshrc
 # 1.    :/plugins=(git) 定位到plugins=(git...
 # 2.    append zsh-autosuggestions & zsh-syntax-highlighting plugins
-#       plugins=(git zsh-autosuggestions zsh-syntax-highlighting plugins)
+#       plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 # 3.    :wq save configuration
 # 4.    Reopen Terminal
 ```
