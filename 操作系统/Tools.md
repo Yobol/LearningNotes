@@ -1,5 +1,44 @@
 # OS Tools
 
+## Performance
+
+### perf
+
+#### 安装
+
+```shell
+# Ubuntu 18.04
+$ sudo apt-get update
+$ sudo apt-get install linux-tools-common
+$ sudo apt-get install linux-tools-5.3.0-46-generic linux-cloud-tools-5.3.0-46-generic linux-tools-generic linux-cloud-tools-generic
+```
+
+#### 使用
+
+##### stat
+
+```shell
+$ sudo perf stat ./traverse_2d_array
+arr[j][i] costs 241197325ns, arr[i][j] costs 40863930ns, 5times
+ Performance counter stats for './traverse_2d_array':
+
+            337.45 msec task-clock                #    1.169 CPUs utilized          
+               492      context-switches          #    0.001 M/sec                  
+               102      cpu-migrations            #    0.302 K/sec                  
+               986      page-faults               #    0.003 M/sec                  
+   <not supported>      cycles                                                      
+   <not supported>      instructions                                                
+   <not supported>      branches                                                    
+   <not supported>      branch-misses                                               
+
+       0.288666111 seconds time elapsed
+
+       0.313371000 seconds user
+       0.034342000 seconds sys
+```
+
+
+
 ## Shortcut
 
 ### 系统自带截图工具
@@ -156,3 +195,28 @@ tmux
 | z             | 最大化当前pane，再按一次后恢复                 |
 | x             | 关闭当前pane，输入y/n决定是否真正执行          |
 
+#### 激活鼠标功能
+
+1. 新建 `~/.tmux.conf`，加入：
+
+   ```shell
+   set-option -g mource on
+   ```
+
+2. 在 tmux 中进入命令模式： `ctrl+b` -> `:`；
+
+3. 输入 `source ~/.tmux.conf` 回车。
+
+
+
+复原：删除 `~/.tmux.conf`，执行 `tmux kill-server`。
+
+## Timer
+
+### Crontab
+
+定时执行脚本。
+
+### 参考
+
+1. [How to Use Cron in Linux](https://opensource.com/article/17/11/how-use-cron-linux)；

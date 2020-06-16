@@ -27,11 +27,15 @@ git config --global user.email "xxx@.xxx"
 
 ### 配置别名
 
-`git config --global alias.<alias-name> '<command-name>'`
+```shell
+git config --global alias.<alias-name> '<command-name>
+```
 
 #### lg
 
-`git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"`
+```shell
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+```
 
 ### 查看配置信息
 
@@ -41,7 +45,7 @@ git config --global user.email "xxx@.xxx"
 
 #### 当前用户的Git配置文件
 
-当前用户Git配置文件放在用户主目录下的一个隐藏文件`.gitconfig`中，使用`cat ～/.gitconfig`查看。
+当前用户Git配置文件放在用户主目录下的一个隐藏文件`.gitconfig`中，使用`cat ~/.gitconfig`查看。
 
 ## 查看仓库中所有人的提交记录
 
@@ -53,8 +57,6 @@ git config --global user.email "xxx@.xxx"
 # 按时间逆序排
 git log
 ```
-
-
 
 ## 本地仓库
 
@@ -97,8 +99,6 @@ $ git diff --cached
 # 带有版本号
 git reflog
 ```
-
-
 
 ### 工作区
 
