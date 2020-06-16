@@ -240,21 +240,23 @@ class OuterClass:
 #### 下载指定的版本
 
 ```shell
-# 下载3.5版本
-$ sudo apt-get update
-$ sudo apt-get install python3.5
+sudo apt-get install openssl libssl-dev libncurses5-dev libsqlite3-dev libreadline-dev libtk8.5 libgdm-dev libdb4o-cil-dev libpcap-dev
 
-# 查看版本信息
-$ sudo python3.5 -v
+wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz
+tar -xf Python-3.6.3.tgz
+cd Python-3.6.3
 
-# 配置环境变量
-# 1 需要根据系统update-alternatives --list python结果决定
-# update-alternatives --list python显示没有可供替代的python版本，就将该数字配置为1
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 0
-$ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.5 1
+./configure --with-ssl --prefix=/usr/local/python3
+make
+sudo make install
+
+# zipimport.ZipImportError: can't decompress data; zlib not available
+# 如果遇到上面的错误，则安装 zlib 和 zlib-devel
+sudo apt-get install zlib1g
+sudo apt-get install zlib1g.dev
+
+sudo ln -s /usr/local/python3/bin/python3 /usr/bin/python3
 ```
-
-参考：[安装Python 3.6 在Ubuntu 16.04 LTS 版本](https://blog.csdn.net/lzzyok/article/details/77413968)
 
 #### 查看当前使用的版本
 
@@ -311,6 +313,12 @@ $ pip3 install -U pip
 $ pip3 install some-package 			# 最新版本
 $ pip3 install some-package==1.0.0 	# 指定版本
 $ pip3 install 'some-package>=1.0.0' # 最小版本
+
+# -i http://mirrors.aliyun.com/pypi/simple/ 指定依赖源地址
+# --trusted-host mirrors.aliyun.com
+# -r ./requirement.txt 指定 requirements.txt 路径
+# --target /usr/local/python3.6.9/lib/python3.6 指定依赖包下载地址
+$ python3 -m pip install -U --no-cache-dir -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com -r ./requirements.txt --target /usr/local/python3.6.9/lib/python3.6
 ```
 
 #### 更新包
@@ -349,8 +357,6 @@ $ pip3 list
 ```shell
 $ pip3 list -o
 ```
-
-#### 常用命令
 
 #### 参考
 
