@@ -217,8 +217,6 @@ tmux
 
 定时执行脚本。
 
-
-
 ### 参考
 
-1. [How to Use Cron in Linux](https://opensource.com/article/17/11/how-use-cron-linux)
+1. [How to Use Cron in Linux](https://opensource.com/article/17/11/how-use-cron-linux)；
