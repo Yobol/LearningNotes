@@ -56,7 +56,91 @@ arr[j][i] costs 241197325ns, arr[i][j] costs 40863930ns, 5times
 
 可以选择复制到剪贴板或者保存到本地，但是不便于对截取的图片进行编辑。
 
-### Shutter（推荐）
+### flameshot（推荐）
+
+`注：flameshot 0.6.0 以上才有插入文字及贴图功能！`
+
+#### apt 安装
+
+```shell
+# Ubuntu 18.04
+
+# 查看当前已安装的 flameshot 版本
+apt-cache show flameshot
+
+sudo apt update
+sudo apt install flameshot  # 默认安装的应该是 flameshot-0.5.1 版本的
+
+# Uninstall
+sudo apt remove flameshot
+```
+
+#### deb 安装
+
+```shell
+wget https://github.com/lupoDharkael/flameshot/releases/download/v0.6.0/flameshot_0.6.0_bionic_x86_64.deb
+
+chmod u+x flameshot_0.6.0_bionic_x86_64.deb
+
+sudo dpkg -i flameshot_0.6.0_bionic_x86_64.deb
+
+# Uninstall
+sudo dpkg -r flameshot
+```
+
+默认设置是没有文字及贴图功能的，需要手动开启。
+
+```shell
+flameshot config
+```
+
+![image-20200617224118605](/home/yobol/.config/Typora/typora-user-images/image-20200617224118605.png)
+
+点击 `Select All` 选中所有功能项。
+
+但是如果安装的是 flameshot 0.6.0，但是没有插入文字的功能，有可能是之前安装过 0.6.0 以下的版本。
+
+```shell
+pkill flameshot  # 杀掉 flameshot 进程
+```
+
+开启 flameshot 程序（通过 Show Applications 打开），然后进行上述配置。
+
+#### 编译安装
+
+```shell
+# Compile-time
+sudo apt install g++ build-essential qt5-default qt5-qmake qttools5-dev-tools
+
+# Run-time
+sudo apt install libqt5dbus5 libqt5network5 libqt5core5a libqt5widgets5 libqt5gui5 libqt5svg5-dev
+
+# Optional
+sudo apt install git openssl ca-certificates
+
+# Download sources
+git clone git@github.com:lupoDharkael/flameshot.git  # 默认下载的是 flameshot-0.5.1 版本的
+cd flameshot
+mkdir build && cd build
+qmake ../
+make
+
+# Uninstall
+cd flameshot/build
+sudo make uninstall
+make clean
+```
+
+#### 设置快捷键
+
+1. 系统设置 -> 键盘 -> 快捷键；
+2. 自定义快捷键： 
+   - 名称：`flameshot`；
+   - 命令： `flameshot gui`；
+3. 给该命令设置快捷键：
+   - `ALT + S`。
+
+### Shutter
 
 #### 安装
 
@@ -135,7 +219,7 @@ chsh -s `which zsh`
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # 选择主题
-# 在https://github.com/ohmyzsh/ohmyzsh/wiki/Themes中选择喜欢的主题
+# 在 https://github.com/ohmyzsh/ohmyzsh/wiki/Themes 中选择喜欢的主题
 # 在 ~/.zshrc 中新增变量 ZSH_THEME="theme_name"
 # ZSH_THEME="sunrise"
 ```
@@ -144,11 +228,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 #### 自动补全
 
-**前置条件：** 已经安装了 on-my-zsh
-
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting [官方文档](https://gist.github.com/dogrocker/1efb8fd9427779c827058f873b94df95)
+**前置条件：** 已经安装了 oh-my-zsh。
 
 ```shell
+# ZSH_CUSTOM=~/.oh-my-zsh/custom/
 # 自动补全插件
 $ git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
 
@@ -157,11 +240,9 @@ $ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM
 
 # 插件配置
 vim ~/.zshrc
-# 1.    :/plugins=(git) 定位到plugins=(git...
-# 2.    append zsh-autosuggestions & zsh-syntax-highlighting plugins
-#       plugins=(git zsh-autosuggestions zsh-syntax-highlighting plugins)
-# 3.    :wq save configuration
-# 4.    Reopen Terminal
+# 1. 定位到 plugins=(git，添加 zsh-autosuggestions zsh-syntax-highlighting 插件
+# 2. plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+# 3. 保存配置，重新打开终端生效
 ```
 
 
@@ -193,7 +274,7 @@ tmux
 | :arrow_left:  | 切换到当前pane的左邻窗口                       |
 | :arrow_right: | 切换到当前pane的右邻窗口                       |
 | z             | 最大化当前pane，再按一次后恢复                 |
-| x             | 关闭当前pane，输入y/n决定是否真正执行          |
+| x             | 关闭当前 pane，输入 y/n 决定是否真正执行       |
 
 #### 激活鼠标功能
 
