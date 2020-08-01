@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5283a81c-5544-4857-913e-b572d6b8f1b2" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1chSCtczmTZEpVuxBPTJ9Hy9ZNm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/nginx" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Nginx/Nginx 使用实战" />
+      <recent name="$PROJECT_DIR$/Nginx" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5283a81c-5544-4857-913e-b572d6b8f1b2" name="Default Changelist" comment="" />
+      <created>1591360470995</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1591360470995</updated>
+      <workItem from="1591360476082" duration="273000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/Frontend/Angular2/1.Angular入门-学习笔记/TypeScript/19.TypeScript模块-example/TestShape.js" />
+        <option value="$PROJECT_DIR$/Frontend/Angular2/1.Angular入门-学习笔记/TypeScript/19.TypeScript模块-example/IShape.js" />
+        <option value="$PROJECT_DIR$/Frontend/Angular2/1.Angular入门-学习笔记/TypeScript/19.TypeScript模块-example/Triangle.js" />
+        <option value="$PROJECT_DIR$/Frontend/Angular2/1.Angular入门-学习笔记/TypeScript/19.TypeScript模块-example/Circle.js" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="663" y="345" width="651" height="414" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590979301437">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="663" y="345" width="651" height="414" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1853.1053/1920.0.1366.768@67.27.1853.1053" timestamp="1590979301437" />
+    <state x="167" y="125" width="1653" height="855" key="DiffContextDialog" timestamp="1591360768798">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="167" y="125" width="1653" height="855" key="DiffContextDialog/67.27.1853.1053/1920.0.1366.768@67.27.1853.1053" timestamp="1591360768798" />
+    <state x="532" y="218" width="912" height="668" key="VcsDiffUtil.ChangesDialog" timestamp="1591360677484">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="532" y="218" width="912" height="668" key="VcsDiffUtil.ChangesDialog/67.27.1853.1053/1920.0.1366.768@67.27.1853.1053" timestamp="1591360677484" />
+  </component>
+</project>
